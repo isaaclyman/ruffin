@@ -14,8 +14,8 @@
 }
 @font-face {
   font-family: 'prociono';
-  src: url('fonts/Prociono-Regular-webfont.woff') format('woff'),
-       url('fonts/Prociono-Regular-webfont.ttf') format('truetype');
+  src: url('/fonts/Prociono-Regular-webfont.woff') format('woff'),
+       url('/fonts/Prociono-Regular-webfont.ttf') format('truetype');
 }
 
 html,
@@ -32,11 +32,16 @@ div.wrapper {
   div {
     min-width: 330px;
     width: 100%;
+    &.logo {
+      text-align: center;
+    }
     &.center {
+      max-width: 600px;
+      min-width: 520px;
       padding: 10px;
       padding-bottom: @footer-height;
       padding-left: 25px;
-      margin: 15px none;
+      margin: 15px auto;
       background-color: @box-color;
       border: 1px solid transparent;
       border-radius: none;
@@ -59,6 +64,6 @@ h1 {
   font-family: 'ralewayThin', Helvetica, sans-serif;
 }
 
-p {
+p, label {
   font-family: "prociono", Georgia, serif;
 }

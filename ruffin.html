@@ -1,18 +1,42 @@
 <head>
-  <title>Ruffin</title>
+	<title>Ruffin</title>
+	<link rel="icon" type="image/png" href="favico.png">
 </head>
 
 <body>
-<div class="wrapper">
+<div class="wrapper container-fluid">
 
-    <div class="logo">
-        <img />
+    <div class="logo row">
+        <img src="logo.png"/>
     </div>
-    <div class="center">
-        <h1>Welcome to Ruffin.</h1>
-        <p>Ruffin will help you go outside, meet people, and seize the freakin' day, every day.</p>
+    <div class="center row">
+        <h1>Welcome to your new life.</h1>
+        <p>Ruffin will help you go outside, meet people, and seize the day.</p>
         <p>Don't worry about logging in. You can't. There are no passwords or accounts here.</p>
         <p>Instead, you'll need three things:</p>
+        <div class="form-group col-xs-6">
+	        <p>
+	        	A name (it doesn't have to be your real name).<br/>
+	        	<a href="#" title="Any combination of letters, numbers or symbols will work (28 characters maximum).">
+	        		<input class="form-control" id="nameInput" type="text" placeholder="Name" />
+	        	</a>
+        	</p>
+        	<p>	
+        		A zip code, so we can match you with folks in your area.<br/>
+        		<a href="#" title="American zip codes are five numerical digits.">
+        			<input class="form-control" id="zipInput" type="text" placeholder="Zip Code" />
+        		</a>
+        	</p>
+	        <p>
+	        	One or two words describing a hobby&mdash;for example, "rock climbing" or "chess".<br/>
+	        	<a href="#" title="Be as general as possible&mdash;&quot;weaving&quot; will work better than &quot;amateur basket weaving&quot;.">
+	        		<input class="form-control" id="hobbyInput" type="text" placeholder="Hobby" />
+	        	</a>
+        	</p>
+        	<p>
+        		<button class="form-control btn btn-default">Okay, done.</button>
+        	</p>
+        </div>
     </div>
     <div class="copy">
         &copy;2015 by Isaac Lyman.

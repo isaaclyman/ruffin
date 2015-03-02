@@ -7,5 +7,7 @@
 meteor-platform
 autopublish
 insecure
-bootstrap
 natestrauser:font-awesome
+bootstrap
+less
+mizzao:jquery-ui

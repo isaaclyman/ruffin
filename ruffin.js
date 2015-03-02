@@ -1,5 +1,7 @@
 if (Meteor.isClient) {
-
+	$(function() {
+		$( document ).tooltip();
+	});
 }
 
 if (Meteor.isServer) {
