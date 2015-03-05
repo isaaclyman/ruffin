@@ -10,3 +10,5 @@ less
 mizzao:jquery-ui
 mizzao:bootstrap-3
 iron:router
+mrt:livestamp-hs
+ayue:recaptcha
