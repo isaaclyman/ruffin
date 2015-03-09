@@ -1,7 +1,10 @@
+Router.map(function() {
+	this.route('home', {path: '/'} );
+});
+
 if (Meteor.isClient) {
-	$(function() {
-		$( document ).tooltip();
-	});
+	// Enable tooltips
+	$(function () { $("[data-toggle='tooltip']").tooltip(); });
 }
 
 if (Meteor.isServer) {
