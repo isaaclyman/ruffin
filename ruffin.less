@@ -5,6 +5,7 @@
 @border-color: #888888;
 @light-text: #444444;
 @shadow-color: #AAAAAA;
+@fa-check-color: #33CC33;
 
 // Fonts
 @font-face {
@@ -31,7 +32,6 @@ div.wrapper {
   height: 100%;
   div {
     min-width: 330px;
-    width: 100%;
     &.logo {
       text-align: center;
     }
@@ -66,4 +66,25 @@ h1 {
 
 p, label {
   font-family: "prociono", Georgia, serif;
+}
+
+div.right-addon {
+  position: relative;
+  input {
+    padding-right: 30px;
+  }
+  i.fa {
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+    right: 0px;
+  }
+}
+
+.nomargin {
+  margin-bottom: 0px;
+}
+
+.fa-check {
+  color: @fa-check-color;
 }
