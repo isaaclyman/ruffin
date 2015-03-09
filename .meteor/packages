@@ -6,6 +6,7 @@
 
 meteor-platform
 natestrauser:font-awesome
-bootstrap
 less
 mizzao:jquery-ui
+mizzao:bootstrap-3
+iron:router
