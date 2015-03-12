@@ -30,10 +30,12 @@ body {
 div.wrapper {
   position: relative;
   height: 100%;
+  min-height: 250px;
+  z-index: 0;
   div {
-    min-width: 330px;
     &.logo {
       text-align: center;
+      z-index: 1;
     }
     &.center {
       max-width: 600px;
@@ -44,6 +46,10 @@ div.wrapper {
       border: 1px solid transparent;
       border-radius: none;
       box-shadow: 0px 0px 5px 3px @shadow-color;
+      z-index: 1;
+      .form-group {
+        margin-bottom: 0px;
+      }
     }
     &.copy {
       font-size: .8em;
@@ -54,6 +60,7 @@ div.wrapper {
       position: absolute;
       bottom: 0;
       left: 0;
+      z-index: -1;
     }
   }
 }
