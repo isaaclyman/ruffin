@@ -1,21 +1,17 @@
-<head>
-	<title>Ruffin</title>
-	<link rel="icon" type="image/png" href="favico.png">
-</head>
-
 <template name="home">
-    <div class="wrapper container-fluid">
+    {{setTitle}}
 
-        <div class="logo row">
-            <img src="logo.png"/>
+    <div class="logo row">
+        <img src="logo.png"/>
+    </div>
+    <div class="center row">
+        <div class="col-xs-12">
+            <h1>Welcome to your new life.</h1>
+            <p>Ruffin will help you go outside, meet people, and seize the day.</p>
+            <p>Don't worry about logging in. You can't. There are no passwords or accounts here.</p>
+            <p>Instead, you'll need three things:</p>
         </div>
-        <div class="center row">
-            <div class="col-xs-12">
-                <h1>Welcome to your new life.</h1>
-                <p>Ruffin will help you go outside, meet people, and seize the day.</p>
-                <p>Don't worry about logging in. You can't. There are no passwords or accounts here.</p>
-                <p>Instead, you'll need three things:</p>
-            </div>
+        <form class="begin">
             <div class="form-group col-xs-12">
     	        <p>
                     A name (it doesn't have to be your real name).<br>
@@ -40,10 +36,10 @@
             <div class="form-group col-xs-12">
             	<button class="form-control btn btn-default">Okay, done.</button>
             </div>
-        </div>
-        <div class="copy">
-            &copy;2015 by Isaac Lyman.
-        </div>
-
+        </form>
     </div>
+    <div class="copy">
+        &copy;2015 by Isaac Lyman.
+    </div>
+
 </template>

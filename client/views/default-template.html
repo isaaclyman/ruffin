@@ -1,0 +1,13 @@
+<!-- Default layout. Other pages are inserted into the {{yield}} tag -->
+
+<template name="default">
+	<head>
+		<link rel="icon" type="image/png" href="favico.png">
+	</head>
+
+	<section class="main">
+		<div class="wrapper container-fluid">
+			{{> yield}}
+		</div>
+	</section>
+</template>
