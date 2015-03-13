@@ -12,6 +12,10 @@ Template.home.rendered = function() {
 }
 
 Template.home.events({
+	"change #nameInput": function (event) {
+		console.log(event);
+		return;
+	},
 	"submit .begin": function (event) {
 		var name  = event.target[0].value;
 		var zip   = event.target[1].value;
