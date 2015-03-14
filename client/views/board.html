@@ -1,0 +1,33 @@
+<template name="board">
+	{{setTitle board.id}}
+	<div class="center row">
+		
+		<div class="messages row">
+			<div class="window col-xs-12">
+				{{#each message}}
+					{{#if message.mine}}
+						<p class="left">{{message.text}}</p>
+					{{else}}
+						<p class="right">{{message.text}}</p>
+					{{/if}}
+				{{/each}}
+			</div>
+			<div class="add col-xs-8">
+				<input class="form-control" type="text" placeholder="Type a message here" />
+			</div>
+		</div>
+
+		<hr />
+
+		<div class="card row">
+			{{#each card}}
+				<div class="contact-box col-xs-4">
+					<h2>{{card.name}}</h2>
+					<img src="{{avatar}}" />
+					<button class="form-control">Talk</button>
+				</div>
+			{{/each}}
+		</div>
+
+	</div>
+</template>

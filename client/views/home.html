@@ -1,0 +1,45 @@
+<template name="home">
+    {{setTitle}}
+
+    <div class="logo row">
+        <img src="logo.png"/>
+    </div>
+    <div class="center row">
+        <div class="col-xs-12">
+            <h1>Welcome to your new life.</h1>
+            <p>Ruffin will help you go outside, meet people, and seize the day.</p>
+            <p>Don't worry about logging in. You can't. There are no passwords or accounts here.</p>
+            <p>Instead, you'll need three things:</p>
+        </div>
+        <form class="begin">
+            <div class="form-group col-xs-12">
+    	        <p>
+                    A name (it doesn't have to be your real name).<br>
+        	        <input class="form-control" id="nameInput" type="text" placeholder="Name" data-toggle="tooltip" data-original-title="Any combination of letters, numbers or symbols will work (28 characters maximum)." />
+                </p>
+            </div>
+            <div class="form-group col-xs-12">
+            	<p class="nomargin">
+            		A zip code, so we can get you in touch with people in your area.<br>
+                	<div class="right-addon">
+                        <i class="fa fa-check"></i>
+                		<input type="text" placeholder="Zip Code" class="form-control" id="zipInput" data-toggle="tooltip" data-original-title="American zip codes are five numerical digits." />
+                    </div>
+                </p>
+            </div>
+            <div class="form-group col-xs-12">
+            	<p>
+                    One or two words describing a hobby&mdash;for example, "rock climbing" or "chess".<br>
+                	<input class="form-control" id="hobbyInput" type="text" placeholder="Hobby" data-toggle="tooltip" data-original-title="Be as general as possible&mdash;&quot;weaving&quot; will work better than &quot;amateur basket weaving.&quot;" />
+                </p>
+            </div>
+            <div class="form-group col-xs-12">
+            	<button class="form-control btn btn-default">Okay, done.</button>
+            </div>
+        </form>
+    </div>
+    <div class="copy">
+        &copy;2015 by Isaac Lyman.
+    </div>
+
+</template>

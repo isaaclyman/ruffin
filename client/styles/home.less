@@ -5,6 +5,7 @@
 @border-color: #888888;
 @light-text: #444444;
 @shadow-color: #AAAAAA;
+@fa-check-color: #33CC33;
 
 // Fonts
 @font-face {
@@ -29,23 +30,26 @@ body {
 div.wrapper {
   position: relative;
   height: 100%;
+  min-height: 250px;
+  z-index: 0;
   div {
-    min-width: 330px;
-    width: 100%;
     &.logo {
       text-align: center;
+      z-index: 1;
     }
     &.center {
       max-width: 600px;
       min-width: 520px;
-      padding: 10px;
       padding-bottom: @footer-height;
-      padding-left: 25px;
       margin: 15px auto;
       background-color: @box-color;
       border: 1px solid transparent;
       border-radius: none;
       box-shadow: 0px 0px 5px 3px @shadow-color;
+      z-index: 1;
+      .form-group {
+        margin-bottom: 0px;
+      }
     }
     &.copy {
       font-size: .8em;
@@ -56,6 +60,7 @@ div.wrapper {
       position: absolute;
       bottom: 0;
       left: 0;
+      z-index: -1;
     }
   }
 }
@@ -66,4 +71,31 @@ h1 {
 
 p, label {
   font-family: "prociono", Georgia, serif;
+}
+
+p, h1, h2, h3, span {
+  &.center {
+    text-align: center;
+  }
+}
+
+div.right-addon {
+  position: relative;
+  input {
+    padding-right: 30px;
+  }
+  i.fa {
+    position: absolute;
+    padding: 10px;
+    pointer-events: none;
+    right: 0px;
+  }
+}
+
+.nomargin {
+  margin-bottom: 0px;
+}
+
+.fa-check {
+  color: @fa-check-color;
 }
