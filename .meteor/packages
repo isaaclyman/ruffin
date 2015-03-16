@@ -13,3 +13,4 @@ jquery
 meteor-platform
 twbs:bootstrap-noglyph
 aldeed:collection2
+accounts-password
