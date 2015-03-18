@@ -1,8 +1,13 @@
 if(Meteor.isClient) {
 
-// Enable tooltips
+// Enable tooltips, set default vars
 Template.home.rendered = function() {
 	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
+	Session.setDefault({
+		name: '',
+		zip: '',
+		hobby: ''
+	});
 };
 
 // Set page title dynamically
@@ -16,13 +21,17 @@ Handlebars.registerHelper("setTitle", function(title) {
 
 Template.home.events({
 	"keypress #nameInput": function (event) {
+		var name = event.currentTarget.value;
+		Session.set('name', name);
 		return;
 	},
 	"keypress #zipInput": function (event) {
+		Session.set('zip', event.currentTarget.value);
 		return;
 	},
 	"keypress #hobbyInput": function (event) {
-
+		Session.set('hobby', event.currentTarget.value);
+		return;
 	},
 	"submit #begin": function (event) {
 		var name  = event.target[0].value.toString();
@@ -48,6 +57,21 @@ Template.home.events({
 		Session.set('board', hobby);
 		Router.go('/zip/' + zip + '/board/' + hobby);
 		return false;
+	}
+});
+
+Template.home.helpers({
+	warning: function() {
+		return Session.get('warning');
+	},
+	name: function() {
+		return Session.get('name');
+	},
+	zip: function() {
+		return Session.get('zip');
+	},
+	hobby: function() {
+		return Session.get('hobby');
 	}
 });
 

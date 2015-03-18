@@ -23,7 +23,7 @@
             	<p class="nomargin">
             		A zip code, so we can get you in touch with people in your area.<br>
                 	<div class="right-addon">
-                        <i class="fa fa-check"></i>
+                        <i class="fa fa-check" style="display: {{warning.zipCheck}}" ></i>
                 		<input type="text" placeholder="Zip Code" class="form-control" id="zipInput" data-toggle="tooltip" data-original-title="American zip codes are five numerical digits." />
                     </div>
                     <p class="warning">{{warning.zip}}</p>
@@ -37,7 +37,7 @@
                 </p>
             </div>
             <div class="form-group col-xs-12">
-            	<button class="form-control btn btn-default">Okay, done.</button>
+            	<button class="form-control btn btn-default" disabled="{{warning.invalid}}">Okay, done.</button>
             </div>
         </form>
     </div>
