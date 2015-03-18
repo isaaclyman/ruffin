@@ -7,10 +7,10 @@
 natestrauser:font-awesome
 less
 iron:router
-mrt:livestamp-hs
 ayue:recaptcha
 jquery
 meteor-platform
 twbs:bootstrap-noglyph
 aldeed:collection2
 accounts-password
+mizzao:timesync

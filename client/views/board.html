@@ -1,10 +1,10 @@
 <template name="board">
-	{{setTitle board.id}}
+	{{setTitle board}}
 	<div class="center row">
 		
 		<div class="messages row">
 			<div class="window col-xs-12">
-				{{#each message}}
+				{{#each board_messages}}
 					{{#if message.mine}}
 						<p class="pull-left">
 							<span class="username">{{message.user}}:</span>
