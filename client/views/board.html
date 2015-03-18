@@ -6,14 +6,29 @@
 			<div class="window col-xs-12">
 				{{#each message}}
 					{{#if message.mine}}
-						<p class="left">{{message.text}}</p>
+						<p class="pull-left">
+							<span class="username">{{message.user}}:</span>
+							<span class="content">{{message.text}}</span>
+							<span class="timestamp">{{message.timestamp}}</span>
+						</p>
 					{{else}}
-						<p class="right">{{message.text}}</p>
+						<p class="pull-right">
+							<span class="username">{{message.user}}:</span>
+							<span class="content">{{message.text}}</span>
+							<span class="timestamp">{{message.timestamp}}</span>
+						</p>
 					{{/if}}
 				{{/each}}
 			</div>
 			<div class="add col-xs-8">
-				<input class="form-control" type="text" placeholder="Type a message here" />
+				<p class="pull-left row">
+					<span class="username">{{user.name}}:</span>
+					<input class="form-control" type="text" placeholder="Type a message here" />
+					<span class="timestamp">{{timestamp}}</span>
+				</p>
+				<p class="options row">
+					<button class="form-control">Leave a card</button>
+				</p>
 			</div>
 		</div>
 
