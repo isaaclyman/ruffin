@@ -3,7 +3,7 @@ People.attachSchema(new SimpleSchema({
 	name: {
 		type: String,
 		label: "Name",
-		max: 50
+		max: 36
 	},
 	zip: {
 		type: Number,

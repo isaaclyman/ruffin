@@ -22,6 +22,11 @@ Handlebars.registerHelper("setTitle", function(title) {
 Template.home.events({
 	"keypress #nameInput": function (event) {
 		var name = event.currentTarget.value;
+		if( name.length > 36 ) {
+			Session.set('warning.name', 'Too long.');
+		} else {
+			Session.set('warning.name', '');
+		}
 		return;
 	},
 	"change #nameInput": function (event) {
@@ -30,6 +35,13 @@ Template.home.events({
 	},
 	"keypress #zipInput": function (event) {
 		var zip = event.currentTarget.value;
+		if( zip.length > 5 ) {
+			Session.set('warning.zip', 'Five-digit American zip codes only.');
+		} else if ( zip.match(/[^0-9]/g) ) {
+			Session.set('warning.zip', 'Numbers only.');
+		} else {
+			Session.set('warning.zip', '');
+		}
 		return;
 	},
 	"change #zipInput": function (event) {
@@ -38,6 +50,11 @@ Template.home.events({
 	},
 	"keypress #hobbyInput": function (event) {
 		var hobby = event.currentTarget.value;
+		if( hobby.length > 200 ) {
+			Session.set('warning.hobby', '200 characters maximum');
+		} else {
+			Session.set('warning.hobby', '');
+		}
 		return;
 	},
 	"change #hobbyInput": function (event) {
