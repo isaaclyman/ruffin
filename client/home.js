@@ -22,14 +22,25 @@ Handlebars.registerHelper("setTitle", function(title) {
 Template.home.events({
 	"keypress #nameInput": function (event) {
 		var name = event.currentTarget.value;
-		Session.set('name', name);
+		return;
+	},
+	"change #nameInput": function (event) {
+		Session.set('name', event.currentTarget.value);
 		return;
 	},
 	"keypress #zipInput": function (event) {
+		var zip = event.currentTarget.value;
+		return;
+	},
+	"change #zipInput": function (event) {
 		Session.set('zip', event.currentTarget.value);
 		return;
 	},
 	"keypress #hobbyInput": function (event) {
+		var hobby = event.currentTarget.value;
+		return;
+	},
+	"change #hobbyInput": function (event) {
 		Session.set('hobby', event.currentTarget.value);
 		return;
 	},

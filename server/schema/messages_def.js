@@ -1,6 +1,6 @@
 //Messages = new Mongo.Collection("messages");
 Messages.attachSchema(new SimpleSchema({
-	board: {
+	board_id: {
 		type: String,
 		label: "Board"
 	},

@@ -13,26 +13,9 @@ Boards.allow({
 	}
 });
 
-// Allow messages to be created, updated and removed
+// Allow messages to be created
 Messages.allow({
 	'insert' : function(person, message) {
-		if( message.user === person.name ) {
-			return true;
-		} else {
-			return false;
-		}
-	},
-	'update' : function(person, message, fields, modifier) {
-		// if the user wants to modify their own message, I say let em
-		if( message.user === person.name &&
-			fields === ['text', 'timestamp'] &&
-			!!modifier.$set.text.toString() ) {
-				return true;
-		} else {
-			return false;
-		}
-	},
-	'remove' : function(person, message) {
 		if( message.user === person.name ) {
 			return true;
 		} else {
@@ -49,11 +32,5 @@ People.allow({
 		} else {
 			return false;
 		}
-	},
-	'update' : function() {
-		return true;
-	},
-	'remove' : function() {
-		return true;
 	}
 });
