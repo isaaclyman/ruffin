@@ -19,7 +19,7 @@ Meteor.methods({
 	*/
 	personExists: function(name) {
 		if(name) {
-			if( typeof Person.find({ name: name }).fields === 'undefined' ) {
+			if( Person.find({ name: name }).fetch().length === 0 ) {
 				return false;
 			} else {
 				return true;
@@ -27,15 +27,15 @@ Meteor.methods({
 		}
 	},
 	makeNewPerson: function(name, zip, hobby) {
-		if( !People.find({ name: name }) ) {
+		if( !Meteor.call('personExists', [name]) ) {
 			var person = {
 				name: name,
 				zip: zip,
 				hobby: hobby,
 				email: 'none'
 			};
-			var userID = People.insert(person);
-			return userID;
+			var _id = People.insert(person);
+			return _id;
 		} else {
 			return false;
 		}

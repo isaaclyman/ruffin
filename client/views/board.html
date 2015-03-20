@@ -1,8 +1,10 @@
 <template name="board">
 	{{setTitle board}}
 	<div class="center row">
-		
-		<div class="messages row">
+		<div class="board-title col-xs-12">
+			<h1>{{board}}</h1>
+		</div>
+		<div class="messages col-xs-12">
 			<div class="window col-xs-12">
 				{{#each board_messages}}
 					{{#if message.mine}}
@@ -34,7 +36,7 @@
 
 		<hr />
 
-		<div class="card row">
+		<div class="card col-xs-12">
 			{{#each card}}
 				<div class="contact-box col-xs-4">
 					<h2>{{card.name}}</h2>
