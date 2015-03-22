@@ -8,8 +8,8 @@ Meteor.publish('boards', function() {
 });
 
 // Publish (messages in board)
-Meteor.publish('messages', function(board) {
-	return Messages.find({ board: board });
+Meteor.publish('messages', function(board_path) {
+	return Messages.find({ board: board_path });
 });
 
 // Publish (people in board)

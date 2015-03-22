@@ -3,19 +3,28 @@ People.attachSchema(new SimpleSchema({
 	name: {
 		type: String,
 		label: "Name",
+		regEx: /^[a-zA-Z0-9]+$/,
+		min: 1,
 		max: 36
 	},
 	zip: {
 		type: Number,
 		label: "Zip Code",
-		max: 3
+		regEx: /^[0-9]{3}$/,
+		min: 000,
+		max: 999
 	},
 	hobbies: {
 		type: [String],
-		label: "Hobbies"
+		label: "Hobbies",
+		regEx: /^[a-zA-Z0-9]+$/,
+		min: 1,
+		max: 200
 	},
 	email: {
 		type: String,
-		label: "Email"
+		label: "Email",
+		regEx: SimpleSchema.RegEx.Email,
+		optional: true
 	}
 }));

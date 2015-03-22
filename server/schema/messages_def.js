@@ -13,7 +13,7 @@ Messages.attachSchema(new SimpleSchema({
 		label: "Text"
 	},
 	timestamp: {
-		type: String,
+		type: Date,
 		label: "Timestamp"
 	}
 }));

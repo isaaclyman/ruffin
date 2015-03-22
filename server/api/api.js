@@ -19,7 +19,7 @@ Meteor.methods({
 	*/
 	personExists: function(name) {
 		if(name) {
-			if( Person.find({ name: name }).fetch().length === 0 ) {
+			if( People.find({ name: name }).fetch().length === 0 ) {
 				return false;
 			} else {
 				return true;
@@ -27,12 +27,11 @@ Meteor.methods({
 		}
 	},
 	makeNewPerson: function(name, zip, hobby) {
-		if( !Meteor.call('personExists', [name]) ) {
+		if( !Meteor.call('personExists', name) ) {
 			var person = {
 				name: name,
 				zip: zip,
-				hobby: hobby,
-				email: 'none'
+				hobbies: [hobby]
 			};
 			var _id = People.insert(person);
 			return _id;
@@ -45,8 +44,16 @@ Meteor.methods({
 	*/
 	findBoard: function(board_path) {
 		if( board_path ) {
-			var transformedPath = Meteor.call('transformName', [board_path]);
+			var transformedPath = Meteor.call('transformName', board_path);
 			return Boards.find({ board: transformedPath });
+		} else {
+			return false;
+		}
+	},
+	findBoardMessages: function(board_path) {
+		if( board_path && Number(board_path) !== 'NaN' ) {
+			var board = Number(board_path);
+			return Boards.find({ board: board_path });
 		} else {
 			return false;
 		}
@@ -59,6 +66,6 @@ Meteor.methods({
 		return newName = name.toString()
 							.trim()
 							.toLowerCase()
-							.replace(/[^\w]/g, '');
+							.replace(/[^\w]|_/g, '');
 	}
 });
