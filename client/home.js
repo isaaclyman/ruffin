@@ -1,5 +1,3 @@
-if(Meteor.isClient) {
-
 // Enable tooltips, set default vars
 Template.home.rendered = function() {
 	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
@@ -102,5 +100,3 @@ Template.home.helpers({
 		return Session.get('hobby');
 	}
 });
-
-}

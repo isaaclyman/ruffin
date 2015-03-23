@@ -24,7 +24,8 @@ Boards.attachSchema(new SimpleSchema({
 	description: {
 		type: String,
 		label: "Description",
-		max: 140
+		max: 140,
+		optional: true
 	},
 	createdDate: {
 		type: Date,

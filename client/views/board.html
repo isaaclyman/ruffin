@@ -1,37 +1,58 @@
 <template name="board">
 	{{setTitle board}}
 	<div class="center row">
-		<div class="board-title col-xs-12">
+		<div class="board-title col-xs-9">
 			<h1>{{board}}</h1>
+		</div>
+		<div class="date col-xs-3">
+			<p>{{date}}</p>
+		</div>
+		<div class="description col-xs-12">
+			{{#if description}}
+				<p>{{description}}</p>
+			{{else}}
+				<div class="input-group break">
+					<input class="form-control" id="descriptionInput" type="text" placeholder="Enter a description for this board" aria-describedby="descriptionBtn" />
+					<span class="input-group-addon btn btn-default" id="descriptionBtn">Submit</span>
+				</div>
+			{{/if}}
 		</div>
 		<div class="messages col-xs-12">
 			<div class="window col-xs-12">
 				{{#each board_messages}}
-					{{#if message.mine}}
+					{{#if mine}}
 						<p class="pull-left">
-							<span class="username">{{message.user}}:</span>
-							<span class="content">{{message.text}}</span>
-							<span class="timestamp">{{message.timestamp}}</span>
+							<span class="username">{{user}}:</span>
+							<span class="content">{{text}}</span>
+							<span class="timestamp">{{timestamp}}</span>
 						</p>
 					{{else}}
 						<p class="pull-right">
-							<span class="username">{{message.user}}:</span>
-							<span class="content">{{message.text}}</span>
-							<span class="timestamp">{{message.timestamp}}</span>
+							<span class="username">{{user}}:</span>
+							<span class="content">{{text}}</span>
+							<span class="timestamp">{{timestamp}}</span>
 						</p>
 					{{/if}}
 				{{/each}}
 			</div>
-			<div class="add col-xs-8">
-				<p class="pull-left row">
-					<span class="username">{{user.name}}:</span>
+
+			<hr />
+
+			<div class="add col-xs-12">
+				<p class="row">
+					<span class="username">{{username}} at {{time}}:</span>
 					<input class="form-control" type="text" placeholder="Type a message here" />
-					<span class="timestamp">{{timestamp}}</span>
-				</p>
-				<p class="options row">
-					<button class="form-control">Leave a card</button>
 				</p>
 			</div>
+		</div>
+
+		<hr />
+
+		<div class="options col-xs-12">
+			<p class="options col-xs-12">
+				<button class="form-control btn btn-default break">Leave a card</button>
+				<button class="form-control btn btn-default">Create an event</button>
+			</p>
 		</div>
 
 		<hr />
