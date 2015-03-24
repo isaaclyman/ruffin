@@ -4,8 +4,8 @@
 		<div class="board-title col-xs-9">
 			<h1>{{board}}</h1>
 		</div>
-		<div class="date col-xs-3">
-			<p>{{date}}</p>
+		<div class="info col-xs-3">
+			<p><button class="btn btn-warning">Info</button></p>
 		</div>
 		<div class="description col-xs-12">
 			{{#if description}}
@@ -41,7 +41,10 @@
 			<div class="add col-xs-12">
 				<p class="row">
 					<span class="username">{{username}} at {{time}}:</span>
-					<input class="form-control" type="text" placeholder="Type a message here" />
+					<div class="input-group">
+						<input class="form-control" type="text" placeholder="Type a message here" id="messageInput" aria-describedby="descriptionBtn" />
+						<span class="input-group-addon btn btn-default" id="messageBtn">Post</span>
+					</div>
 				</p>
 			</div>
 		</div>
@@ -50,8 +53,8 @@
 
 		<div class="options col-xs-12">
 			<p class="options col-xs-12">
-				<button class="form-control btn btn-default break">Leave a card</button>
-				<button class="form-control btn btn-default">Create an event</button>
+				<button class="form-control btn btn-primary break" data-toggle="tooltip" data-original-title="Leave contact information for others on this board">Leave a card</button>
+				<button class="form-control btn btn-primary" data-toggle="tooltip">Create an event</button>
 			</p>
 		</div>
 
@@ -60,8 +63,9 @@
 		<div class="card col-xs-12">
 			{{#each card}}
 				<div class="contact-box col-xs-4">
-					<h2>{{card.name}}</h2>
-					<img src="{{avatar}}" />
+					<h2>{{name}}</h2>
+					<p>Available:</p>
+					<p>{{availability}}</p>
 					<button class="form-control">Talk</button>
 				</div>
 			{{/each}}
