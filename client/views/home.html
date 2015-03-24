@@ -14,7 +14,7 @@
         <form id="begin">
             <div class="form-group col-xs-12">
     	        <p>
-                    A name (it doesn't have to be your real name).<br>
+                    A name (a fake name is fine, or leave a blank to just explore).<br>
         	        <input class="form-control" id="nameInput" type="text" placeholder="Name" data-toggle="tooltip" data-original-title="Any combination of letters, numbers or symbols will work (36 characters maximum)." value="{{name}}"/>
                     <p class="warning">{{warning.name}}</p>
                 </p>
@@ -23,7 +23,9 @@
             	<p class="nomargin">
             		A zip code, so we can get you in touch with people in your area.<br>
                 	<div class="right-addon">
-                        <i class="fa fa-check" style="display: {{warning.zipCheck}}" ></i>
+                        {{#if zipPerfect}}
+                            <i class="fa fa-check"></i>
+                        {{/if}}
                 		<input type="text" placeholder="Zip Code" class="form-control" id="zipInput" data-toggle="tooltip" data-original-title="American zip codes are five numerical digits." value="{{zip}}"/>
                     </div>
                     <p class="warning">{{warning.zip}}</p>
@@ -37,7 +39,7 @@
                 </p>
             </div>
             <div class="form-group col-xs-12">
-            	<button class="form-control btn btn-default" disabled="{{warning.invalid}}">Okay, done.</button>
+            	<button class="form-control btn btn-default" disabled="{{!submittable}}">Okay, done.</button>
             </div>
         </form>
     </div>

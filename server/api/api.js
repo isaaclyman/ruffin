@@ -22,10 +22,13 @@ Meteor.methods({
 			board.hobby.toString().length <= 200 &&
 			!board.hobby.toString().match(/[^\w]|_/g) &&
 			board.zip.toString().length === 5 &&
-			!board.zip.toString().match(/[^0-9]/g) ) {
+			!board.zip.toString().match(/[^0-9]/g &&
+			!Boards.findOne({ board: board }).length > 0 ) ) {
 				board.zip = Number(board.zip.toString().substring(0,3));
 				board.createdDate = (new Date).toTimeString();
-				Boards.insert(board);
+				return Boards.insert(board);
+		} else {
+			return false;
 		}
 	},
 	getBoardDescription: function(board_id) {
@@ -37,7 +40,7 @@ Meteor.methods({
 		}
 	},
 	addBoardDescription: function(board_id, description) {
-		if(board_id && description) {
+		if(board_id && description && !Boards.findOne({ _id: board_id }).description ) {
 			description = Meteor.call('transformName', description);
 			Boards.update({ _id: board_id }, {$set: {description:description} });
 		} else {

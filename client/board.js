@@ -11,7 +11,7 @@ Template.board.rendered = function () {
 Template.board.events({
 	"click #descriptionBtn" : function (event) {
 		var description = $('#descriptionInput').value;
-		Meteor.call('addBoardDescription', !!boardID, description); //TODO
+		Meteor.call('addBoardDescription', Session.get('board_id'), description); //TODO
 	}
 });
 

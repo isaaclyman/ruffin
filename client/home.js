@@ -4,7 +4,11 @@ Template.home.rendered = function() {
 	Session.setDefault({
 		name: '',
 		zip: '',
-		hobby: ''
+		hobby: '',
+		warning_name: '',
+		warning_zip: '',
+		zipPerfect: false,
+		warning_hobby: ''
 	});
 };
 
@@ -21,9 +25,9 @@ Template.home.events({
 	"keypress #nameInput": function (event) {
 		var name = event.currentTarget.value;
 		if( name.length > 36 ) {
-			Session.set('warning.name', 'Too long.');
+			Session.set('warning_name', 'Too long.');
 		} else {
-			Session.set('warning.name', '');
+			Session.set('warning_name', '');
 		}
 		return;
 	},
@@ -34,11 +38,17 @@ Template.home.events({
 	"keypress #zipInput": function (event) {
 		var zip = event.currentTarget.value;
 		if( zip.length > 5 ) {
-			Session.set('warning.zip', 'Five-digit American zip codes only.');
-		} else if ( zip.match(/[^0-9]/g) ) {
-			Session.set('warning.zip', 'Numbers only.');
+			Session.set('warning_zip', 'Five-digit American zip codes only.');
+			Session.set('zipPerfect', false);
+		} else if ( !zip.match(/^[0-9]+$/) ) {
+			Session.set('warning_zip', 'Numbers only.');
+			Session.set('zipPerfect', false);
+		} else if ( zip.match(/^[0-9]{5}$/) ) {
+			Session.set('warning_zip', '');
+			Session.set('zipPerfect', true);
 		} else {
-			Session.set('warning.zip', '');
+			Session.set('warning_zip', '');
+			Session.set('zipPerfect', false);
 		}
 		return;
 	},
@@ -49,9 +59,9 @@ Template.home.events({
 	"keypress #hobbyInput": function (event) {
 		var hobby = event.currentTarget.value;
 		if( hobby.length > 200 ) {
-			Session.set('warning.hobby', '200 characters maximum');
+			Session.set('warning_hobby', '200 characters maximum');
 		} else {
-			Session.set('warning.hobby', '');
+			Session.set('warning_hobby', '');
 		}
 		return;
 	},
@@ -68,15 +78,15 @@ Template.home.events({
 					.toLowerCase()
 					.replace(/[^\w]|_/g, '');
 		var board = zip + hobby;
-		if( !Boards.find({ board: board }) ) {
+		if( !Meteor.call('boardExists', board) ) {
 			var newBoard = {
 				board: board,
 				hobby: hobby,
-				zip  : zip,
-				description: '',  //TODO
-				createdDate: null //TODO
+				zip  : zip
 			}
-			Meteor.makeNewBoard(newBoard);
+			Session.set('board_id', Meteor.call('makeNewBoard', newBoard));
+		} else {
+			Session.set('board_id', Meteor.call('boardExists', board));
 		}
 		Session.set('user', name);
 		Session.set('zip', zip);
@@ -86,9 +96,23 @@ Template.home.events({
 	}
 });
 
+var submittable = function () {
+	return (Session.get('warning_name') === '' &&
+			Session.get('warning_zip') === '' &&
+			Session.get('warning.hobby') === '' &&
+			Session.get('zip') !== '' &&
+			Session.get('hobby') !== '');
+};
+
 Template.home.helpers({
-	warning: function() {
-		return Session.get('warning');
+	warning_name: function() {
+		return Session.get('warning_name');
+	},
+	warning_zip: function() {
+		return Session.get('warning_zip');
+	},
+	warning_hobby: function() {
+		return Session.get('warning_hobby');
 	},
 	name: function() {
 		return Session.get('name');
@@ -96,7 +120,13 @@ Template.home.helpers({
 	zip: function() {
 		return Session.get('zip');
 	},
+	zipPerfect: function() {
+		return Session.get('zipPerfect');
+	},
 	hobby: function() {
 		return Session.get('hobby');
+	},
+	submittable: function() {
+		return submittable();
 	}
 });
