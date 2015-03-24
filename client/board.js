@@ -4,6 +4,10 @@ Meteor.startup(function() {
 	}, 20000);
 });
 
+Template.board.rendered = function () {
+	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
+};
+
 Template.board.events({
 	"click #descriptionBtn" : function (event) {
 		var description = $('#descriptionInput').value;
