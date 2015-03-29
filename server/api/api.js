@@ -75,23 +75,53 @@ Meteor.methods({
 	/*
 		MESSAGES
 	*/
-	findBoard: function(board_path) {
-		if( board_path ) {
-			var transformedPath = Meteor.call('transformName', board_path);
-			return Boards.find({ board: transformedPath });
+	addMessage: function(user_id, board_id, text) {
+		// Make sure the user is who they say they are
+		if (board_id && 
+			user_id && 
+			text && 
+			text !== '' && 
+			user_id === Meteor.user()) {
+				var message = {
+					user: user_id,
+					name: getName(user_id),
+					text: text,
+					timestamp: Date.now()
+				};
+				Boards.update({ _id: board_id }, 
+							  { $push: { messages: message } });
+				return true;
 		} else {
 			return false;
 		}
 	},
-	findBoardMessages: function(board_path) {
-		if( board_path && Number(board_path) !== 'NaN' ) {
-			var board = Number(board_path);
-			return Boards.find({ board: board_path });
+	editMessage: function(user_id, board_id, timestamp, text) {
+		if (user_id &&
+			user_id === Meteor.user() &&
+			board_id &&
+			timestamp &&
+			text &&
+			text !== '') {
+				Boards.update({ _id: board_id, "messages.user": user_id, "messages.timestamp": timestamp },
+							  { $set: { "messages.$.text" : text } });
+				return true;
 		} else {
 			return false;
 		}
 	},
-
+	deleteMessage: function(user_id, board_id, timestamp) {
+		if (user_id &&
+			user_id === Meteor.user() &&
+			board_id &&
+			timestamp &&
+			text) {
+				Boards.update({ _id: board_id },
+							  { $pull: { messages : { user: user_id, timestamp: timestamp } } });
+				return true;
+		} else {
+			return false;
+		}
+	},
 	/*
 		AUXILIARY FUNCTIONS
 	*/
@@ -102,3 +132,13 @@ Meteor.methods({
 							.replace(/[^\w]|_/g, '');
 	}
 });
+
+
+/*
+	PRIVATE METHODS
+*/
+var getName = function(user_id) {
+	if(user_id) {
+		return People.findOne({ _id: user_id }).name;
+	}
+};

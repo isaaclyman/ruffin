@@ -1,3 +1,28 @@
+//Message is a property of Boards
+Message = new SimpleSchema({
+	user: {
+		type: String,
+		label: "User"
+	},
+	name: {
+		type: String,
+		label: "Name",
+		max: 36
+	},
+	text: {
+		type: String,
+		label: "Text"
+	},
+	edited: {
+		type: Boolean,
+		label: "Edited"
+ 	},
+	timestamp: {
+		type: Date,
+		label: "Timestamp"
+	}
+});
+
 //Boards = new Mongo.Collection("boards");
 Boards.attachSchema(new SimpleSchema({
 	board: {
@@ -25,6 +50,17 @@ Boards.attachSchema(new SimpleSchema({
 		type: String,
 		label: "Description",
 		max: 140,
+		optional: true
+	},
+	tags: {
+		type: [String],
+		label: "Tags",
+		max: 36,
+		optional: true
+	},
+	messages: {
+		type: [Message],
+		label: "Messages",
 		optional: true
 	},
 	createdDate: {

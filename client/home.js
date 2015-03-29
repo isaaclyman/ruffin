@@ -22,26 +22,23 @@ Handlebars.registerHelper("setTitle", function(title) {
 })
 
 Template.home.events({
-	"keypress #nameInput": function (event) {
+	"keyup #nameInput": function (event) {
 		var name = event.currentTarget.value;
 		if( name.length > 36 ) {
-			Session.set('warning_name', 'Too long.');
+			Session.set('warning_name', 'This name is too long.');
 		} else {
 			Session.set('warning_name', '');
 		}
+		Session.set('name', name);
 		return;
 	},
-	"change #nameInput": function (event) {
-		Session.set('name', event.currentTarget.value);
-		return;
-	},
-	"keypress #zipInput": function (event) {
+	"keyup #zipInput": function (event) {
 		var zip = event.currentTarget.value;
-		if( zip.length > 5 ) {
-			Session.set('warning_zip', 'Five-digit American zip codes only.');
+		if( zip.length > 5 && zip.match(/^[0-9]+$/) ) {
+			Session.set('warning_zip', 'Five-digit zip codes only.');
 			Session.set('zipPerfect', false);
-		} else if ( !zip.match(/^[0-9]+$/) ) {
-			Session.set('warning_zip', 'Numbers only.');
+		} else if ( zip.length > 0 && !zip.match(/^[0-9]+$/) ) {
+			Session.set('warning_zip', 'Only numbers are allowed.');
 			Session.set('zipPerfect', false);
 		} else if ( zip.match(/^[0-9]{5}$/) ) {
 			Session.set('warning_zip', '');
@@ -50,23 +47,17 @@ Template.home.events({
 			Session.set('warning_zip', '');
 			Session.set('zipPerfect', false);
 		}
+		Session.set('zip', zip);
 		return;
 	},
-	"change #zipInput": function (event) {
-		Session.set('zip', event.currentTarget.value);
-		return;
-	},
-	"keypress #hobbyInput": function (event) {
+	"keyup #hobbyInput": function (event) {
 		var hobby = event.currentTarget.value;
 		if( hobby.length > 200 ) {
-			Session.set('warning_hobby', '200 characters maximum');
+			Session.set('warning_hobby', 'This hobby is too long.');
 		} else {
 			Session.set('warning_hobby', '');
 		}
-		return;
-	},
-	"change #hobbyInput": function (event) {
-		Session.set('hobby', event.currentTarget.value);
+		Session.set('hobby', hobby);
 		return;
 	},
 	"submit #begin": function (event) {
@@ -96,13 +87,15 @@ Template.home.events({
 	}
 });
 
-var submittable = function () {
-	return (Session.get('warning_name') === '' &&
-			Session.get('warning_zip') === '' &&
-			Session.get('warning.hobby') === '' &&
-			Session.get('zip') !== '' &&
-			Session.get('hobby') !== '');
-};
+Tracker.autorun(function () {
+	var sub = (Session.get('warning_name') === '' &&
+			   Session.get('warning_zip') === '' &&
+			   Session.get('warning_hobby') === '' &&
+			   Session.get('zip') !== '' &&
+			   Session.get('zipPerfect') &&
+			   Session.get('hobby') !== '');
+	Session.set('submittable', sub);
+});
 
 Template.home.helpers({
 	warning_name: function() {
@@ -117,6 +110,10 @@ Template.home.helpers({
 	name: function() {
 		return Session.get('name');
 	},
+	namePerfect: function() {
+		return Session.get('name').length > 0 && 
+			   Session.get('warning_name').length === 0;
+	},
 	zip: function() {
 		return Session.get('zip');
 	},
@@ -126,7 +123,11 @@ Template.home.helpers({
 	hobby: function() {
 		return Session.get('hobby');
 	},
+	hobbyPerfect: function() {
+		return Session.get('hobby').length > 0 &&
+			   Session.get('warning_hobby').length === 0;
+	},
 	submittable: function() {
-		return submittable();
+		return !Session.get('submittable') ? {'disabled': true} : {};
 	}
 });

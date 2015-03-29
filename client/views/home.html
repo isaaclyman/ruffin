@@ -4,7 +4,7 @@
     <div class="logo row">
         <img src="logo.png"/>
     </div>
-    <div class="center row">
+    <div class="center row home">
         <div class="col-xs-12">
             <h1>Welcome to your new life.</h1>
             <p>Ruffin will help you go outside, meet people, and seize the day.</p>
@@ -13,33 +13,41 @@
         </div>
         <form id="begin">
             <div class="form-group col-xs-12">
-    	        <p>
-                    A name (a fake name is fine, or leave a blank to just explore).<br>
-        	        <input class="form-control" id="nameInput" type="text" placeholder="Name" data-toggle="tooltip" data-original-title="Any combination of letters, numbers or symbols will work (36 characters maximum)." value="{{name}}"/>
-                    <p class="warning">{{warning.name}}</p>
+    	        <p class="nomargin">
+                    A name (a fake name is fine, or leave a blank to just explore). <span class="warning">{{warning_name}}</span>
+                    <div class="right-addon">
+                        {{#if namePerfect}}
+                            <i class="fa fa-check"></i>
+                        {{/if}}
+                        <input class="form-control" id="nameInput" type="text" placeholder="Name" data-toggle="tooltip" data-original-title="Any combination of letters, numbers or symbols will work (36 characters maximum)." />
+                    </div>
                 </p>
             </div>
             <div class="form-group col-xs-12">
             	<p class="nomargin">
-            		A zip code, so we can get you in touch with people in your area.<br>
+            		A zip code, so we can get you in touch with people in your area. <span class="warning">{{warning_zip}}</span>
                 	<div class="right-addon">
                         {{#if zipPerfect}}
                             <i class="fa fa-check"></i>
                         {{/if}}
-                		<input type="text" placeholder="Zip Code" class="form-control" id="zipInput" data-toggle="tooltip" data-original-title="American zip codes are five numerical digits." value="{{zip}}"/>
+                		<input type="text" placeholder="Zip Code" class="form-control" id="zipInput" data-toggle="tooltip" data-original-title="American zip codes are five numerical digits." />
                     </div>
-                    <p class="warning">{{warning.zip}}</p>
                 </p>
             </div>
             <div class="form-group col-xs-12">
             	<p>
-                    A hobby&mdash;for example, "rock climbing" or "chess".<br>
-                	<input class="form-control" id="hobbyInput" type="text" placeholder="Hobby" data-toggle="tooltip" data-original-title="Be as general as possible&mdash;&quot;weaving&quot; will work better than &quot;amateur basket weaving.&quot;" value="{{hobby}}"/>
-                    <p class="warning">{{warning.hobby}}</p>
+                    A hobby&mdash;for example, "rock climbing" or "chess".
+                    <span class="warning">{{warning_hobby}}</span>
+                	<div class="right-addon">
+                        {{#if hobbyPerfect}}
+                            <i class="fa fa-check"></i>
+                        {{/if}}
+                        <input class="form-control" id="hobbyInput" type="text" placeholder="Hobby" data-toggle="tooltip" data-original-title="Be as general as possible&mdash;&quot;weaving&quot; will work better than &quot;amateur basket weaving.&quot;" />
+                    </div>
                 </p>
             </div>
             <div class="form-group col-xs-12">
-            	<button class="form-control btn btn-default" disabled="{{!submittable}}">Okay, done.</button>
+                <button class="form-control btn btn-default" {{submittable}}>Okay, done.</button>
             </div>
         </form>
     </div>
