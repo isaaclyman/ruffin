@@ -2,6 +2,9 @@
 	ALLOW
 */
 
+// VALIDATION IS HANLDED SERVER-SIDE
+// This is here for reactive optimization
+
 // Allow boards to be created
 Boards.allow({
 	'insert' : function(board) {

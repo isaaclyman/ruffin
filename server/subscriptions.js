@@ -7,11 +7,6 @@ Meteor.publish('boards', function() {
 	return Boards.find();
 });
 
-// Publish (messages in board)
-Meteor.publish('messages', function(board_path) {
-	return Messages.find({ board: board_path });
-});
-
 // Publish (people in board)
 Meteor.publish('people', function(board) {
 	return People.find({ hobbies: board });
