@@ -14,6 +14,7 @@ Meteor.methods({
 				}
 			});
 		} else {
+			Meteor.error('API:Called boardExists with invalid arguments');
 			return false;
 		}
 	},
@@ -24,16 +25,23 @@ Meteor.methods({
 			board.hobby.toString().length <= 200 &&
 			board.hobby.toString().match(/^[\w]+$/) &&
 			board.zip.toString().length >= 3 &&
-			board.zip.toString().match(/^[0-9]+$/) &&
-			Boards.find({ board: board.board }).fetch().length === 0 ) {
-				var newBoard = {
-					board: board.board,
-					hobby: board.hobby
-				};
-				newBoard.zip = Number(board.zip.toString().substring(0,3));
-				newBoard.createdDate = Date.now();
-				return Boards.insert(newBoard);
+			board.zip.toString().match(/^[0-9]+$/) ) {
+				Meteor.call('boardExists', board.board, function(error, result) {
+					if(!result) {
+						var newBoard = {
+							board: board.board,
+							hobby: board.hobby
+						};
+						newBoard.zip = Number(board.zip.toString().substring(0,3));
+						newBoard.createdDate = Date.now();
+						return Boards.insert(newBoard);		
+					} else {
+						Meteor.call('API:Called makeNewBoard for a board that already exists');
+						return false;
+					}
+				});
 		} else {
+			Meteor.error('API:Called makeNewBoard with invalid arguments');
 			return false;
 		}
 	},
@@ -42,6 +50,7 @@ Meteor.methods({
 			var board = Boards.findOne({ _id: board_id.toString() });
 			return board.description; 
 		} else {
+			Meteor.error('API:Called getBoardDescription with invalid arguments');
 			return false;
 		}
 	},
@@ -53,6 +62,7 @@ Meteor.methods({
 				return true;
 			});
 		} else {
+			Meteor.error('API:Called addBoardDescription with invalid arguments');
 			return false;
 		}
 	},
@@ -84,10 +94,12 @@ Meteor.methods({
 						};
 						return People.insert(newPerson);
 					} else {
+						Meteor.error('API:Called makeNewPerson for a person that already exists');
 						return false;
 					}
 				});
 		} else {
+			Meteor.error('API:Called makeNewPerson with invalid arguments');
 			return false;
 		}
 	},
@@ -111,6 +123,7 @@ Meteor.methods({
 							  { $push: { messages: message } });
 				return true;
 		} else {
+			Meteor.error('API:Called addMessage with invalid arguments');
 			return false;
 		}
 	},
@@ -125,6 +138,7 @@ Meteor.methods({
 							  { $set: { "messages.$.text" : text } });
 				return true;
 		} else {
+			Meteor.error('API:Called editMessage with invalid arguments');
 			return false;
 		}
 	},
@@ -138,6 +152,7 @@ Meteor.methods({
 							  { $pull: { messages : { user: user_id, timestamp: timestamp } } });
 				return true;
 		} else {
+			Meteor.error('API:Called deleteMessage with invalid arguments');
 			return false;
 		}
 	},
@@ -159,5 +174,7 @@ Meteor.methods({
 var getName = function(user_id) {
 	if(user_id) {
 		return People.findOne({ _id: user_id }).name;
+	} else {
+		Meteor.error('API:Called getName with invalid arguments');
 	}
 };
