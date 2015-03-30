@@ -29,7 +29,7 @@ Boards.allow({
 });
 
 // Allow messages to be created, updated and removed
-// MOVED TO BOARD: NEED TO IMPLEMENT
+// ^ MOVED TO BOARD: NEED TO IMPLEMENT ^
 
 // Allow users to be created and updated
 People.allow({

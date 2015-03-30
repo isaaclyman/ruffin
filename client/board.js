@@ -22,6 +22,9 @@ Template.board.helpers({
 		return originalBoard.charAt(0).toUpperCase() + 
 				originalBoard.slice(1);
 	},
+	description: function() {
+		return false;
+	},
 	username: function() {
 		var originalName = Session.get('username');
 		return originalName.charAt(0).toUpperCase() + 

@@ -20,14 +20,14 @@ Meteor.methods({
 	makeNewBoard: function(board) {
 		if(board.board && board.hobby && board.zip &&
 			board.board.toString().length <= 203 &&
-			!board.board.toString().match(/[^\w]|_/g) &&
+			board.board.toString().match(/^[\w]+$/) &&
 			board.hobby.toString().length <= 200 &&
-			!board.hobby.toString().match(/[^\w]|_/g) &&
-			board.zip.toString().length === 5 &&
-			!board.zip.toString().match(/[^0-9]/g &&
-			!Boards.findOne({ board: board }).length > 0 ) ) {
+			board.hobby.toString().match(/^[\w]+$/) &&
+			board.zip.toString().length >= 3 &&
+			board.zip.toString().match(/^[0-9]+$/) &&
+			Boards.find({ board: board }).fetch().length === 0 ) {
 				board.zip = Number(board.zip.toString().substring(0,3));
-				board.createdDate = (new Date).toTimeString();
+				board.createdDate = Date.now();
 				return Boards.insert(board);
 		} else {
 			return false;

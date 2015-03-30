@@ -81,22 +81,6 @@ Template.home.events({
 				});
 			}
 		});
-
-		// Create board if it doesn't exist
-		Meteor.call('boardExists', board, function(error, result) {
-			if(!result) {
-				var newBoard = {
-					board: board,
-					hobby: hobby,
-					zip  : zip
-				}
-				Meteor.call('makeNewBoard', newBoard, function(error, result) {
-					Session.set('board_id', result);
-				});
-			} else {
-				Session.set('board_id', result);
-			}
-		});
 		
 		Session.set('user', name);
 		Session.set('zip', zip);
