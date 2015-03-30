@@ -18,7 +18,7 @@ Template.board.events({
 
 Template.board.helpers({ 
 	board: function() {
-		var originalBoard = Session.get('board');
+		var originalBoard = Session.get('hobby');
 		return originalBoard.charAt(0).toUpperCase() + 
 				originalBoard.slice(1);
 	},

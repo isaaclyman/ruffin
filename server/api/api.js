@@ -14,7 +14,7 @@ Meteor.methods({
 				}
 			});
 		} else {
-			Meteor.error('API:Called boardExists with invalid arguments');
+			throw new Meteor.Error('API','Called boardExists with invalid arguments');
 			return false;
 		}
 	},
@@ -36,12 +36,12 @@ Meteor.methods({
 						newBoard.createdDate = Date.now();
 						return Boards.insert(newBoard);		
 					} else {
-						Meteor.call('API:Called makeNewBoard for a board that already exists');
+						Meteor.call('API','Called makeNewBoard for a board that already exists');
 						return false;
 					}
 				});
 		} else {
-			Meteor.error('API:Called makeNewBoard with invalid arguments');
+			throw new Meteor.Error('API','Called makeNewBoard with invalid arguments');
 			return false;
 		}
 	},
@@ -50,7 +50,7 @@ Meteor.methods({
 			var board = Boards.findOne({ _id: board_id.toString() });
 			return board.description; 
 		} else {
-			Meteor.error('API:Called getBoardDescription with invalid arguments');
+			throw new Meteor.Error('API','Called getBoardDescription with invalid arguments');
 			return false;
 		}
 	},
@@ -62,7 +62,7 @@ Meteor.methods({
 				return true;
 			});
 		} else {
-			Meteor.error('API:Called addBoardDescription with invalid arguments');
+			throw new Meteor.Error('API','Called addBoardDescription with invalid arguments');
 			return false;
 		}
 	},
@@ -77,7 +77,7 @@ Meteor.methods({
 				return false;
 			}
 		} else {
-			Meteor.error('API:Called personExists with invalid arguments');
+			throw new Meteor.Error('API','Called personExists with invalid arguments');
 			return false;
 		}
 	},
@@ -97,12 +97,12 @@ Meteor.methods({
 						};
 						return People.insert(newPerson);
 					} else {
-						Meteor.error('API:Called makeNewPerson for a person that already exists');
+						throw new Meteor.Error('API','Called makeNewPerson for a person that already exists');
 						return false;
 					}
 				});
 		} else {
-			Meteor.error('API:Called makeNewPerson with invalid arguments');
+			throw new Meteor.Error('API','Called makeNewPerson with invalid arguments');
 			return false;
 		}
 	},
@@ -126,7 +126,7 @@ Meteor.methods({
 							  { $push: { messages: message } });
 				return true;
 		} else {
-			Meteor.error('API:Called addMessage with invalid arguments');
+			throw new Meteor.Error('API','Called addMessage with invalid arguments');
 			return false;
 		}
 	},
@@ -141,7 +141,7 @@ Meteor.methods({
 							  { $set: { "messages.$.text" : text } });
 				return true;
 		} else {
-			Meteor.error('API:Called editMessage with invalid arguments');
+			throw new Meteor.Error('API','Called editMessage with invalid arguments');
 			return false;
 		}
 	},
@@ -155,7 +155,7 @@ Meteor.methods({
 							  { $pull: { messages : { user: user_id, timestamp: timestamp } } });
 				return true;
 		} else {
-			Meteor.error('API:Called deleteMessage with invalid arguments');
+			throw new Meteor.Error('API','Called deleteMessage with invalid arguments');
 			return false;
 		}
 	},
@@ -178,6 +178,6 @@ var getName = function(user_id) {
 	if(user_id) {
 		return People.findOne({ _id: user_id }).name;
 	} else {
-		Meteor.error('API:Called getName with invalid arguments');
+		throw new Meteor.Error('API','Called getName with invalid arguments');
 	}
 };
