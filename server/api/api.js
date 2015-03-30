@@ -76,6 +76,9 @@ Meteor.methods({
 			} else {
 				return false;
 			}
+		} else {
+			Meteor.error('API:Called personExists with invalid arguments');
+			return false;
 		}
 	},
 	makeNewPerson: function(person) {
