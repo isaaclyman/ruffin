@@ -71,27 +71,32 @@ Template.home.events({
 		var board = zip + hobby;
 		
 		// Stop user if their name is taken
-		if( Meteor.call('personExists', name)) {
-			Session.set('warning_name', 'This name is taken.');
-			console.log('person taken');
-			return false;
-		} else {
-			var user_id = Meteor.call('makeNewPerson', name, zip, hobby);
-			Session.set('user_id', user_id);
-			console.log('user_id|', user_id);
-		}
+		Meteor.call('personExists', name, function(error, result) {
+			if(result) {
+				Session.set('warning_name', 'This name is taken.');
+				return false;	
+			} else {
+				Meteor.call('makeNewPerson', name, zip, hobby, function(error, result) {
+					Session.set('user_id', result);
+				});
+			}
+		});
 
 		// Create board if it doesn't exist
-		if( !Meteor.call('boardExists', board) ) {
-			var newBoard = {
-				board: board,
-				hobby: hobby,
-				zip  : zip
+		Meteor.call('boardExists', board, function(error, result) {
+			if(!result) {
+				var newBoard = {
+					board: board,
+					hobby: hobby,
+					zip  : zip
+				}
+				Meteor.call('makeNewBoard', newBoard, function(error, result) {
+					Session.set('board_id', result);
+				});
+			} else {
+				Session.set('board_id', result);
 			}
-			Session.set('board_id', Meteor.call('makeNewBoard', newBoard));
-		} else {
-			Session.set('board_id', Meteor.call('boardExists', board));
-		}
+		});
 		
 		Session.set('user', name);
 		Session.set('zip', zip);
@@ -125,8 +130,7 @@ Template.home.helpers({
 		return Session.get('name');
 	},
 	namePerfect: function() {
-		return Session.get('name') !== '' && 
-			   Session.get('warning_name') === '';
+		return Session.get('warning_name') === '';
 	},
 	zip: function() {
 		return Session.get('zip');

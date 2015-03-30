@@ -4,13 +4,15 @@ Meteor.methods({
 	*/
 	boardExists: function(board_path) {
 		if(board_path && board_path.toString().length <= 203) {
-			board_path = Meteor.call('transformName', board_path);
-			var board = Boards.findOne({ board: board_path });
-			if( board ) {
-				return board._id;
-			} else {
-				return false;
-			}
+			Meteor.call('transformName', board_path, function(error, result) {
+				board_path = result;
+				var board = Boards.findOne({ board: board_path });
+				if( board ) {
+					return board._id;
+				} else {
+					return false;
+				}
+			});
 		} else {
 			return false;
 		}
@@ -41,8 +43,11 @@ Meteor.methods({
 	},
 	addBoardDescription: function(board_id, description) {
 		if(board_id && description && !Boards.findOne({ _id: board_id }).description ) {
-			description = Meteor.call('transformName', description);
-			Boards.update({ _id: board_id }, {$set: {description:description} });
+			Meteor.call('transformName', description, function(error, result) {
+				description = result;
+				Boards.update({ _id: board_id }, {$set: {description:description} });
+				return true;
+			});
 		} else {
 			return false;
 		}
@@ -60,17 +65,19 @@ Meteor.methods({
 		}
 	},
 	makeNewPerson: function(name, zip, hobby) {
-		if( !Meteor.call('personExists', name) ) {
-			var person = {
-				name: name,
-				zip: zip,
-				hobbies: [hobby]
-			};
-			var _id = People.insert(person);
-			return _id;
-		} else {
-			return false;
-		}
+		Meteor.call('personExists', name, function(error, result) {
+			if(result) {
+				var person = {
+					name: name,
+					zip: zip,
+					hobbies: [hobby]
+				};
+				var _id = People.insert(person);
+				return _id;
+			} else {
+				return false;
+			}
+		});
 	},
 	/*
 		MESSAGES

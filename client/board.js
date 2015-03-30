@@ -1,4 +1,5 @@
 Meteor.startup(function() {
+	Session.set('rightnow', new Date());
 	setInterval(function() {
 		Session.set('rightnow', new Date());
 	}, 20000);
@@ -11,7 +12,7 @@ Template.board.rendered = function () {
 Template.board.events({
 	"click #descriptionBtn" : function (event) {
 		var description = $('#descriptionInput').value;
-		Meteor.call('addBoardDescription', Session.get('board_id'), description); //TODO
+		Meteor.call('addBoardDescription', Session.get('board_id'), description);
 	}
 });
 

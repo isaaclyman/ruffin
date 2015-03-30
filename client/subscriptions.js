@@ -16,17 +16,6 @@ Boards.allow({
 	}
 });
 
-// Allow messages to be created
-Messages.allow({
-	'insert' : function(person, message) {
-		if( message.user === person.name ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-});
-
 // Allow users to be created
 People.allow({
 	'insert' : function(name) {
