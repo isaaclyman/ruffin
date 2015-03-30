@@ -25,10 +25,14 @@ Meteor.methods({
 			board.hobby.toString().match(/^[\w]+$/) &&
 			board.zip.toString().length >= 3 &&
 			board.zip.toString().match(/^[0-9]+$/) &&
-			Boards.find({ board: board }).fetch().length === 0 ) {
-				board.zip = Number(board.zip.toString().substring(0,3));
-				board.createdDate = Date.now();
-				return Boards.insert(board);
+			Boards.find({ board: board.board }).fetch().length === 0 ) {
+				var newBoard = {
+					board: board.board,
+					hobby: board.hobby
+				};
+				newBoard.zip = Number(board.zip.toString().substring(0,3));
+				newBoard.createdDate = Date.now();
+				return Boards.insert(newBoard);
 		} else {
 			return false;
 		}
@@ -57,27 +61,35 @@ Meteor.methods({
 	*/
 	personExists: function(name) {
 		if(name) {
-			if( People.find({ name: name }).fetch().length === 0 ) {
-				return false;
-			} else {
+			if( People.find({ name: name }).fetch().length > 0 ) {
 				return true;
+			} else {
+				return false;
 			}
 		}
 	},
-	makeNewPerson: function(name, zip, hobby) {
-		Meteor.call('personExists', name, function(error, result) {
-			if(result) {
-				var person = {
-					name: name,
-					zip: zip,
-					hobbies: [hobby]
-				};
-				var _id = People.insert(person);
-				return _id;
-			} else {
-				return false;
-			}
-		});
+	makeNewPerson: function(person) {
+		if (person.name && person.zip && person.hobby &&
+			person.name.toString().length <= 36 &&
+			person.zip.toString().length >= 3 &&
+			person.zip.toString().match(/^[0-9]+$/) &&
+			person.board.toString().length <= 200 &&
+			person.board.toString().match(/^[\w]+$/) ) {
+				Meteor.call('personExists', person.name, function(error, result) {
+					if(!result) {
+						var newPerson = {
+							name  : person.name,
+							zip   : person.zip,
+							boards: [person.board]
+						};
+						return People.insert(newPerson);
+					} else {
+						return false;
+					}
+				});
+		} else {
+			return false;
+		}
 	},
 	/*
 		MESSAGES

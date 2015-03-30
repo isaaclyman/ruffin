@@ -61,7 +61,7 @@ Template.home.events({
 		return;
 	},
 	"submit #begin": function (event) {
-		var name  = event.target[0].value.toString();
+		var name  = event.target[0].value.toString().toLowerCase().trim();
 		var zip   = event.target[1].value.toString().substring(0,3);
 		var hobby = event.target[2].value
 					.toString()
@@ -76,7 +76,12 @@ Template.home.events({
 				Session.set('warning_name', 'This name is taken.');
 				return false;	
 			} else {
-				Meteor.call('makeNewPerson', name, zip, hobby, function(error, result) {
+				var newPerson = {
+					name: name,
+					zip: zip,
+					board: board
+				};
+				Meteor.call('makeNewPerson', newPerson, function(error, result) {
 					Session.set('user_id', result);
 				});
 			}
@@ -84,7 +89,8 @@ Template.home.events({
 		
 		Session.set('user', name);
 		Session.set('zip', zip);
-		Session.set('board', hobby);
+		Session.set('hobby', hobby);
+		Session.set('board', board);
 		Router.go('/region/' + zip + '/board/' + hobby);
 		return false;
 	}
