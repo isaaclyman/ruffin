@@ -33,7 +33,7 @@ Template.board.helpers({
 	time: function() {
 		var rightnow = Session.get('rightnow');
 		var seconds = rightnow.getSeconds();
-		var minutes = rightnow.getMinutes();
+		var minutes = rightnow.getMinutes().toString().length === 1 ? '0' + rightnow.getMinutes() : rightnow.getMinutes();
 		var ampm    = rightnow.getHours() <= 12 ? 'AM' : 'PM';
 		var hours   = rightnow.getHours() <= 12 ? rightnow.getHours() : rightnow.getHours() - 12;
 		return hours + ':' + minutes + ' ' + ampm;

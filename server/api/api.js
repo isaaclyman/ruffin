@@ -55,12 +55,17 @@ Meteor.methods({
 		}
 	},
 	addBoardDescription: function(board_id, description) {
-		if(board_id && description && !Boards.findOne({ _id: board_id }).description ) {
-			Meteor.call('transformName', description, function(error, result) {
-				description = result;
-				Boards.update({ _id: board_id }, {$set: {description:description} });
-				return true;
-			});
+		if(board_id && description) {
+			if(!Boards.findOne({ _id: board_id }).description) {
+				Meteor.call('transformName', description, function(error, result) {
+					description = result;
+					Boards.update({ _id: board_id }, {$set: {description:description} });
+					return true;
+				});
+			} else {
+				throw new Meteor.Error('API','Called addBoardDescription for a board that already has a description');
+				return false;
+			}			
 		} else {
 			throw new Meteor.Error('API','Called addBoardDescription with invalid arguments');
 			return false;
@@ -95,7 +100,9 @@ Meteor.methods({
 							zip   : person.zip,
 							boards: [person.board]
 						};
-						return People.insert(newPerson);
+						var user_id = People.insert(newPerson);
+						this.setUserId(user_id);
+						return true;
 					} else {
 						throw new Meteor.Error('API','Called makeNewPerson for a person that already exists');
 						return false;
@@ -104,6 +111,11 @@ Meteor.methods({
 		} else {
 			throw new Meteor.Error('API','Called makeNewPerson with invalid arguments');
 			return false;
+		}
+	},
+	setPerson: function(user_id) {
+		if(user_id) {
+			this.setUserId(user_id);
 		}
 	},
 	/*

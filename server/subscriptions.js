@@ -7,11 +7,6 @@ Meteor.publish('boards', function() {
 	return Boards.find();
 });
 
-// Publish (people in board)
-Meteor.publish('people', function(board) {
-	return People.find({ hobbies: board });
-});
-
 
 /*
 	ALLOW
@@ -20,7 +15,7 @@ Meteor.publish('people', function(board) {
 // Allow boards to be created
 Boards.allow({
 	'insert' : function(person, board) {
-		if( !Boards.find({ board: board }) ) {
+		if( Boards.find({ board: board }).fetch().lenth === 0 ) {
 			return true;
 		} else {
 			return false;
@@ -32,15 +27,12 @@ Boards.allow({
 // ^ MOVED TO BOARD: NEED TO IMPLEMENT ^
 
 // Allow users to be created and updated
-People.allow({
+Users.allow({
 	'insert' : function(name) {
-		if( !People.find({ name: name })) {
+		if( Users.find({ name: name }).fetch().length === 0 ) {
 			return true;
 		} else {
 			return false;
 		}
-	},
-	'update' : function() {
-		return true;
 	}
 });

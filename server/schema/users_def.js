@@ -1,5 +1,5 @@
 //People = new Mongo.Collection("people");
-People.attachSchema(new SimpleSchema({
+Users.attachSchema(new SimpleSchema({
 	name: {
 		type: String,
 		label: "Name",

@@ -81,13 +81,11 @@ Template.home.events({
 					zip: zip,
 					board: board
 				};
-				Meteor.call('makeNewPerson', newPerson, function(error, result) {
-					Session.set('user_id', result);
-				});
+				Meteor.call('makeNewPerson', newPerson);
 			}
 		});
 		
-		Session.set('user', name);
+		Session.set('name', name);
 		Session.set('zip', zip);
 		Session.set('hobby', hobby);
 		Session.set('board', board);
