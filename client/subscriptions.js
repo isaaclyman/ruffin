@@ -15,14 +15,3 @@ Boards.allow({
 		}
 	}
 });
-
-// Allow users to be created
-People.allow({
-	'insert' : function(name) {
-		if( !People.find({ name: name })) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-});

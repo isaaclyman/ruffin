@@ -76,7 +76,7 @@ Meteor.methods({
 	*/
 	personExists: function(name) {
 		if(name) {
-			if( People.find({ name: name }).fetch().length > 0 ) {
+			if( Meteor.users.find({ username: name }).fetch().length > 0 ) {
 				return true;
 			} else {
 				return false;
@@ -87,31 +87,15 @@ Meteor.methods({
 		}
 	},
 	makeNewPerson: function(person) {
-		if (person.name && person.zip && person.hobby &&
-			person.name.toString().length <= 36 &&
-			person.zip.toString().length >= 3 &&
-			person.zip.toString().match(/^[0-9]+$/) &&
-			person.board.toString().length <= 200 &&
-			person.board.toString().match(/^[\w]+$/) ) {
-				Meteor.call('personExists', person.name, function(error, result) {
-					if(!result) {
-						var newPerson = {
-							name  : person.name,
-							zip   : person.zip,
-							boards: [person.board]
-						};
-						var user_id = People.insert(newPerson);
-						this.setUserId(user_id);
-						return true;
-					} else {
-						throw new Meteor.Error('API','Called makeNewPerson for a person that already exists');
-						return false;
-					}
-				});
-		} else {
-			throw new Meteor.Error('API','Called makeNewPerson with invalid arguments');
-			return false;
-		}
+		var newPerson = {
+			username:  person.name,
+			zip     :  person.zip,
+			boards  : [person.board]
+		};
+		// Generate a random password for this person
+		var passlen  = (Math.floor((Math.random() * 10) + 15)) * -1;
+		newPerson.password = Random.id(passlen);
+		return {user_id: Accounts.createUser(newPerson), password: newPerson.password};
 	},
 	setPerson: function(user_id) {
 		if(user_id) {

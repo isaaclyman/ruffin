@@ -26,13 +26,5 @@ Boards.allow({
 // Allow messages to be created, updated and removed
 // ^ MOVED TO BOARD: NEED TO IMPLEMENT ^
 
-// Allow users to be created and updated
-Users.allow({
-	'insert' : function(name) {
-		if( Users.find({ name: name }).fetch().length === 0 ) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-});
+// Prevent users from editing their profile
+Meteor.users.deny({update: function() { return true; }});

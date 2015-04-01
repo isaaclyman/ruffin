@@ -1,11 +1,29 @@
-//People = new Mongo.Collection("people");
-Users.attachSchema(new SimpleSchema({
-	name: {
+//Users = new Mongo.Collection("users");
+Email = new SimpleSchema({
+	address: {
+		type: String,
+		label: "Email Address",
+		regEx: SimpleSchema.RegEx.Email,
+		max: 250
+	},
+	verified: {
+		type: Boolean,
+		label: "Email Verified"
+	}
+});
+
+Meteor.users.attachSchema(new SimpleSchema({
+	username: {
 		type: String,
 		label: "Name",
 		regEx: /^[a-zA-Z0-9]+$/,
 		min: 1,
 		max: 36
+	},
+	emails: {
+		type: [Email],
+		label: "Emails",
+		optional: true
 	},
 	zip: {
 		type: Number,
@@ -21,10 +39,9 @@ Users.attachSchema(new SimpleSchema({
 		min: 1,
 		max: 200
 	},
-	email: {
-		type: String,
-		label: "Email",
-		regEx: SimpleSchema.RegEx.Email,
+	createdAt: {
+		type: Date,
+		label: "Created Date",
 		optional: true
 	}
 }));
