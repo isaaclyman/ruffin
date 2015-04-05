@@ -3,7 +3,8 @@ Meteor.methods({
 		BOARDS
 	*/
 	boardExists: function(board_path) {
-		if(board_path && board_path.toString().length <= 203) {
+		check(board_path, String);
+		if(board_path.length <= 203) {
 			Meteor.call('transformName', board_path, function(error, result) {
 				board_path = result;
 				var board = Boards.findOne({ board: board_path });
@@ -19,8 +20,12 @@ Meteor.methods({
 		}
 	},
 	makeNewBoard: function(board) {
-		if(board.board && board.hobby && board.zip &&
-			board.board.toString().length <= 203 &&
+		check(board, {
+			board: String,
+			hobby: String,
+			zip: Number
+		});
+		if( board.board.toString().length <= 203 &&
 			board.board.toString().match(/^[\w]+$/) &&
 			board.hobby.toString().length <= 200 &&
 			board.hobby.toString().match(/^[\w]+$/) &&
@@ -46,6 +51,7 @@ Meteor.methods({
 		}
 	},
 	getBoardDescription: function(board_id) {
+		check(board_id, String);
 		if(board_id) {
 			var board = Boards.findOne({ _id: board_id.toString() });
 			return board.description; 
@@ -55,6 +61,8 @@ Meteor.methods({
 		}
 	},
 	addBoardDescription: function(board_id, description) {
+		check(board_id, String);
+		check(description, String);
 		if(board_id && description) {
 			if(!Boards.findOne({ _id: board_id }).description) {
 				Meteor.call('transformName', description, function(error, result) {
@@ -75,6 +83,7 @@ Meteor.methods({
 		PEOPLE
 	*/
 	personExists: function(name) {
+		check(name, String);
 		if(name) {
 			if( Meteor.users.find({ username: name }).fetch().length > 0 ) {
 				return true;
@@ -87,6 +96,11 @@ Meteor.methods({
 		}
 	},
 	makeNewPerson: function(person) {
+		check(person, {
+			name: String,
+			zip: Number,
+			board: String
+		});
 		var newPerson = {
 			username:  person.name,
 			zip     :  person.zip,
@@ -98,6 +112,7 @@ Meteor.methods({
 		return {user_id: Accounts.createUser(newPerson), password: newPerson.password};
 	},
 	setPerson: function(user_id) {
+		check(user_id, String);
 		if(user_id) {
 			this.setUserId(user_id);
 		}
@@ -106,6 +121,9 @@ Meteor.methods({
 		MESSAGES
 	*/
 	addMessage: function(user_id, board_id, text) {
+		check(user_id, String);
+		check(board_id, String);
+		check(text, String);
 		// Make sure the user is who they say they are
 		if (board_id && 
 			user_id && 

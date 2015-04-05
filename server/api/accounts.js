@@ -11,6 +11,7 @@ Accounts.validateNewUser(function (person) {
 				throw new Meteor.Error('API','Tried to create a new user, but name already exists.');
 			}
 		} else {
-			throw new Meteor.Error('API', 'Tried to create a new user with invalid arguments.', EJSON.stringify(person));
+			throw new Meteor.Error('API', 'Tried to create a new user with invalid arguments.');
+			console.log(person);
 		}
 });
