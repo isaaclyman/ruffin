@@ -97,14 +97,16 @@ Meteor.methods({
 	},
 	makeNewPerson: function(person) {
 		check(person, {
-			name: String,
-			zip: Number,
-			board: String
+			username: String,
+			zip: Number
 		});
 		var newPerson = {
-			username:  person.name,
-			zip     :  person.zip,
-			boards  : [person.board]
+			username :  person.username,
+			createdAt:  Date.now(),
+			profile: {
+				zip: person.zip,
+				boards: []
+			}
 		};
 		// Generate a random password for this person
 		var passlen  = (Math.floor((Math.random() * 10) + 15)) * -1;
@@ -145,6 +147,10 @@ Meteor.methods({
 		}
 	},
 	editMessage: function(user_id, board_id, timestamp, text) {
+		check(user_id, String);
+		check(board_id, String);
+		check(timestamp, Number);
+		check(text, String);
 		if (user_id &&
 			user_id === Meteor.user() &&
 			board_id &&
@@ -160,6 +166,9 @@ Meteor.methods({
 		}
 	},
 	deleteMessage: function(user_id, board_id, timestamp) {
+		check(user_id, String);
+		check(board_id, String);
+		check(timestamp, Number);
 		if (user_id &&
 			user_id === Meteor.user() &&
 			board_id &&
@@ -177,6 +186,7 @@ Meteor.methods({
 		AUXILIARY FUNCTIONS
 	*/
 	transformName: function(name) {
+		check(name, String);
 		return newName = name.toString()
 							.trim()
 							.toLowerCase()

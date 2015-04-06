@@ -61,8 +61,8 @@ Template.home.events({
 		return;
 	},
 	"submit #begin": function (event) {
-		var name  = event.target[0].value.toString().toLowerCase().trim();
-		var zip   = event.target[1].value.toString().substring(0,3);
+		var username  = event.target[0].value.toString().toLowerCase().trim();
+		var zip   = parseInt(event.target[1].value.toString().substring(0,3));
 		var hobby = event.target[2].value
 					.toString()
 					.trim()
@@ -71,26 +71,25 @@ Template.home.events({
 		var board = zip + hobby;
 		
 		// Stop user if their name is taken
+		event.preventDefault();
 		Meteor.call('personExists', name, function(error, result) {
 			if(result) {
 				Session.set('warning_name', 'This name is taken.');
 				return false;	
 			} else {
 				var newPerson = {
-					name: name,
-					zip: zip,
-					board: board
+					username: username,
+					zip: zip
 				};
 				Meteor.call('makeNewPerson', newPerson);
+				Session.set('username', username);
+				Session.set('zip', zip);
+				Session.set('hobby', hobby);
+				Session.set('board', board);
+				Router.go('/region/' + zip + '/board/' + hobby);
+				return false;
 			}
 		});
-		
-		Session.set('name', name);
-		Session.set('zip', zip);
-		Session.set('hobby', hobby);
-		Session.set('board', board);
-		Router.go('/region/' + zip + '/board/' + hobby);
-		return false;
 	}
 });
 
