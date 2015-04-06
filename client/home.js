@@ -81,13 +81,16 @@ Template.home.events({
 					username: username,
 					zip: zip
 				};
-				Meteor.call('makeNewPerson', newPerson);
-				Session.set('username', username);
-				Session.set('zip', zip);
-				Session.set('hobby', hobby);
-				Session.set('board', board);
-				Router.go('/region/' + zip + '/board/' + hobby);
-				return false;
+				Meteor.call('makeNewPerson', newPerson, function(error, result) {
+					Session.set('user_id', result.user_id);
+					Session.set('password', result.password);
+					Session.set('username', username);
+					Session.set('zip', zip);
+					Session.set('hobby', hobby);
+					Session.set('board', board);
+					Router.go('/region/' + zip + '/board/' + hobby);
+					return false;
+				});
 			}
 		});
 	}

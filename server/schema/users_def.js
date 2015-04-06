@@ -26,7 +26,7 @@ Profile = new SimpleSchema({
 		label: "Boards",
 		regEx: /^[a-zA-Z0-9]+$/,
 		min: 1,
-		max: 200,
+		max: 203,
 		optional: true
 	}
 });

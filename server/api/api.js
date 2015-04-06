@@ -112,6 +112,18 @@ Meteor.methods({
 			this.setUserId(user_id);
 		}
 	},
+	addBoardToPerson: function(board_path, user_id) {
+		check(board_path, String);
+		check(user_id, String);
+		if( Meteor.users.find({ _id: user_id }).fetch().length > 0 ) {
+			Meteor.users.update({ _id: user_id }, 
+								{ $push: { boards: board_path }});
+			return true;
+		} else {
+			throw new Meteor.Error('API', 'User not found');
+			return false;
+		}
+	},
 	/*
 		MESSAGES
 	*/
