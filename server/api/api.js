@@ -102,7 +102,7 @@ Meteor.methods({
 			}
 		};
 		// Generate a random password for this person
-		var passlen  = (Math.floor((Math.random() * 10) + 15)) * -1;
+		var passlen  = (Math.floor((Math.random() * 10) + 15));
 		newPerson.password = Random.id(passlen);
 		return {user_id: Accounts.createUser(newPerson), password: newPerson.password};
 	},
@@ -117,7 +117,7 @@ Meteor.methods({
 		check(user_id, String);
 		if( Meteor.users.find({ _id: user_id }).fetch().length > 0 ) {
 			Meteor.users.update({ _id: user_id }, 
-								{ $push: { boards: board_path }});
+								{ $push: { 'profile.boards': board_path }});
 			return true;
 		} else {
 			throw new Meteor.Error('API', 'User not found');
