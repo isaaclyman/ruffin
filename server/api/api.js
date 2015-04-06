@@ -31,24 +31,22 @@ Meteor.methods({
 			board.hobby.toString().match(/^[\w]+$/) &&
 			board.zip.toString().length >= 3 &&
 			board.zip.toString().match(/^[0-9]+$/) ) {
-				Meteor.call('boardExists', board.board, function(error, result) {
-					if(!result) {
-						var newBoard = {
-							board: board.board,
-							hobby: board.hobby
-						};
-						newBoard.zip = Number(board.zip.toString().substring(0,3));
-						newBoard.createdDate = Date.now();
-						return Boards.insert(newBoard);		
-					} else {
-						Meteor.call('API','Called makeNewBoard for a board that already exists');
-						return false;
-					}
-				});
-		} else {
-			throw new Meteor.Error('API','Called makeNewBoard with invalid arguments');
-			return false;
-		}
+				if(Boards.find({ board: board.board }).fetch().length === 0) {
+					var newBoard = {
+						board: board.board,
+						hobby: board.hobby
+					};
+					newBoard.zip = Number(board.zip.toString().substring(0,3));
+					newBoard.createdDate = Date.now();
+					return Boards.insert(newBoard);		
+				} else {
+					throw new Meteor.Error('API','Called makeNewBoard for a board that already exists');
+					return false;
+				}
+			} else {
+				throw new Meteor.Error('API','Called makeNewBoard with invalid arguments');
+				return false;
+			}
 	},
 	getBoardDescription: function(board_id) {
 		check(board_id, String);
@@ -82,16 +80,11 @@ Meteor.methods({
 	/*
 		PEOPLE
 	*/
-	personExists: function(name) {
-		check(name, String);
-		if(name) {
-			if( Meteor.users.find({ username: name }).fetch().length > 0 ) {
-				return true;
-			} else {
-				return false;
-			}
+	personExists: function(username) {
+		check(username, String);
+		if( Meteor.users.find({ username: username }).fetch().length > 0 ) {
+			return true;
 		} else {
-			throw new Meteor.Error('API','Called personExists with invalid arguments');
 			return false;
 		}
 	},
