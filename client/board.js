@@ -18,17 +18,13 @@ Template.board.events({
 
 Template.board.helpers({ 
 	board: function() {
-		var originalBoard = Session.get('hobby');
-		return originalBoard.charAt(0).toUpperCase() + 
-				originalBoard.slice(1);
+		return Session.get('hobby');
 	},
 	description: function() {
 		return false;
 	},
 	username: function() {
-		var originalName = Session.get('username');
-		return originalName.charAt(0).toUpperCase() + 
-				originalName.slice(1);
+		return Session.get('username');
 	},
 	time: function() {
 		var rightnow = Session.get('rightnow');

@@ -28,14 +28,14 @@ Boards.attachSchema(new SimpleSchema({
 	board: {
 		type: String,
 		label: "Board",
-		regEx: /^[a-zA-Z0-9]+$/,
+		regEx: /^[a-zA-Z0-9_]+$/,
 		min: 4,
 		max: 203
 	},
 	hobby: {
 		type: String,
 		label: "Hobby",
-		regEx: /^[a-zA-Z0-9]+$/,
+		regEx: /^[a-zA-Z0-9_]+$/,
 		min: 1,
 		max: 200
 	},

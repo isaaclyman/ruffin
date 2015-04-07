@@ -67,7 +67,8 @@ Template.home.events({
 					.toString()
 					.trim()
 					.toLowerCase()
-					.replace(/[^\w]|_/g, '');
+					.replace(/ /g, '_')
+					.replace(/[^\w_]/g, '');
 		var board = zip + hobby;
 		
 		// Stop user if their name is taken
@@ -82,12 +83,12 @@ Template.home.events({
 					zip: zip
 				};
 				Meteor.call('makeNewPerson', newPerson, function(error, result) {
-					Session.set('user_id', result.user_id);
-					Session.set('password', result.password);
-					Session.set('username', username);
-					Session.set('zip', zip);
-					Session.set('hobby', hobby);
-					Session.set('board', board);
+					Session.setPersistent('user_id', result.user_id);
+					Session.setPersistent('password', result.password);
+					Session.setPersistent('username', username);
+					Session.setPersistent('zip', zip);
+					Session.setPersistent('hobby', hobby);
+					Session.setPersistent('board', board);
 					Router.go('/region/' + zip + '/board/' + hobby);
 					return false;
 				});
