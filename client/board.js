@@ -12,11 +12,14 @@ Template.board.rendered = function () {
 Template.board.events({
 	"click #descriptionBtn" : function (event) {
 		var description = $('#descriptionInput').value;
-		Meteor.call('addBoardDescription', Session.get('board_id'), description);
+		Meteor.call('addBoardDescription', Session.get('board_path'), description);
 	}
 });
 
 Template.board.helpers({ 
+	title: function() {
+		return "Ruffin|" + Session.get('hobby');
+	},
 	board: function() {
 		return Session.get('hobby');
 	},

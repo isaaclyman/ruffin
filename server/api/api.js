@@ -58,22 +58,17 @@ Meteor.methods({
 			return false;
 		}
 	},
-	addBoardDescription: function(board_id, description) {
-		check(board_id, String);
+	addBoardDescription: function(board_path, description) {
+		check(board_path, String);
 		check(description, String);
-		if(board_id && description) {
-			if(!Boards.findOne({ _id: board_id }).description) {
-				Meteor.call('transformName', description, function(error, result) {
-					description = result;
-					Boards.update({ _id: board_id }, {$set: {description:description} });
-					return true;
-				});
-			} else {
-				throw new Meteor.Error('API','Called addBoardDescription for a board that already has a description');
-				return false;
-			}			
+		if(!Boards.findOne({ _id: board_path }).description) {
+			Meteor.call('transformName', description, function(error, result) {
+				description = result;
+				Boards.update({ board: board_path }, {$set: {description:description} });
+				return true;
+			});
 		} else {
-			throw new Meteor.Error('API','Called addBoardDescription with invalid arguments');
+			throw new Meteor.Error('API','Called addBoardDescription for a board that already has a description');
 			return false;
 		}
 	},
@@ -116,9 +111,16 @@ Meteor.methods({
 		check(board_path, String);
 		check(user_id, String);
 		if( Meteor.users.find({ _id: user_id }).fetch().length > 0 ) {
-			Meteor.users.update({ _id: user_id }, 
-								{ $push: { 'profile.boards': board_path }});
-			return true;
+			if( Meteor.users.find({ _id: user_id, "profile.boards": board_path })
+				.fetch().length === 0 ) {
+					Meteor.users.update({ _id: user_id }, 
+										{ $push: { 'profile.boards': board_path }});
+					return true;
+			} else {
+				// No error here; the user is just coming back to a board
+				//  that they've visited before.
+				return false;
+			}
 		} else {
 			throw new Meteor.Error('API', 'User not found');
 			return false;
