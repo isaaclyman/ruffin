@@ -73,7 +73,7 @@ Template.home.events({
 		
 		// Stop user if their name is taken
 		event.preventDefault();
-		Meteor.call('personExists', name, function(error, result) {
+		Meteor.call('personExists', username, function(error, result) {
 			if(result) {
 				Session.set('warning_name', 'This name is taken.');
 				return false;	

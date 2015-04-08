@@ -11,10 +11,21 @@ Template.board.rendered = function () {
 
 Template.board.events({
 	"click #descriptionBtn" : function (event) {
-		var description = $('#descriptionInput').value;
-		Meteor.call('addBoardDescription', Session.get('board_path'), description);
+		var description = $('#descriptionInput')[0].value;
+		var board_path = Session.get('board_path');
+		Meteor.call('addBoardDescription', board_path, description);
 	}
 });
+
+Tracker.autorun(function () {
+	var board_path = Session.get('board_path');
+	var board = Boards.findOne({ board: board_path });
+	if(board) {
+		Session.set('description', board.description);
+	}
+	return;
+});
+
 
 Template.board.helpers({ 
 	title: function() {
@@ -24,7 +35,7 @@ Template.board.helpers({
 		return Session.get('hobby');
 	},
 	description: function() {
-		return false;
+		return Session.get('description');
 	},
 	username: function() {
 		return Session.get('username');

@@ -48,25 +48,17 @@ Meteor.methods({
 				return false;
 			}
 	},
-	getBoardDescription: function(board_id) {
-		check(board_id, String);
-		if(board_id) {
-			var board = Boards.findOne({ _id: board_id.toString() });
-			return board.description; 
-		} else {
-			throw new Meteor.Error('API','Called getBoardDescription with invalid arguments');
-			return false;
-		}
+	getBoardDescription: function(board_path) {
+		check(board_path, String);
+		var board = Boards.findOne({ board: board_path });
+		return board.description; 
 	},
 	addBoardDescription: function(board_path, description) {
 		check(board_path, String);
 		check(description, String);
-		if(!Boards.findOne({ _id: board_path }).description) {
-			Meteor.call('transformName', description, function(error, result) {
-				description = result;
-				Boards.update({ board: board_path }, {$set: {description:description} });
-				return true;
-			});
+		if(!Boards.findOne({ board: board_path }).description) {
+			Boards.update({ board: board_path }, {$set: {description:description} });
+			return true;
 		} else {
 			throw new Meteor.Error('API','Called addBoardDescription for a board that already has a description');
 			return false;
