@@ -24,19 +24,19 @@
 		<div class="messages col-xs-12">
 			<div class="window col-xs-12">
 				{{#each board_messages}}
-					{{#if mine}}
+					<!--{{#if mine}}-->
 						<p class="pull-left">
-							<span class="username">{{user}}:</span>
-							<span class="content">{{text}}</span>
-							<span class="timestamp">{{timestamp}}</span>
+							<span class="username">{{this.name}}:</span>
+							<span class="content">{{this.text}}</span>
+							<span class="timestamp">{{this.timestamp}}</span>
 						</p>
-					{{else}}
+					<!--{{else}}
 						<p class="pull-right">
-							<span class="username">{{user}}:</span>
-							<span class="content">{{text}}</span>
-							<span class="timestamp">{{timestamp}}</span>
+							<span class="username">{{this.name}}:</span>
+							<span class="content">{{this.text}}</span>
+							<span class="timestamp">{{this.timestamp}}</span>
 						</p>
-					{{/if}}
+					{{/if}}-->
 				{{/each}}
 			</div>
 

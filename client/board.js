@@ -44,6 +44,11 @@ Template.board.helpers({
 	loggedIn: function() {
 		return Session.get('loggedIn');
 	},
+	board_messages: function() {
+		if(Boards.findOne({ board: Session.get('board_path') })) {
+			return Boards.findOne({ board: Session.get('board_path') }).messages;
+		}
+	},
 	username: function() {
 		return Session.get('username');
 	},

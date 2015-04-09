@@ -32,9 +32,19 @@ Meteor.methods({
 			board.zip.toString().length >= 3 &&
 			board.zip.toString().match(/^[0-9]+$/) ) {
 				if(Boards.find({ board: board.board }).fetch().length === 0) {
+					var welcomeMessage = 'This is a brand new board for people like you: people who like ' + 
+										 board.hobby + '. Get things moving by introducing ' +
+										 'yourself, leaving a secure contact card, and setting ' +
+										 'up an event. Go ahead, be a trendsetter.';
 					var newBoard = {
 						board: board.board,
-						hobby: board.hobby
+						hobby: board.hobby,
+						messages : [{
+							user: 'Administrator',
+							name: 'Administrator',
+							text: welcomeMessage,
+							timestamp: Date.now()
+						}]
 					};
 					newBoard.zip = Number(board.zip.toString().substring(0,3));
 					newBoard.createdDate = Date.now();

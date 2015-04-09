@@ -15,7 +15,8 @@ Message = new SimpleSchema({
 	},
 	edited: {
 		type: Boolean,
-		label: "Edited"
+		label: "Edited",
+		optional: true
  	},
 	timestamp: {
 		type: Date,
