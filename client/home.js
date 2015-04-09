@@ -71,13 +71,45 @@ Template.home.events({
 					.replace(/[^\w_]/g, '');
 		var board = zip + hobby;
 		
-		// Stop user if their name is taken
+		// Don't do a page refresh...don't do it...
 		event.preventDefault();
+
+		// If user wants to browse anonymously, let it happen
+		if(!username || username === '') {
+			Meteor.call('logOut');
+			Session.setPersistent('user_id', null);
+			Session.setPersistent('password', null);
+			Session.setPersistent('username', null);
+			Session.setPersistent('zip', zip);
+			Session.setPersistent('hobby', hobby);
+			Session.setPersistent('board', board);
+			Router.go('/region/' + zip + '/board/' + hobby);
+			return false;
+		}
+		
+		// If the user is trying to log in again as themself, let it happen
+		var loginNeeded = true;
+		Meteor.apply('alreadyLoggedIn', [username], true, function(error, result) {
+			if(result) {
+				Session.setPersistent('zip', zip);
+				Session.setPersistent('hobby', hobby);
+				Session.setPersistent('board', board);
+				Router.go('/region/' + zip + '/board/' + hobby);
+				loginNeeded = false;
+				return false;
+			}
+		});
+
+		if(!loginNeeded) {
+			return false;
+		}
+		// Stop user if their name is taken
 		Meteor.call('personExists', username, function(error, result) {
 			if(result) {
 				Session.set('warning_name', 'This name is taken.');
 				return false;	
 			} else {
+				// Otherwise, create a user for them
 				var newPerson = {
 					username: username,
 					zip: zip

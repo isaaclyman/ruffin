@@ -3,10 +3,15 @@ Meteor.startup(function() {
 	setInterval(function() {
 		Session.set('rightnow', new Date());
 	}, 20000);
+
+	Session.setDefault('loggedIn', false);
 });
 
 Template.board.rendered = function () {
 	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
+	Meteor.call('loggedIn', function(error, result) {
+		Session.set('loggedIn', result);
+	});
 };
 
 Template.board.events({
@@ -26,7 +31,6 @@ Tracker.autorun(function () {
 	return;
 });
 
-
 Template.board.helpers({ 
 	title: function() {
 		return "Ruffin|" + Session.get('hobby');
@@ -36,6 +40,9 @@ Template.board.helpers({
 	},
 	description: function() {
 		return Session.get('description');
+	},
+	loggedIn: function() {
+		return Session.get('loggedIn');
 	},
 	username: function() {
 		return Session.get('username');

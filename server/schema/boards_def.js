@@ -52,6 +52,11 @@ Boards.attachSchema(new SimpleSchema({
 		max: 140,
 		optional: true
 	},
+	described_by: {
+		type: String,
+		label: "Description",
+		optional: true
+	},
 	tags: {
 		type: [String],
 		label: "Tags",

@@ -8,13 +8,17 @@
 			<p><button class="btn btn-default">Info</button></p>
 		</div>
 		<div class="description col-xs-12">
-			{{#if description}}
-				<p>{{description}}</p>
-			{{else}}
+			{{#if loggedIn}}
 				<div class="input-group break">
 					<input class="form-control" id="descriptionInput" type="text" placeholder="Enter a description for this board" aria-describedby="descriptionBtn" />
 					<span class="input-group-addon btn btn-default" id="descriptionBtn">Submit</span>
 				</div>
+			{{else}}
+				{{#if description}}
+					<p>{{description}}</p>
+				{{else}}
+					<p>It's exactly what it sounds like.</p>
+				{{/if}}
 			{{/if}}
 		</div>
 		<div class="messages col-xs-12">

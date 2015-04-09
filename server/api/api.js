@@ -56,8 +56,13 @@ Meteor.methods({
 	addBoardDescription: function(board_path, description) {
 		check(board_path, String);
 		check(description, String);
+		if(!this.userId) {
+			throw new Meteor.Error('API', 'Attempted to add a description without having a username.');
+			return false;
+		}
 		if(!Boards.findOne({ board: board_path }).description) {
-			Boards.update({ board: board_path }, {$set: {description:description} });
+			Boards.update({ board: board_path }, 
+						  {$set: { description: description, described_by: this.userId } });
 			return true;
 		} else {
 			throw new Meteor.Error('API','Called addBoardDescription for a board that already has a description');
@@ -80,6 +85,10 @@ Meteor.methods({
 			username: String,
 			zip: Number
 		});
+		if( Meteor.users.find({ username: person.username }).fetch().length > 0) {
+			throw new Meteor.Error('API', 'Attempted to create a person that already exists.');
+			return false;
+		}
 		var newPerson = {
 			username :  person.username,
 			createdAt:  Date.now(),
@@ -91,13 +100,9 @@ Meteor.methods({
 		// Generate a random password for this person
 		var passlen  = (Math.floor((Math.random() * 10) + 15));
 		newPerson.password = Random.id(passlen);
-		return {user_id: Accounts.createUser(newPerson), password: newPerson.password};
-	},
-	setPerson: function(user_id) {
-		check(user_id, String);
-		if(user_id) {
-			this.setUserId(user_id);
-		}
+		var user_id = Accounts.createUser(newPerson);
+		this.setUserId(user_id);
+		return {user_id: user_id, password: newPerson.password};
 	},
 	addBoardToPerson: function(board_path, user_id) {
 		check(board_path, String);
@@ -114,9 +119,25 @@ Meteor.methods({
 				return false;
 			}
 		} else {
-			throw new Meteor.Error('API', 'User not found');
+			throw new Meteor.Error('API', 'User not found.');
 			return false;
 		}
+	},
+	loggedIn: function() {
+		return !!(this.userId);
+	},
+	alreadyLoggedIn: function(username) {
+		check(username, String);
+		var user_id = this.userId;
+		if(!user_id) {
+			return false;
+		} else {
+			return !!(Meteor.users.findOne({ _id: user_id }).username === username);
+		}
+	},
+	logOut: function() {
+		this.setUserId(null);
+		return true;
 	},
 	/*
 		MESSAGES
