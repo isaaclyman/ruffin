@@ -49,7 +49,7 @@ Template.board.helpers({
 			var messages = Boards.findOne({ board: Session.get('board_path') }).messages;
 			for(var msg in messages) {
 				messages[msg].timestamp = messages[msg].timestamp.toString().substring(0, 24);
-				
+				messages[msg].mine = !!(messages[mgs].user_id === Meteor.userId());
 			}
 			return messages;
 		}

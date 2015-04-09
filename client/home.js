@@ -114,7 +114,7 @@ Template.home.events({
 					username: username,
 					zip: zip
 				};
-				Meteor.call('makeNewPerson', newPerson, function(error, result) {
+				Meteor.apply('makeNewPerson', [newPerson], true, function(error, result) {
 					Session.setPersistent('user_id', result.user_id);
 					Session.setPersistent('password', result.password);
 					Session.setPersistent('username', username);
