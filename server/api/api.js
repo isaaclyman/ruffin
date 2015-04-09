@@ -40,7 +40,7 @@ Meteor.methods({
 						board: board.board,
 						hobby: board.hobby,
 						messages : [{
-							user: 'Administrator',
+							user_id: 'root',
 							name: 'Administrator',
 							text: welcomeMessage,
 							timestamp: Date.now()

@@ -1,5 +1,5 @@
 Meteor.startup(function() {
-	Session.set('rightnow', new Date());
+	Session.setDefault('rightnow', new Date());
 	setInterval(function() {
 		Session.set('rightnow', new Date());
 	}, 20000);
@@ -46,7 +46,12 @@ Template.board.helpers({
 	},
 	board_messages: function() {
 		if(Boards.findOne({ board: Session.get('board_path') })) {
-			return Boards.findOne({ board: Session.get('board_path') }).messages;
+			var messages = Boards.findOne({ board: Session.get('board_path') }).messages;
+			for(var msg in messages) {
+				messages[msg].timestamp = messages[msg].timestamp.toString().substring(0, 24);
+				
+			}
+			return messages;
 		}
 	},
 	username: function() {

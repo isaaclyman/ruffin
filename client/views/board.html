@@ -9,10 +9,14 @@
 		</div>
 		<div class="description col-xs-12">
 			{{#if loggedIn}}
-				<div class="input-group break">
-					<input class="form-control" id="descriptionInput" type="text" placeholder="Enter a description for this board" aria-describedby="descriptionBtn" />
-					<span class="input-group-addon btn btn-default" id="descriptionBtn">Submit</span>
-				</div>
+				{{#if description}}
+					<p>{{description}}</p>
+				{{else}}
+					<div class="input-group break">
+						<input class="form-control" id="descriptionInput" type="text" placeholder="Enter a description for this board" aria-describedby="descriptionBtn" />
+						<span class="input-group-addon btn btn-default" id="descriptionBtn">Submit</span>
+					</div>
+				{{/if}}
 			{{else}}
 				{{#if description}}
 					<p>{{description}}</p>
@@ -26,9 +30,10 @@
 				{{#each board_messages}}
 					<!--{{#if mine}}-->
 						<p class="pull-left">
-							<span class="username">{{this.name}}:</span>
-							<span class="content">{{this.text}}</span>
-							<span class="timestamp">{{this.timestamp}}</span>
+							<span class="msgContent">{{this.text}}</span>
+							<br>
+							<span class="msgUsername">{{this.name}}</span>
+							<span class="msgTimestamp"> on {{this.timestamp}}</span>
 						</p>
 					<!--{{else}}
 						<p class="pull-right">
@@ -44,13 +49,17 @@
 
 			<div class="add col-xs-12">
 				<p class="row">
-					<span class="username">
-						<span class="capitalize">{{username}}</span>
-						at {{time}}:</span>
-					<div class="input-group">
-						<input class="form-control" type="text" placeholder="Type a message here" id="messageInput" aria-describedby="descriptionBtn" />
-						<span class="input-group-addon btn btn-default" id="messageBtn">Post</span>
-					</div>
+					{{#if loggedIn}}
+						<span class="username">
+							<span class="capitalize">{{username}}</span>
+							at {{time}}:</span>
+						<div class="input-group">
+							<input class="form-control" type="text" placeholder="Type a message here" id="messageInput" aria-describedby="descriptionBtn" />
+							<span class="input-group-addon btn btn-default" id="messageBtn">Post</span>
+						</div>
+					{{else}}
+						<p>You can't post to this board because you are browsing anonymously.</p>
+					{{/if}}
 				</p>
 			</div>
 		</div>

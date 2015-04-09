@@ -4,7 +4,7 @@
 
 // All boards are public
 Meteor.publish('boards', function() {
-	return Boards.find();
+	return Boards.find({}, {fields: {user_id: 0}});
 });
 
 
@@ -12,19 +12,17 @@ Meteor.publish('boards', function() {
 	ALLOW
 */
 
-// Allow boards to be created
+// Allow messages to be inserted, changed, or removed
 Boards.allow({
-	'insert' : function(person, board) {
-		if( Boards.find({ board: board }).fetch().lenth === 0 ) {
-			return true;
-		} else {
+	'update' : function(userId, currentDoc, fieldNames, modifier) {
+		if(!userId || fieldNames !== ['messages']) {
 			return false;
+		}
+		if(modifier.$set['messages.text']) {
+			console.log(modifier);
 		}
 	}
 });
-
-// Allow messages to be created, updated and removed
-// ^ MOVED TO BOARD: NEED TO IMPLEMENT ^
 
 // Prevent users from editing their profile
 Meteor.users.deny({update: function() { return true; }});

@@ -1,8 +1,7 @@
 //Message is a property of Boards
 Message = new SimpleSchema({
-	user: {
-		type: String,
-		label: "User"
+	user_id: {
+		type: String
 	},
 	name: {
 		type: String,
