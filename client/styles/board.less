@@ -4,6 +4,7 @@
 @msg-user: #000000;
 @msg-time: #AAAAAA;
 @msg-brdr: #CCCCCC;
+@window-color: #FCFCFC;
 
 hr {
 	height: 1px;
@@ -22,6 +23,7 @@ div.info {
 }
 
 div.window {
+	background-color: @window-color;
 	border: 1px solid @window-border;
 	border-radius: 3px;
 	min-height: 300px;
@@ -45,18 +47,21 @@ div.window {
 
 p.pull-left, p.pull-right {
 	clear: both;
+	background-color: #FFF;
 	max-width: 400px;
+	padding: 5px 5px;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	box-shadow: 0px 0px 6px 2px @window-border;
 }
 
 p.pull-left {
 	float: left;
-	padding-left: 5px;
 	border-left: 1px solid @msg-brdr;
 }
 
 p.pull-right {
 	float: right;
-	padding-right: 5px;
 	border-right: 1px solid @msg-brdr;
 }
 
