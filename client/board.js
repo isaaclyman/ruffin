@@ -61,9 +61,6 @@ Template.board.helpers({
 	username: function() {
 		return Session.get('username');
 	},
-	user_id: function() {
-		return Meteor.userId();
-	},
 	time: function() {
 		var rightnow = Session.get('rightnow');
 		var seconds = rightnow.getSeconds();

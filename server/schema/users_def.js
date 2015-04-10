@@ -5,7 +5,7 @@ Email = new SimpleSchema({
 		type: String,
 		label: "Email Address",
 		regEx: SimpleSchema.RegEx.Email,
-		max: 250
+		max: 500
 	},
 	verified: {
 		type: Boolean,
@@ -52,5 +52,10 @@ Meteor.users.attachSchema(new SimpleSchema({
 	profile: {
 		type: Profile,
 		label: "Profile"
+	},
+	services: {
+		type: Object,
+		blackbox: true,
+		optional: true
 	}
 }));

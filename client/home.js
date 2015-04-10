@@ -76,7 +76,8 @@ Template.home.events({
 
 		// If user wants to browse anonymously, let it happen
 		if(!username || username === '') {
-			Meteor.call('logOut');
+			Meteor.logout();
+			Meteor.apply('logOut', [], true);
 			Session.setPersistent('user_id', null);
 			Session.setPersistent('password', null);
 			Session.setPersistent('username', null);
@@ -115,6 +116,7 @@ Template.home.events({
 					zip: zip
 				};
 				Meteor.apply('makeNewPerson', [newPerson], true, function(error, result) {
+					Meteor.loginWithPassword({id: result.user_id},result.password);
 					Session.setPersistent('user_id', result.user_id);
 					Session.setPersistent('password', result.password);
 					Session.setPersistent('username', username);
