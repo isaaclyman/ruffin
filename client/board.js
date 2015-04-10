@@ -19,6 +19,10 @@ Template.board.events({
 		var description = $('#descriptionInput')[0].value;
 		var board_path = Session.get('board_path');
 		Meteor.call('addBoardDescription', board_path, description);
+	},
+	"submit #newMessage" : function (event) {
+		var message = event.target.value;
+		Meteor.call('')
 	}
 });
 
@@ -49,13 +53,16 @@ Template.board.helpers({
 			var messages = Boards.findOne({ board: Session.get('board_path') }).messages;
 			for(var msg in messages) {
 				messages[msg].timestamp = messages[msg].timestamp.toString().substring(0, 24);
-				messages[msg].mine = !!(messages[mgs].user_id === Meteor.userId());
+				messages[msg].mine = !!(messages[msg].user_id === Meteor.userId());
 			}
 			return messages;
 		}
 	},
 	username: function() {
 		return Session.get('username');
+	},
+	user_id: function() {
+		return Meteor.userId();
 	},
 	time: function() {
 		var rightnow = Session.get('rightnow');

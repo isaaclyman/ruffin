@@ -37,9 +37,10 @@
 						</p>
 					{{else}}
 						<p class="pull-right">
-							<span class="username">{{this.name}}:</span>
-							<span class="content">{{this.text}}</span>
-							<span class="timestamp">{{this.timestamp}}</span>
+							<span class="msgContent">{{this.text}}</span>
+							<br>
+							<span class="msgUsername">{{this.name}}</span>
+							<span class="msgTimestamp"> on {{this.timestamp}}</span>
 						</p>
 					{{/if}}
 				{{/each}}
@@ -51,11 +52,14 @@
 				<p class="row">
 					{{#if loggedIn}}
 						<span class="username">
-							<span class="capitalize">{{username}}</span>
-							at {{time}}:</span>
+							<span class="capitalize">{{username}} ({{user_id}})</span>
+							at {{time}}:
+						</span>
 						<div class="input-group">
-							<input class="form-control" type="text" placeholder="Type a message here" id="messageInput" aria-describedby="descriptionBtn" />
-							<span class="input-group-addon btn btn-default" id="messageBtn">Post</span>
+							<form id="newMessage">
+								<input class="form-control" type="text" placeholder="Type a message here" id="messageInput" aria-describedby="descriptionBtn" />
+								<span class="input-group-addon btn btn-default" id="messageBtn">Post</span>
+							</form>
 						</div>
 					{{else}}
 						<p>You can't post to this board because you are browsing anonymously.</p>

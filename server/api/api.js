@@ -152,65 +152,37 @@ Meteor.methods({
 	/*
 		MESSAGES
 	*/
-	addMessage: function(user_id, board_id, text) {
-		check(user_id, String);
-		check(board_id, String);
+	addMessage: function(board_path, text) {
+		check(board_path, String);
 		check(text, String);
-		// Make sure the user is who they say they are
-		if (board_id && 
-			user_id && 
-			text && 
-			text !== '' && 
-			user_id === Meteor.user()) {
-				var message = {
-					user: user_id,
-					name: getName(user_id),
-					text: text,
-					timestamp: Date.now()
-				};
-				Boards.update({ _id: board_id }, 
-							  { $push: { messages: message } });
-				return true;
-		} else {
-			throw new Meteor.Error('API','Called addMessage with invalid arguments');
+		if(text === '') {
 			return false;
 		}
+		var username = Meteor.users.findOne({ _id: this.userId }).username;
+		var message = {
+			user: this.userId,
+			name: username,
+			text: text,
+			timestamp: Date.now()
+		};
+		Boards.update({ board: board_path }, 
+					  { $push: { messages: message } });
+		return true;
 	},
-	editMessage: function(user_id, board_id, timestamp, text) {
-		check(user_id, String);
-		check(board_id, String);
-		check(timestamp, Number);
+	editMessage: function(board_path, timestamp, text) {
+		check(board_path, String);
+		check(timestamp, Date);
 		check(text, String);
-		if (user_id &&
-			user_id === Meteor.user() &&
-			board_id &&
-			timestamp &&
-			text &&
-			text !== '') {
-				Boards.update({ _id: board_id, "messages.user": user_id, "messages.timestamp": timestamp },
-							  { $set: { "messages.$.text" : text } });
-				return true;
-		} else {
-			throw new Meteor.Error('API','Called editMessage with invalid arguments');
-			return false;
-		}
+		Boards.update({ _id: board_id, 'messages.user': this.userId, 'messages.timestamp': timestamp },
+					  { $set: { 'messages.$.text' : text } });
+		return true;
 	},
-	deleteMessage: function(user_id, board_id, timestamp) {
-		check(user_id, String);
-		check(board_id, String);
-		check(timestamp, Number);
-		if (user_id &&
-			user_id === Meteor.user() &&
-			board_id &&
-			timestamp &&
-			text) {
-				Boards.update({ _id: board_id },
-							  { $pull: { messages : { user: user_id, timestamp: timestamp } } });
-				return true;
-		} else {
-			throw new Meteor.Error('API','Called deleteMessage with invalid arguments');
-			return false;
-		}
+	deleteMessage: function(board_path, timestamp) {
+		check(board_path, String);
+		check(timestamp, Date);
+		Boards.update({ _id: board_id },
+					  { $pull: { messages : { user: this.userId, timestamp: timestamp } } });
+		return true;
 	},
 	/*
 		AUXILIARY FUNCTIONS
