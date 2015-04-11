@@ -121,7 +121,7 @@ Template.home.events({
 					Session.setPersistent('zip', zip);
 					Session.setPersistent('hobby', hobby);
 					Session.setPersistent('board', board);
-					Router.go('/id/' + result.user_id + '/token/' + result.password);
+					Router.go('reserve/id/' + result.user_id + '/token/' + result.password);
 					return false;
 				});
 			}

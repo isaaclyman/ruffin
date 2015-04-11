@@ -22,7 +22,7 @@ Template.username.events({
 				Session.set('emailValid', false);
 			} else {
 				Session.set('emailValid', false);
-				setTimeout(function() {
+				Meteor.setTimeout(function() {
 					$('#email')[0].value = Session.get('email');
 				}, 50);
 			}
@@ -58,7 +58,6 @@ Template.username.events({
 	},
 	"submit #reserveName" : function(event) {
 		event.preventDefault();
-		bootbox.alert('hello greg!');
 		if(event.target[0].value === 'on') {
 			Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
 		} else if(event.target[1].value === 'on') {
