@@ -1,0 +1,33 @@
+<template name="username">
+	{{setTitle title}}
+	<div class="center row">
+		<div class="col-xs-12">
+			<h1>The name <b>{{username}}</b> is available.</h1>
+			<p>It's unique and it's yours for at least 24 hours. We'll give it away when you're done with it.</p>
+			<p>Or, if you'd like to keep it forever, just give us your email address and we'll reserve it for you.</p>
+			<p>We promise never to send you an email unless you ask us to.</p>
+			<form id="reserveName">
+				<div class="form-group">
+					<p>
+						<input type="radio" name="email" class="radio-form" id="noEmail" />
+						<label for="noEmail">
+							<b> No,</b> I don't want to use this name forever. I'll pick a different one next time I visit Ruffin.
+						</label>
+					</p>
+					<p>
+						<input type="radio" name="email" class="radio-form" id="giveEmail" />
+						<label for="giveEmail">
+							<b> Yes,</b> I'll provide an email address and keep this as my permanent name.
+						</label>
+					</p>
+					{{#if chooseEmail}}
+						<input type="email" class="form-control" id="email" placeholder="Email Address"/>
+					{{/if}}
+					{{#if choiceMade}}
+						<button class="form-control btn btn-default" {{emailValid}}>Continue to board</button>
+					{{/if}}
+				</div>
+			</form>
+		</div>
+	</div>
+</template>

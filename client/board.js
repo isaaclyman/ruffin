@@ -1,17 +1,15 @@
-Meteor.startup(function() {
-	Session.setDefault('rightnow', new Date());
-	setInterval(function() {
-		Session.set('rightnow', new Date());
-	}, 20000);
-
-	Session.setDefault('loggedIn', false);
-});
-
 Template.board.rendered = function () {
 	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
+	
+	Session.setDefault('loggedIn', false);
+	Session.setDefault('rightnow', new Date());
+
 	Meteor.call('loggedIn', function(error, result) {
 		Session.set('loggedIn', result);
 	});
+	setInterval(function() {
+		Session.set('rightnow', new Date());
+	}, 20000);
 };
 
 Template.board.events({
