@@ -21,7 +21,12 @@
 						</label>
 					</p>
 					{{#if chooseEmail}}
+						<p>Enter your email below.
+						<span class="warning"> {{warning_email}}</span>
+						</p>
 						<input type="email" class="form-control" id="email" placeholder="Email Address"/>
+						<input type="email" class="form-control" id="emailConfirm" placeholder="Confirm Email"/>
+						<p>We'll send you one email right away to verify this address.</p>
 					{{/if}}
 					{{#if choiceMade}}
 						<button class="form-control btn btn-default" {{emailValid}}>Continue to board</button>

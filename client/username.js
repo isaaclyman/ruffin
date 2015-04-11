@@ -2,6 +2,7 @@ Template.username.rendered = function() {
 	Session.set('chooseEmail', false);
 	Session.set('choiceMade' , false);
 	Session.set('emailValid', false);
+	Session.set('warning_email', '');
 	Session.set('email', null);
 };
 
@@ -15,22 +16,60 @@ Template.username.events({
 			Session.set('choiceMade', true);
 			Session.set('emailValid', true);
 		} else if(event.target.id === 'giveEmail') {
+			Session.set('chooseEmail', true);
+			Session.set('choiceMade', true);
 			if(!Session.get('email')) {
 				Session.set('emailValid', false);
 			} else {
-				Session.set('emailValid', validateEmail(Session.get('email')));
+				Session.set('emailValid', false);
+				setTimeout(function() {
+					$('#email')[0].value = Session.get('email');
+				}, 50);
 			}
-			Session.set('chooseEmail', true);
-			Session.set('choiceMade', true);
 		}
 	},
-	"keyup #email" : function(event) {
+	"change #email" : function(event) {
 		var email = event.currentTarget.value;
 		Session.set('email', email);
-		if(validateEmail(email)) {
-			Session.set('emailValid', true);
+		if(!validateEmail(email)) {
+			Session.set('warning_email', 'This doesn\'t look like a valid email address.');
 		} else {
-			Session.set('emailValid', false);
+			Session.set('warning_email', '');
+		}
+	},
+	"keyup #emailConfirm" : function(event) {
+		var email2 = event.currentTarget.value;
+		var email1 = Session.get('email');
+		Session.set('email2', email2);
+		if(email2 !== email1.substring(0, email2.length) ) {
+			Session.set('warning_email', 'These email addresses do not match.');
+		} else {
+			Session.set('warning_email', '');
+			if(email1.trim() && email1 === email2 && validateEmail(email2)) {
+				Session.set('emailValid', true);
+			} else if(!email1.trim()){
+				Session.set('warning_email', 'Please enter an email address.');
+				Session.set('emailValid', false);
+			} else if(!validateEmail(email1)) {
+				Session.set('warning_email', 'This doesn\'t look like a valid email address.');
+				Session.set('emailValid', false);
+			}
+		}
+	},
+	"submit #reserveName" : function(event) {
+		event.preventDefault();
+		bootbox.alert('hello greg!');
+		if(event.target[0].value === 'on') {
+			Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
+		} else if(event.target[1].value === 'on') {
+			var email1 = event.target[2].value;
+			var email2 = event.target[3].value;
+			if(email1 === email2 && validateEmail(email1)) {
+				// Send a verification email
+			} else {
+				bootbox.alert('Error: Something\'s wrong with this email address. Please look it over and try again.');
+				return false;
+			}
 		}
 	}
 });
@@ -48,11 +87,14 @@ Template.username.helpers({
 	emailValid: function() {
 		return !Session.get('emailValid') ? {'disabled': true} : {};
 	},
+	warning_email: function() {
+		return Session.get('warning_email');
+	},
 	choiceMade: function() {
 		return Session.get('choiceMade');
 	}
 });
 
 var validateEmail = function(email) {
-	return email.search(/^[.]+@[.]+\.[.]+$/) !== -1;
+	return (email.search(/^.+@.+\..+$/i) !== -1);
 }

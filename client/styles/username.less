@@ -1,10 +1,17 @@
+@import "globals.less";
+
 form#reserveName {
 	label {
 		font-weight: normal;
 		margin-bottom: 0px;
 	}
 
-	input#email {
+	span.warning {
+		color: @warning-color;
+		font-weight: bold;
+	}
+
+	input#email, input#emailConfirm {
 		margin-bottom: 10px;
 	}
 }

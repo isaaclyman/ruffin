@@ -1,3 +1,12 @@
+// Set page title dynamically
+Handlebars.registerHelper("setTitle", function(title) {
+	if(title) {
+		document.title = title;
+	} else {
+		document.title = "Ruffin";
+	}
+});
+
 // Enable tooltips, set default vars
 Template.home.rendered = function() {
 	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
@@ -11,15 +20,6 @@ Template.home.rendered = function() {
 		warning_hobby: ''
 	});
 };
-
-// Set page title dynamically
-Handlebars.registerHelper("setTitle", function(title) {
-	if(title) {
-		document.title = title;
-	} else {
-		document.title = "Ruffin";
-	}
-})
 
 Template.home.events({
 	"keyup #nameInput": function (event) {
@@ -117,13 +117,11 @@ Template.home.events({
 				};
 				Meteor.apply('makeNewPerson', [newPerson], true, function(error, result) {
 					Meteor.loginWithPassword({id: result.user_id},result.password);
-					Session.setPersistent('user_id', result.user_id);
-					Session.setPersistent('password', result.password);
 					Session.setPersistent('username', username);
 					Session.setPersistent('zip', zip);
 					Session.setPersistent('hobby', hobby);
 					Session.setPersistent('board', board);
-					Router.go('/region/' + zip + '/board/' + hobby);
+					Router.go('/id/' + result.user_id + '/token/' + result.password);
 					return false;
 				});
 			}
