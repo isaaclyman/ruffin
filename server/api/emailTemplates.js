@@ -18,7 +18,7 @@ var verifyHTML = function(link) {
 
     <p style=
     "Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 25px">
-    ' + link + '</p>
+    <a href="' + link + '">Verify your email (' + link + ')</a></p>
 
     <p style=
     "Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 25px">

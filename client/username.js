@@ -64,7 +64,10 @@ Template.username.events({
 			var email1 = event.target[2].value;
 			var email2 = event.target[3].value;
 			if(email1 === email2 && validateEmail(email1)) {
-				// Send a verification email
+				Meteor.apply('verifyEmail', [Session.get('user_id'), email1], true);
+				bootbox.alert('You\'re all set! Check your email soon to verify this address.');
+				Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
+				return false;
 			} else {
 				bootbox.alert('Error: Something\'s wrong with this email address. Please look it over and try again.');
 				return false;
@@ -91,6 +94,14 @@ Template.username.helpers({
 	},
 	choiceMade: function() {
 		return Session.get('choiceMade');
+	},
+	user_id: function() {
+		Session.set('user_id', this);
+		return this;
+	},
+	password: function() {
+		Session.set('password,' this);
+		return this;
 	}
 });
 
