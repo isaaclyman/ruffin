@@ -1,6 +1,6 @@
 Meteor.methods({
 	// Email verification
-	verifyEmail: function(user_id, address) {
+	verifyThisEmail: function(user_id, address) {
 		check(user_id, String);
 		check(address, String);
 		if(user_id !== this.userId) {
@@ -12,13 +12,18 @@ Meteor.methods({
 		Accounts.sendVerificationEmail(user_id, address);
 	},
 	// Login information
-	sendLogin: function(user_id, address) {
+	sendNewLogin: function(user_id, address) {
 		check(user_id, String);
 		check(address, String);
 		if(user_id !== this.userId) {
 			throw new Meteor.Error('Email', 'This user is not logged in.');
 			return false;
 		}
-
+		// Send them their original link
+	},
+	resendLogin: function(username) {
+		check(username, String);
+		var email = Meteor.users.findOne({ username: username }).emails[0].address;
+		// Send them a new link
 	}
 });

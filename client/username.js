@@ -100,7 +100,7 @@ Template.username.helpers({
 		return this;
 	},
 	password: function() {
-		Session.set('password,' this);
+		Session.set('password', this);
 		return this;
 	}
 });

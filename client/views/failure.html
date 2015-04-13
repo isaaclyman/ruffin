@@ -1,0 +1,22 @@
+<template name="failure">
+	{{setTitle title}}
+	<div class="center row failure">
+		<div class="col-xs-12">
+			<h1>Wow. That didn't work at all.</h1>
+			<p>Feel free to try again. If there's something wrong with your Ruffin access link, click below and we can send you a new one.</p>
+			{{#unless linkSent}}
+				<button class="form-control btn btn-default" id="newLink">Send me a new link</button>
+			{{/unless}}
+			{{#if newLink}}
+				<p></p>
+				<p>Enter your user name below and we'll send you an email with your personal Ruffin access link.</p>
+				<input class="form-control nameInput" type="text" placeholder="Name" />
+				<button class="form-control btn btn-default" id="sendLink">Submit</button>
+			{{/if}}
+			{{#if linkSent}}
+				<p class="low"><strong>Sent!</strong> Check your email soon to find your link.</p>
+			{{/if}}
+			<p class="low">You can <a href="/">click here</a> to go back to the homepage.</p>
+		</div>
+	</div>
+</template>
