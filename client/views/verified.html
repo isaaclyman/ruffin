@@ -2,20 +2,23 @@
     {{setTitle title}}
 
     <div class="center row">
-        <h1>You're verified!</h1>
-        <p>
-            We're sending you one last email, <strong>and it's important</strong>.
-            It contains your personal link to Ruffin. Use it to access the site with the name we've reserved for you. 
-        </p>
-        <p>
-            There's no other way for Ruffin to know who you are, so hold onto that email (or bookmark the link).
-        </p>
-        {{#if loggedIn}}
-            <p>For now, you're all set! Click below to reach your personal dashboard.</p>
-            <button class="form-control btn btn-default" id="toDashboard">Let's go</button>
-        {{else}}
-            <p>Check your email soon to get your link and start using Ruffin.</p>
-        {{/if}}
+        <div class="col-xs-12">
+            <h1>You're verified!</h1>
+            <p>
+                We're sending you one last email, and <strong>it's important</strong>.
+                It contains your personal link to Ruffin. Use it to access the site with the name we've reserved for you. 
+            </p>
+            <p>
+                There's no other way for Ruffin to know who you are, so hold onto that email (or bookmark the link).
+            </p>
+            {{#if loggedIn}}
+                <p>For now, you're all set! Click below to reach your personal dashboard.</p>
+                <button class="form-control btn btn-default" id="toDashboard">Let's go</button>
+            {{else}}
+                <p>Check your email soon to get your link and start using Ruffin.</p>
+                <p>You can close this window whenever you're ready.</p>
+            {{/if}}
+        </div>
     </div>
 
 </template>

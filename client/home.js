@@ -19,6 +19,7 @@ Template.home.rendered = function() {
 		zipPerfect: false,
 		warning_hobby: ''
 	});
+	Session.set('nameTaken', false);
 };
 
 Template.home.events({
@@ -59,6 +60,10 @@ Template.home.events({
 		}
 		Session.set('hobby', hobby);
 		return;
+	},
+	"click #lostLink": function (event) {
+		bootbox.alert('No worries! Use this page to get a new link.');
+		Router.go('/failure');
 	},
 	"submit #begin": function (event) {
 		var username  = event.target[0].value.toString().toLowerCase().trim();
@@ -108,6 +113,7 @@ Template.home.events({
 		Meteor.call('personExists', username, function(error, result) {
 			if(result) {
 				Session.set('warning_name', 'This name is taken.');
+				Session.set('nameTaken', true);
 				return false;	
 			} else {
 				// Otherwise, create a user for them
@@ -121,7 +127,7 @@ Template.home.events({
 					Session.setPersistent('zip', zip);
 					Session.setPersistent('hobby', hobby);
 					Session.setPersistent('board', board);
-					Router.go('reserve/id/' + result.user_id + '/token/' + result.password);
+					Router.go('/reserve/id/' + result.user_id + '/token/' + result.password);
 					return false;
 				});
 			}
@@ -170,5 +176,8 @@ Template.home.helpers({
 	},
 	submittable: function() {
 		return !Session.get('submittable') ? {'disabled': true} : {};
+	},
+	nameTaken: function() {
+		return !!(Session.get('nameTaken'));
 	}
 });

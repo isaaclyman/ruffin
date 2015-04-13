@@ -7,7 +7,7 @@
     <div class="center row home">
         <div class="col-xs-12">
             <h1>Welcome to your new life.</h1>
-            <p>Ruffin will help you go outside, meet people, and seize the day.</p>
+            <p>Ruffin is about going outside, meeting people, and seizing the day.</p>
             <p>Don't worry about logging in. You can't. There are no passwords or accounts here.</p>
             <p>Instead, you'll need three things:</p>
         </div>
@@ -47,12 +47,17 @@
                 </p>
             </div>
             <div class="form-group col-xs-12">
-                <button class="form-control btn btn-default" {{submittable}}>Okay, done.</button>
+                <button class="form-control btn btn-default" {{submittable}}>Okay, done</button>
             </div>
+            {{#if nameTaken}}
+                <div>
+                    <button class="form-control btn btn-default" id="lostLink">I lost my access link</button>
+                </div>
+            {{/if}}
         </form>
     </div>
     <div class="copy">
-        &copy;2015 by Isaac Lyman.
+        &copy;2015 by <a class="subtle" href="http://www.isaaclyman.com">Isaac Lyman</a>.
     </div>
 
 </template>

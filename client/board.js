@@ -19,8 +19,10 @@ Template.board.events({
 		Meteor.call('addBoardDescription', board_path, description);
 	},
 	"submit #newMessage" : function (event) {
-		var message = event.target.value;
-		Meteor.call('')
+		event.preventDefault();
+		var message = event.currentTarget[0].value;
+		Meteor.call('addMessage', Session.get('board_path'), message);
+		$('#messageInput')[0].value = '';
 	}
 });
 

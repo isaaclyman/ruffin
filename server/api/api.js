@@ -158,15 +158,15 @@ Meteor.methods({
 		if(text === '') {
 			return false;
 		}
-		var username = Meteor.users.findOne({ _id: this.userId }).username;
+		var username = Meteor.user().username;
 		var message = {
-			user: this.userId,
+			user_id: this.userId,
 			name: username,
 			text: text,
 			timestamp: Date.now()
 		};
 		Boards.update({ board: board_path }, 
-					  { $push: { messages: message } });
+					  { $push: { 'messages': message } });
 		return true;
 	},
 	editMessage: function(board_path, timestamp, text) {

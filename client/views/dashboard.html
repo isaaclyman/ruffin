@@ -1,0 +1,14 @@
+<template name="dashboard">
+	{{setTitle title}}
+	<div class="center row dashboard">
+		<div class="col-xs-12">
+			<h1>Welcome, <span class="capitalize">{{username}}.</span></h1>
+			<p>You're a member of the following boards:</p>
+			{{#each boards}}
+				<button class="btn btn-default boardList">
+					<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
+				</button>
+			{{/each}}
+		</div>
+	</div>
+</template>
