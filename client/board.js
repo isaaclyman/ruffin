@@ -42,6 +42,9 @@ Template.board.helpers({
 	board: function() {
 		return Session.get('hobby');
 	},
+	zip: function() {
+		return Session.get('zip') + '##';
+	},
 	description: function() {
 		return Session.get('description');
 	},
