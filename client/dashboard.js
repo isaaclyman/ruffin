@@ -5,17 +5,6 @@ Template.dashboard.rendered = function() {
 	Session.setDefault('username', '...');
 };
 
-Tracker.autorun(function () {
-	var user = Meteor.user();
-	if(user) {
-		if(Session.get('username') !== user.username) {
-			Router.go('/failure');
-		} else {
-			Session.setPersistent('username', user.username);
-		}
-	}
-});
-
 Template.dashboard.events({
 	"click .boardList" : function(event) {
 		var board = unscramble(event.currentTarget.innerText);

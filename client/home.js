@@ -63,7 +63,7 @@ Template.home.events({
 	},
 	"click #lostLink": function (event) {
 		bootbox.alert('No worries! Use this page to get a new link.');
-		Router.go('/failure');
+		Router.go('/failure/reason/access_link');
 	},
 	"submit #begin": function (event) {
 		var username  = event.target[0].value.toString().toLowerCase().trim();
