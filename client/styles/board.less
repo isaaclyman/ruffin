@@ -1,5 +1,6 @@
 @import "globals.less";
 
+@pound-color: #999999;
 @msg-text: #444444;
 @msg-user: #000000;
 @msg-time: #AAAAAA;
@@ -20,6 +21,10 @@ div.board-title {
 	span.little {
 		font-size: 30px;
 	}
+	span.gray {
+		color: @pound-color;
+		font-size: 26px;
+	}
 }
 
 div.info {
@@ -32,6 +37,8 @@ div.window {
 	border: 1px solid @window-border;
 	border-radius: 3px;
 	min-height: 300px;
+	max-height: 412px;
+	overflow-y: scroll;
 	padding: 8px 10px;
 
 	span.msgContent {
@@ -76,4 +83,15 @@ p.pull-right {
 
 #messageInput {
 	display: table-cell;
+}
+
+div::-webkit-scrollbar {
+	width: 6px;
+}	 
+div::-webkit-scrollbar-track {
+	border-radius: 4px;
+}
+div::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #AAAAAA;
 }

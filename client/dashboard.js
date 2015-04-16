@@ -21,7 +21,7 @@ Template.dashboard.helpers({
 		}
 	},
 	username: function() {
-		return Session.get('username');
+		return EJSON.parse(Session.get('username'));
 	},
 	boards: function() {
 		if(Meteor.user()) {

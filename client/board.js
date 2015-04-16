@@ -1,6 +1,9 @@
 Template.board.rendered = function () {
 	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
-	
+	$('#chatWindow').bind('DOMNodeInserted', function() {
+		$('#chatWindow')[0].scrollTop = $('#chatWindow')[0].scrollHeight;
+	});
+
 	Session.setDefault('loggedIn', false);
 	Session.setDefault('rightnow', new Date());
 
@@ -10,6 +13,15 @@ Template.board.rendered = function () {
 	setInterval(function() {
 		Session.set('rightnow', new Date());
 	}, 20000);
+
+	Tracker.autorun(function () {
+		var board_path = Session.get('board_path');
+		var board = Boards.findOne({ board: board_path });
+		if(board) {
+			Session.set('description', board.description);
+		}
+		return;
+	});
 };
 
 Template.board.events({
@@ -24,15 +36,6 @@ Template.board.events({
 		Meteor.call('addMessage', Session.get('board_path'), message);
 		$('#messageInput')[0].value = '';
 	}
-});
-
-Tracker.autorun(function () {
-	var board_path = Session.get('board_path');
-	var board = Boards.findOne({ board: board_path });
-	if(board) {
-		Session.set('description', board.description);
-	}
-	return;
 });
 
 Template.board.helpers({ 
@@ -58,6 +61,7 @@ Template.board.helpers({
 				messages[msg].timestamp = messages[msg].timestamp.toString().substring(0, 24);
 				messages[msg].mine = !!(messages[msg].user_id === Meteor.userId());
 			}
+			Session.set('board_messages', messages);
 			return messages;
 		}
 	},

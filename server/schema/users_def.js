@@ -35,7 +35,7 @@ Meteor.users.attachSchema(new SimpleSchema({
 	username: {
 		type: String,
 		label: "Name",
-		regEx: /^[a-zA-Z0-9]+$/,
+		regEx: /^[a-zA-Z0-9 ]+$/,
 		min: 1,
 		max: 36
 	},

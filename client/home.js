@@ -124,6 +124,7 @@ Template.home.events({
 				Meteor.apply('makeNewPerson', [newPerson], true, function(error, result) {
 					Meteor.loginWithPassword({id: result.user_id},result.password);
 					Session.setPersistent('username', username);
+					console.log(username);
 					Session.setPersistent('zip', zip);
 					Session.setPersistent('hobby', hobby);
 					Session.setPersistent('board', board);

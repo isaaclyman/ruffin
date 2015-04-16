@@ -64,7 +64,7 @@ Template.username.events({
 			var email1 = event.target[2].value;
 			var email2 = event.target[3].value;
 			if(email1 === email2 && validateEmail(email1)) {
-				Meteor.apply('verifyEmail', [Session.get('user_id'), email1], true);
+				Meteor.apply('verifyThisEmail', [Meteor.userId(), email1], true);
 				bootbox.alert('You\'re all set! Check your email soon to verify this address.');
 				Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
 				return false;
