@@ -1,14 +1,56 @@
+var dashboard = {};
+dashboard.addHobby = function() {
+	if(!Session.get('zip')) {
+		Session.set('zip', Meteor.user().profile.zip);
+	}
+	if(Session.get('hobby')) {
+		Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
+	} else {
+		Session.set('warning_hobby', 'That didn\'t work. Please try again.');
+	}
+};
+dashboard.unscramble = function(displayBoard) {
+	var zipStart = displayBoard.lastIndexOf('(');
+	var hobby = displayBoard.substring(0, (zipStart - 1)).toLowerCase();
+	var zip   = displayBoard.substring(zipStart + 1, zipStart + 4);
+	return {
+			hobby: hobby, 
+			zip: zip, 
+			board_path: zip + hobby
+		   };
+};
+
 Template.dashboard.rendered = function() {
 	if(!Meteor.userId()) {
 		Router.go('/failure');
 	}
 	Session.setDefault('username', '...');
+	Session.set({
+		'warning_hobby': '',
+		'hobby': ''
+	});
 };
 
 Template.dashboard.events({
 	"click .boardList" : function(event) {
-		var board = unscramble(event.currentTarget.innerText);
+		var board = dashboard.unscramble(event.currentTarget.innerText);
 		Router.go('/region/' + board.zip + '/board/' + board.hobby);
+	},
+	"keyup #boardInput": function (event) {
+		if(event.which === 13 && Session.get('hobby')) {
+			dashboard.addHobby();
+		}
+		var hobby = event.currentTarget.value;
+		if( hobby.length > 200 ) {
+			Session.set('warning_hobby', 'This hobby is too long.');
+		} else {
+			Session.set('warning_hobby', '');
+		}
+		Session.set('hobby', hobby);
+		return;
+	},
+	"click #addButton": function (event) {
+		dashboard.addHobby();
 	}
 });
 
@@ -34,19 +76,14 @@ Template.dashboard.helpers({
 			}
 			return displayBoards;
 		}
+	},
+	hobbyPerfect: function() {
+		return !(Session.get('hobby') !== '' &&
+			   Session.get('warning_hobby') === '') ?
+				{'disabled': true} :
+				{};
+	},
+	warning_hobby: function() {
+		return Session.get('warning_hobby');
 	}
 });
-
-/*
-	AUXILIARY FUNCTIONS
-*/
-var unscramble = function(displayBoard) {
-	var zipStart = displayBoard.lastIndexOf('(');
-	var hobby = displayBoard.substring(0, (zipStart - 1)).toLowerCase();
-	var zip   = displayBoard.substring(zipStart + 1, zipStart + 4);
-	return {
-			hobby: hobby, 
-			zip: zip, 
-			board_path: zip + hobby
-		   };
-};

@@ -66,7 +66,7 @@ Template.board.helpers({
 		}
 	},
 	username: function() {
-		return Session.get('username');
+		return EJSON.parse(Session.get('username'));
 	},
 	time: function() {
 		var rightnow = Session.get('rightnow');

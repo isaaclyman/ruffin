@@ -117,6 +117,14 @@ Meteor.methods({
 	addBoardToPerson: function(board_path, user_id) {
 		check(board_path, String);
 		check(user_id, String);
+		if(board_path.substring(0,3) === 'NaN') {
+			throw new Meteor.Error('API', 'No region defined.');
+			return false;
+		}
+		if(board_path.substring(3) === 'undefined') {
+			throw new Meteor.Error('API', 'No hobby defined.');
+			return false;
+		}
 		if( Meteor.users.find({ _id: user_id }).fetch().length > 0 ) {
 			if( Meteor.users.find({ _id: user_id, "profile.boards": board_path })
 				.fetch().length === 0 ) {

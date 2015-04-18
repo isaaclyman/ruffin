@@ -6,11 +6,20 @@
 			{{#if boards}}
 				<p>You're a member of the following boards:</p>
 			{{/if}}
-			{{#each boards}}
-				<button class="btn btn-default boardList">
-					<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
-				</button>
-			{{/each}}
+			<p>
+				{{#each boards}}
+					<button class="btn btn-default boardList">
+						<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
+					</button>
+				{{/each}}
+			</p>
+			<p>
+				Want to add a new board? <span class="warning">{{warning_hobby}}</span>
+			</p>
+        	<div class="input-group">
+                <input class="form-control" id="boardInput" type="text" placeholder="I like..." aria-describedby="addButton" />
+                <span class="input-group-addon btn btn-default" id="addButton" {{hobbyPerfect}}>Add</span>
+            </div>
 		</div>
 	</div>
 </template>

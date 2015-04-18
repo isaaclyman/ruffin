@@ -1,12 +1,3 @@
-// Set page title dynamically
-Handlebars.registerHelper("setTitle", function(title) {
-	if(title) {
-		document.title = title;
-	} else {
-		document.title = "Ruffin";
-	}
-});
-
 // Enable tooltips, set default vars
 Template.home.rendered = function() {
 	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
@@ -20,6 +11,16 @@ Template.home.rendered = function() {
 		warning_hobby: ''
 	});
 	Session.set('nameTaken', false);
+
+	Tracker.autorun(function () {
+		var sub = (Session.get('warning_name') === '' &&
+				   Session.get('warning_zip') === '' &&
+				   Session.get('warning_hobby') === '' &&
+				   Session.get('zip') !== '' &&
+				   Session.get('zipPerfect') &&
+				   Session.get('hobby') !== '');
+		Session.set('submittable', sub);
+	});
 };
 
 Template.home.events({
@@ -134,16 +135,6 @@ Template.home.events({
 			}
 		});
 	}
-});
-
-Tracker.autorun(function () {
-	var sub = (Session.get('warning_name') === '' &&
-			   Session.get('warning_zip') === '' &&
-			   Session.get('warning_hobby') === '' &&
-			   Session.get('zip') !== '' &&
-			   Session.get('zipPerfect') &&
-			   Session.get('hobby') !== '');
-	Session.set('submittable', sub);
 });
 
 Template.home.helpers({
