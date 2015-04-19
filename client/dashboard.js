@@ -63,7 +63,17 @@ Template.dashboard.helpers({
 		}
 	},
 	username: function() {
-		return EJSON.parse(Session.get('username'));
+		if(!Meteor.user()) {
+			return ' ';
+		} else {
+			Session.set('username', Meteor.user().username);
+		}
+		var username = Session.get('username');
+		if(username[0] === '"') {
+			return EJSON.parse(username);
+		} else {
+			return username;
+		}
 	},
 	boards: function() {
 		if(Meteor.user()) {

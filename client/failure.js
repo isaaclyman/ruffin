@@ -9,7 +9,7 @@ Template.failure.events({
 	},
 	"click #sendLink" : function(event) {
 		var name = $('#nameInput')[0].value;
-		Meteor.call('resendLogin', name);
+		Meteor.call('resendLogin', window.location.host, name);
 		Session.set('linkSent', true);
 		Session.set('newLink', false);
 	}

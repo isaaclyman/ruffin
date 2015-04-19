@@ -18,5 +18,6 @@ Template.default.rendered = function() {
 
 Accounts.onEmailVerificationLink(function(token, done) {
 	Accounts.verifyEmail(token);
-	Router.go('/verified');
+	Session.setPersistent('andVerified', true);
+	done();
 });

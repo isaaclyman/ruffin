@@ -1,3 +1,12 @@
+var api = {};
+api.getName = function(user_id) {
+	if(user_id) {
+		return People.findOne({ _id: user_id }).name;
+	} else {
+		throw new Meteor.Error('API','Called getName with invalid arguments');
+	}
+};
+
 Meteor.methods({
 	/*
 		BOARDS
@@ -195,15 +204,3 @@ Meteor.methods({
 							.replace(/[^\w]|_/g, '');
 	}
 });
-
-
-/*
-	PRIVATE METHODS
-*/
-var getName = function(user_id) {
-	if(user_id) {
-		return People.findOne({ _id: user_id }).name;
-	} else {
-		throw new Meteor.Error('API','Called getName with invalid arguments');
-	}
-};

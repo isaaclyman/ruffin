@@ -1,5 +1,5 @@
 //Message is a property of Boards
-Message = new SimpleSchema({
+MessagePattern = new SimpleSchema({
 	user_id: {
 		type: String
 	},
@@ -64,7 +64,7 @@ Boards.attachSchema(new SimpleSchema({
 		optional: true
 	},
 	messages: {
-		type: [Message],
+		type: [MessagePattern],
 		label: "Messages",
 		optional: true
 	},

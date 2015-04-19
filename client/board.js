@@ -78,7 +78,7 @@ Template.board.helpers({
 	},
 	username: function() {
 		var username = Session.get('username');
-		if (username[0] = '"') {
+		if (username[0] === '"') {
 			return EJSON.parse(username);
 		} else {
 			return username;

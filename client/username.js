@@ -1,3 +1,8 @@
+var username = {};
+username.validateEmail = function(email) {
+	return (email.search(/^.+@.+\..+$/i) !== -1);
+}
+
 Template.username.rendered = function() {
 	Session.set('chooseEmail', false);
 	Session.set('choiceMade' , false);
@@ -31,7 +36,7 @@ Template.username.events({
 	"change #email" : function(event) {
 		var email = event.currentTarget.value;
 		Session.set('email', email);
-		if(!validateEmail(email)) {
+		if(!username.validateEmail(email)) {
 			Session.set('warning_email', 'This doesn\'t look like a valid email address.');
 		} else {
 			Session.set('warning_email', '');
@@ -45,12 +50,12 @@ Template.username.events({
 			Session.set('warning_email', 'These email addresses do not match.');
 		} else {
 			Session.set('warning_email', '');
-			if(email1.trim() && email1 === email2 && validateEmail(email2)) {
+			if(email1.trim() && email1 === email2 && username.validateEmail(email2)) {
 				Session.set('emailValid', true);
 			} else if(!email1.trim()){
 				Session.set('warning_email', 'Please enter an email address.');
 				Session.set('emailValid', false);
-			} else if(!validateEmail(email1)) {
+			} else if(!username.validateEmail(email1)) {
 				Session.set('warning_email', 'This doesn\'t look like a valid email address.');
 				Session.set('emailValid', false);
 			}
@@ -58,12 +63,12 @@ Template.username.events({
 	},
 	"submit #reserveName" : function(event) {
 		event.preventDefault();
-		if(event.target[0].value === 'on') {
+		if(!Session.get('chooseEmail')) {
 			Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
-		} else if(event.target[1].value === 'on') {
+		} else {
 			var email1 = event.target[2].value;
 			var email2 = event.target[3].value;
-			if(email1 === email2 && validateEmail(email1)) {
+			if(email1 === email2 && username.validateEmail(email1)) {
 				Meteor.apply('verifyThisEmail', [Meteor.userId(), email1], true);
 				bootbox.alert('You\'re all set! Check your email soon to verify this address.');
 				Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
@@ -81,7 +86,12 @@ Template.username.helpers({
 		return 'Ruffin|name';
 	},
 	username: function() {
-		return Session.get('username');
+		var username = Session.get('username');
+		if(username[0] === '"') {
+			return EJSON.parse(username);
+		} else {
+			return username;
+		}
 	},
 	chooseEmail: function() {
 		return Session.get('chooseEmail');
@@ -104,7 +114,3 @@ Template.username.helpers({
 		return this;
 	}
 });
-
-var validateEmail = function(email) {
-	return (email.search(/^.+@.+\..+$/i) !== -1);
-}
