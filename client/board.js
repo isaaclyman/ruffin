@@ -3,6 +3,9 @@ Template.board.rendered = function () {
 	$('#chatWindow').bind('DOMNodeInserted', function() {
 		$('#chatWindow')[0].scrollTop = $('#chatWindow')[0].scrollHeight;
 	});
+	Meteor.setTimeout(function() {
+		$('#chatWindow')[0].scrollTop = $('#chatWindow')[0].scrollHeight;
+	}, 500);
 
 	Session.setDefault('loggedIn', false);
 	Session.setDefault('rightnow', new Date());
@@ -10,7 +13,7 @@ Template.board.rendered = function () {
 	Meteor.call('loggedIn', function(error, result) {
 		Session.set('loggedIn', result);
 	});
-	setInterval(function() {
+	Meteor.setInterval(function() {
 		Session.set('rightnow', new Date());
 	}, 20000);
 
@@ -29,6 +32,14 @@ Template.board.events({
 		var description = $('#descriptionInput')[0].value;
 		var board_path = Session.get('board_path');
 		Meteor.call('addBoardDescription', board_path, description);
+	},
+	"click #deleteBtn" : function (event) {
+		if(!Session.get('board_path')) {
+			Session.set('board_path', Session.get('zip') + Session.get('hobby'));
+		}
+		var board_path = Session.get('board_path');
+		var timestamp = this.timestamp;
+		Meteor.call('deleteMessage', board_path, timestamp);
 	},
 	"submit #newMessage" : function (event) {
 		event.preventDefault();
@@ -58,7 +69,7 @@ Template.board.helpers({
 		if(Boards.findOne({ board: Session.get('board_path') })) {
 			var messages = Boards.findOne({ board: Session.get('board_path') }).messages;
 			for(var msg in messages) {
-				messages[msg].timestamp = messages[msg].timestamp.toString().substring(0, 24);
+				messages[msg].friendlyTimestamp = new Date(messages[msg].timestamp).toString().substring(0,24);
 				messages[msg].mine = !!(messages[msg].user_id === Meteor.userId());
 			}
 			Session.set('board_messages', messages);
@@ -66,7 +77,12 @@ Template.board.helpers({
 		}
 	},
 	username: function() {
-		return EJSON.parse(Session.get('username'));
+		var username = Session.get('username');
+		if (username[0] = '"') {
+			return EJSON.parse(username);
+		} else {
+			return username;
+		}
 	},
 	time: function() {
 		var rightnow = Session.get('rightnow');

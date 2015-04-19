@@ -18,7 +18,7 @@ Message = new SimpleSchema({
 		optional: true
  	},
 	timestamp: {
-		type: Date,
+		type: Number,
 		label: "Timestamp"
 	}
 });

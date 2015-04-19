@@ -177,19 +177,11 @@ Meteor.methods({
 					  { $push: { 'messages': message } });
 		return true;
 	},
-	editMessage: function(board_path, timestamp, text) {
-		check(board_path, String);
-		check(timestamp, Date);
-		check(text, String);
-		Boards.update({ _id: board_id, 'messages.user': this.userId, 'messages.timestamp': timestamp },
-					  { $set: { 'messages.$.text' : text } });
-		return true;
-	},
 	deleteMessage: function(board_path, timestamp) {
 		check(board_path, String);
-		check(timestamp, Date);
-		Boards.update({ _id: board_id },
-					  { $pull: { messages : { user: this.userId, timestamp: timestamp } } });
+		check(timestamp, Number);
+		Boards.update({ board: board_path },
+					  { $pull: { messages : { user_id: this.userId, timestamp: timestamp } } });
 		return true;
 	},
 	/*

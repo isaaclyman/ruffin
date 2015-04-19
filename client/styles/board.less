@@ -70,6 +70,27 @@ p.pull-left, p.pull-right {
 p.pull-left {
 	float: left;
 	border-left: 1px solid @msg-brdr;
+
+	& + p.gray {
+		cursor: pointer;
+		opacity: 0;
+		color: #444;
+		float: left;
+		margin-left: 3px;
+		padding: 2px 2px;
+		background-color: @msg-shdw;
+		box-shadow: 0px 0px 6px 2px @msg-shdw;
+		transition: all .5s;
+		-webkit-transition: all .5s;
+
+		&:hover {
+			opacity: 1;
+			color: #000;
+		}
+	}
+	&:hover + p.gray {
+		opacity: 1;
+	}
 }
 
 p.pull-right {
