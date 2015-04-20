@@ -1,3 +1,6 @@
+var board = {};
+board.trackers = [];
+
 Template.board.rendered = function () {
 	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
 	$('#chatWindow').bind('DOMNodeInserted', function() {
@@ -17,7 +20,7 @@ Template.board.rendered = function () {
 		Session.set('rightnow', new Date());
 	}, 20000);
 
-	Tracker.autorun(function () {
+	var description = Tracker.autorun(function () {
 		var board_path = Session.get('board_path');
 		var board = Boards.findOne({ board: board_path });
 		if(board) {
@@ -25,7 +28,15 @@ Template.board.rendered = function () {
 		}
 		return;
 	});
+
+	board.trackers.push(description);
 };
+
+Template.board.onDestroyed(function () {
+	for(var trk in board.trackers) {
+		board.trackers[trk].stop();
+	}
+});
 
 Template.board.events({
 	"click #descriptionBtn" : function (event) {

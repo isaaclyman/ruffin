@@ -27,6 +27,12 @@ Template.home.rendered = function() {
 	home.trackers.push(submitTracker);
 };
 
+Template.home.onDestroyed(function() {
+	for(var trk in home.trackers) {
+		home.trackers[trk].stop();
+	}
+});
+
 Template.home.events({
 	"keyup #nameInput": function (event) {
 		var name = event.currentTarget.value;

@@ -58,7 +58,7 @@ Meteor.methods({
 		// Change their password and send them their original link
 		var passlen  = (Math.floor((Math.random() * 10) + 15));
 		var password = Random.id(passlen);
-		Accounts.setPassword(user_id, password);
+		Accounts.setPassword(user_id, password, {logout: false});
 		Email.send({
 			from: 'Do Not Reply - Ruffin',
 			to  :  address,
