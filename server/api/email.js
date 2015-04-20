@@ -52,10 +52,6 @@ Meteor.methods({
 			throw new Meteor.Error('Email','URL is invalid.');
 			return false;
 		}
-		if (user_id !== this.userId) {
-			throw new Meteor.Error('Email', 'This user is not logged in.');
-			return false;
-		}
 		// Get email address
 		var user = Meteor.users.findOne({ _id: user_id });
 		var address  = user.emails[0].address;

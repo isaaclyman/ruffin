@@ -1,4 +1,8 @@
 Template.verified.rendered = function() {
+	if(Session.get('andVerified')) {
+		Meteor.call('sendNewLogin', window.location.host, Meteor.userId());
+	}
+	Session.setPersistent('andVerified', false);
 };
 
 Template.verified.events({
@@ -6,8 +10,6 @@ Template.verified.events({
 		var username = Meteor.user().username;
 		if(username) {
 			Router.go('/dashboard/user/' + username);
-		} else {
-			Session.set('loggedIn', false);
 		}
 	}
 });

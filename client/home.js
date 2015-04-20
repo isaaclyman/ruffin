@@ -1,12 +1,8 @@
+var home = {};
+home.trackers = [];
+
 // Enable tooltips, set default vars
 Template.home.rendered = function() {
-	if(Session.get('andVerified')) {
-		Router.go('/verified');
-		return false;
-	} else {
-		Session.setPersistent('andVerified', false);
-	}
-
 	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
 	Session.setDefault({
 		name: '',
@@ -19,7 +15,7 @@ Template.home.rendered = function() {
 	});
 	Session.set('nameTaken', false);
 
-	Tracker.autorun(function () {
+	var submitTracker = Tracker.autorun(function () {
 		var sub = (Session.get('warning_name') === '' &&
 				   Session.get('warning_zip') === '' &&
 				   Session.get('warning_hobby') === '' &&
@@ -28,6 +24,7 @@ Template.home.rendered = function() {
 				   Session.get('hobby') !== '');
 		Session.set('submittable', sub);
 	});
+	home.trackers.push(submitTracker);
 };
 
 Template.home.events({
