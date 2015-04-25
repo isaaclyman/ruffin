@@ -2,24 +2,33 @@ var board = {};
 board.trackers = [];
 
 Template.board.rendered = function () {
+	// Turn on tooltips
 	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
+	
+	// Scroll to the bottom of the chats whenever a new one appears
 	$('#chatWindow').bind('DOMNodeInserted', function() {
 		$('#chatWindow')[0].scrollTop = $('#chatWindow')[0].scrollHeight;
 	});
+
+	// Scroll to the bottom of the chats immediately
 	Meteor.setTimeout(function() {
 		$('#chatWindow')[0].scrollTop = $('#chatWindow')[0].scrollHeight;
 	}, 500);
-
+	
 	Session.setDefault('loggedIn', false);
 	Session.setDefault('rightnow', new Date());
 
+	// Find out if the user has a username or is browsing anonymously
 	Meteor.call('loggedIn', function(error, result) {
 		Session.set('loggedIn', result);
 	});
+
+	// Update the time regularly (only displays minutes)
 	Meteor.setInterval(function() {
 		Session.set('rightnow', new Date());
 	}, 20000);
 
+	// Automatically update description (should probably move this to the helper)
 	var description = Tracker.autorun(function () {
 		var board_path = Session.get('board_path');
 		var board = Boards.findOne({ board: board_path });
@@ -77,18 +86,20 @@ Template.board.helpers({
 	loggedIn: function() {
 		return Session.get('loggedIn');
 	},
-	board_messages: function() {
-		if(Boards.findOne({ board: Session.get('board_path') })) {
-			var messages = Boards.findOne({ board: Session.get('board_path') }).messages;
+	messages: function() {
+		var messages = this.messages || false;
+		if(messages) {
 			for(var msg in messages) {
+				// Create a readable timestamp for each message
 				messages[msg].friendlyTimestamp = new Date(messages[msg].timestamp).toString().substring(0,24);
+				// Determine whether each message was written by the current user
 				messages[msg].mine = !!(messages[msg].user_id === Meteor.userId());
 			}
-			Session.set('board_messages', messages);
-			return messages;
 		}
+		return messages;
 	},
 	username: function() {
+		// Reactively set the username, or anonymous if no one is logged in
 		if(Meteor.user()) {
 			return Meteor.user().username;
 		} else {
@@ -96,6 +107,7 @@ Template.board.helpers({
 		}
 	},
 	time: function() {
+		// Give the current time in hours, minutes, AM/PM
 		var rightnow = Session.get('rightnow');
 		var seconds = rightnow.getSeconds();
 		var minutes = rightnow.getMinutes().toString().length === 1 ? '0' + rightnow.getMinutes() : rightnow.getMinutes();
@@ -104,6 +116,7 @@ Template.board.helpers({
 		return hours + ':' + minutes + ' ' + ampm;
 	},
 	date: function() {
+		// (Currently unused) Get the readable current date
 		var rightnow = Session.get('rightnow');
 		var day     = rightnow.getDate();
 		var months  = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
