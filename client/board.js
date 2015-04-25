@@ -39,7 +39,8 @@ Template.board.onDestroyed(function () {
 });
 
 Template.board.events({
-	"click #descriptionBtn" : function (event) {
+	"submit #newDescription" : function (event) {
+		event.preventDefault();
 		var description = $('#descriptionInput')[0].value;
 		var board_path = Session.get('board_path');
 		Meteor.call('addBoardDescription', board_path, description);
@@ -88,11 +89,10 @@ Template.board.helpers({
 		}
 	},
 	username: function() {
-		var username = Session.get('username');
-		if (username[0] === '"') {
-			return EJSON.parse(username);
+		if(Meteor.user()) {
+			return Meteor.user().username;
 		} else {
-			return username;
+			return 'Anonymous';
 		}
 	},
 	time: function() {

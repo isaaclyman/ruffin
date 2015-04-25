@@ -12,10 +12,12 @@
 				{{#if description}}
 					<p>{{description}}</p>
 				{{else}}
-					<div class="input-group break">
-						<input class="form-control" id="descriptionInput" type="text" placeholder="Enter a description for this board" aria-describedby="descriptionBtn" />
-						<span class="input-group-addon btn btn-default" id="descriptionBtn">Submit</span>
-					</div>
+					<form id="newDescription">
+						<div class="input-group break">
+							<input class="form-control" id="descriptionInput" type="text" placeholder="Enter a description for this board" aria-describedby="descriptionBtn" />
+							<span class="input-group-addon btn btn-default" id="descriptionBtn">Submit</span>
+						</div>
+					</form>
 				{{/if}}
 			{{else}}
 				{{#if description}}
@@ -60,7 +62,7 @@
 						</span>
 						<form id="newMessage">
 							<div class="input-group">
-								<input class="form-control" type="text" placeholder="Type a message here" id="messageInput" aria-describedby="descriptionBtn" />
+								<input class="form-control" type="text" placeholder="Type a message here" id="messageInput" aria-describedby="messageBtn" />
 								<span class="input-group-addon btn btn-default" id="messageBtn">Post</span>
 							</div>
 						</form>

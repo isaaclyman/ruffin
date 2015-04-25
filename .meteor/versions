@@ -66,7 +66,7 @@ srp@1.0.3
 templating@1.1.1
 tracker@1.0.7
 twbs:bootstrap-noglyph@3.3.2
-u2622:persistent-session@0.3.2
+u2622:persistent-session@0.3.3
 ui@1.0.6
 underscore@1.0.3
 url@1.0.4
