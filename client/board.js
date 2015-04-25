@@ -27,18 +27,6 @@ Template.board.rendered = function () {
 	Meteor.setInterval(function() {
 		Session.set('rightnow', new Date());
 	}, 20000);
-
-	// Automatically update description (should probably move this to the helper)
-	var description = Tracker.autorun(function () {
-		var board_path = Session.get('board_path');
-		var board = Boards.findOne({ board: board_path });
-		if(board) {
-			Session.set('description', board.description);
-		}
-		return;
-	});
-
-	board.trackers.push(description);
 };
 
 Template.board.onDestroyed(function () {
@@ -81,7 +69,13 @@ Template.board.helpers({
 		return Session.get('zip');
 	},
 	description: function() {
-		return Session.get('description');
+		var board_path = Session.get('board_path');
+		var board = Boards.findOne({ board: board_path });
+		if(board) {
+			return board.description;
+		} else {
+			return null;
+		}
 	},
 	loggedIn: function() {
 		return Session.get('loggedIn');
