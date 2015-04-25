@@ -28,11 +28,9 @@ Objectives
  - Ruffin will never accept sensitive information from anyone.
 4. Users should not ever be annoyed by Ruffin.
  - Emails will only be sent by specific request of the user.
- - There will be no daily or monthly email. A semiannual email may be allowable.
+ - There will be no daily or monthly email.
 
 License
 -------
 
-Copyright 2015 Isaac Lyman. All rights reserved.
-
-(Obviously, though, the source code is publicly viewable, so go ahead and read it if you want.)
+Copyright.
