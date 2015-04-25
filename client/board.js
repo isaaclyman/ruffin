@@ -1,5 +1,4 @@
 var board = {};
-board.trackers = [];
 
 Template.board.rendered = function () {
 	// Turn on tooltips
@@ -28,12 +27,6 @@ Template.board.rendered = function () {
 		Session.set('rightnow', new Date());
 	}, 20000);
 };
-
-Template.board.onDestroyed(function () {
-	for(var trk in board.trackers) {
-		board.trackers[trk].stop();
-	}
-});
 
 Template.board.events({
 	"submit #newDescription" : function (event) {
