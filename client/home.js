@@ -77,18 +77,13 @@ Template.home.events({
 		Router.go('/failure/reason/access_link');
 	},
 	"submit #begin": function (event) {
-		var username  = event.target[0].value.toString().toLowerCase().trim();
-		var zip   = parseInt(event.target[1].value.toString().substring(0,3));
-		var hobby = event.target[2].value
-					.toString()
-					.trim()
-					.toLowerCase()
-					.replace(/ /g, '_')
-					.replace(/[^\w_]/g, '');
-		var board = zip + hobby;
-		
 		// Don't do a page refresh...don't do it...
 		event.preventDefault();
+
+		var username  = app.transformUsername(event.target[0].value);
+		var zip       = app.transformRegion(event.target[1].value);
+		var hobby     = app.transformToUrl(event.target[2].value);
+		var board     = zip + hobby;
 
 		// If user wants to browse anonymously, let it happen
 		if(!username || username === '') {

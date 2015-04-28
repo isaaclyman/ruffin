@@ -20,7 +20,7 @@ api.checkBoardPath = function(board_path) {
 	} else if(board_path.substring(3) === 'undefined') {
 		throw new Meteor.Error('API', 'No hobby defined.');
 		return false;
-	} else if(!board_path.match(/^[\w]{1,203}$/)) {
+	} else if(!board_path.match(/^[\w\d_]{1,203}$/)) {
 		throw new Meteor.Error('API', 'Board path match failed.');
 		return false;
 	}
@@ -28,14 +28,14 @@ api.checkBoardPath = function(board_path) {
 };
 api.checkBoardName = function(name) {
 	check(name, String);
-	if(!name.match(/^[\w]{1,200}$/)) {
+	if(!name.match(/^[\w\d_]{1,200}$/)) {
 		throw new Meteor.Error('API', 'Invalid hobby name.');
 		return false;
 	}
 	return true;
 };
 api.checkRegion = function(region) {
-	check(region, Number);
+	check(region, String);
 	if(!region.match(/^[0-9]{3,5}$/)) {
 		throw new Meteor.Error('API', 'Invalid region.');
 		return false;
@@ -82,7 +82,7 @@ Meteor.methods({
 		});
 		if( !api.checkBoardPath(board.board) ||
 			!api.checkBoardName(board.hobby) ||
-			!api.checkRegion(board.zip) ) {
+			!api.checkRegion(board.zip.toString()) ) {
 				return false;
 		}
 		if( Boards.findOne({ board: board.board }) ) {

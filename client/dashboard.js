@@ -1,13 +1,21 @@
 var dashboard = {};
 dashboard.addHobby = function() {
-	if(!Session.get('zip')) {
-		Session.set('zip', Meteor.user().profile.zip);
-	}
-	if(!Session.get('hobby')) {
+	var zip = Session.get('zip'), 
+		hobby = Session.get('hobby');
+	// Not being able to get the hobby is a fatal error
+	if(!hobby) {
 		Session.set('warning_hobby', 'That didn\'t work. Please try again.');
 		return false;
 	}
-	Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
+	// Not being able to get the zip is recoverable
+	if(!zip) {
+		zip = Meteor.user().profile.zip;
+		Session.set('zip', zip);
+	}
+	zip = app.transformRegion(zip);
+	hobby = app.transformToUrl(hobby);
+	console.log(hobby);
+	Router.go('/region/' + zip + '/board/' + hobby);
 };
 
 Template.dashboard.rendered = function() {
