@@ -2,7 +2,35 @@
 
 div.dashboard {
 	button.boardList {
+		position: relative;
 		font-family: "prociono", Georgia, serif;
+		min-width: 133px;
 		margin-bottom: 10px;
+
+		span.board-name {
+			opacity: 1;
+			.transition(opacity .1s);
+		}
+
+		span.board-options {
+			position: absolute;
+			left: 1px;
+			top: 2px;
+			display: none;
+			cursor: pointer;
+			padding: 3px 6px;
+		}
+
+		&.select span.board-name {
+			opacity: 0;
+		}
+
+		&.select span.board-options {
+			display: inline-block;
+		}
+
+		span.divider {
+			color: @light-text;
+		}
 	}
 }

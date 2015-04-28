@@ -5,9 +5,11 @@
 @border-color: #888888;
 @light-text: #444444;
 @shadow-color: #DDDDDD;
+@transparent-shadow: rgba(221,221,221,0.6);
 @fa-check-color: #33CC33;
 @window-border: rgb(204,204,204);
 @warning-color: #D43B43;
+@code-color: #CCCCCC;
 
 // Fonts
 @font-face {
@@ -88,6 +90,29 @@ span.warning {
   font-weight: bold;
 }
 
+span.code {
+  border: 1px solid @code-color;
+  border-radius: 3px;
+  padding: 3px 5px;
+  margin: 0px 3px;
+  font-family: "Courier New", Courier, monospace;
+}
+
+span.bottom-outline {
+  border-bottom: 1px solid @code-color;
+  padding: 3px 5px;
+  margin: 0px 3px;
+}
+
+button.thinBtn {
+  padding: 1px 9px;
+  margin-top: -5px;
+}
+
+p.break-top {
+  margin-top: 10px;
+}
+
 .nomargin {
   margin-bottom: 0px;
 }
@@ -112,4 +137,11 @@ p, h1, h2, h3, span {
 
 .capitalize {
   text-transform: capitalize;
+}
+
+.transition(@details) {
+  -webkit-transition: @details;
+     -moz-transition: @details;
+       -o-transition: @details;
+          transition: @details;
 }

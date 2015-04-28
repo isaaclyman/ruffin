@@ -3,13 +3,27 @@
 	<div class="center row dashboard">
 		<div class="col-xs-12">
 			<h1>Welcome, <span class="capitalize">{{username}}.</span></h1>
+			<p>
+				Your current region is <span class="bottom-outline" data-toggle="tooltip" data-original-title="This is the first three digits of your zip code.">{{zip}}</span> <button class="btn btn-default thinBtn" id="changeZip"><i class="fa fa-pencil"></i> Edit</button>
+			</p>
 			{{#if boards}}
 				<p>You're a member of the following boards:</p>
 			{{/if}}
 			<p>
 				{{#each boards}}
 					<button class="btn btn-default boardList">
-						<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
+						<span class="board-name">
+							<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
+						</span>
+						<span class="board-options">
+							<span class="goBtn">
+								<i class="fa fa-external-link fa-lg"></i> Visit
+							</span>
+							<span class="divider"> | </span>
+							<span class="deleteBtn">
+								Delete <i class="fa fa-trash fa-lg"></i>
+							</span>
+						</span>
 					</button>
 				{{/each}}
 			</p>
@@ -20,6 +34,9 @@
                 <input class="form-control" id="boardInput" type="text" placeholder="I like..." aria-describedby="addButton" />
                 <span class="input-group-addon btn btn-default" id="addButton" {{hobbyPerfect}}>Add</span>
             </div>
+            <p class="break-top">
+            	All boards that you visit are automatically added to your profile.
+            </p>
 		</div>
 	</div>
 </template>
