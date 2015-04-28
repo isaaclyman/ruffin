@@ -4,6 +4,7 @@ var api = {};
 	PRIVATE METHODS
 */
 api.getName = function(user_id) {
+	check(user_id, String);
 	if(!user_id) {
 		throw new Meteor.Error('API',
 			'Called getName with invalid arguments');
@@ -12,6 +13,7 @@ api.getName = function(user_id) {
 	return People.findOne({ _id: user_id }).name;
 };
 api.checkBoardPath = function(board_path) {
+	check(board_path, String);
 	if(board_path.substring(0,3) === 'NaN') {
 		throw new Meteor.Error('API', 'No region defined.');
 		return false;
@@ -25,6 +27,7 @@ api.checkBoardPath = function(board_path) {
 	return true;
 };
 api.checkBoardName = function(name) {
+	check(name, String);
 	if(!name.match(/^[\w]{1,200}$/)) {
 		throw new Meteor.Error('API', 'Invalid hobby name.');
 		return false;
@@ -32,6 +35,7 @@ api.checkBoardName = function(name) {
 	return true;
 };
 api.checkRegion = function(region) {
+	check(region, Number);
 	if(!region.match(/^[0-9]{3,5}$/)) {
 		throw new Meteor.Error('API', 'Invalid region.');
 		return false;

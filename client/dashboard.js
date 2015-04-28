@@ -3,11 +3,11 @@ dashboard.addHobby = function() {
 	if(!Session.get('zip')) {
 		Session.set('zip', Meteor.user().profile.zip);
 	}
-	if(Session.get('hobby')) {
-		Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
-	} else {
+	if(!Session.get('hobby')) {
 		Session.set('warning_hobby', 'That didn\'t work. Please try again.');
+		return false;
 	}
+	Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
 };
 
 Template.dashboard.rendered = function() {
@@ -47,7 +47,7 @@ Template.dashboard.events({
 		Router.go('/region/' + this.zip + '/board/' + this.hobby);
 	},
 	"click .deleteBtn" : function (event) {
-
+		Meteor.call('removeBoardFromPerson', this.board_path);
 	},
 	"keyup #boardInput": function (event) {
 		// Submit if enter key
@@ -104,7 +104,12 @@ Template.dashboard.helpers({
 			for(var board in userBoards) {
 				var zip = userBoards[board].substring(0,3);
 				var hobby = userBoards[board].substring(3);
-				displayBoards.push({hobby: hobby, zip: zip});
+				var board_path = zip + hobby;
+				displayBoards.push({
+					hobby: hobby, 
+					zip: zip, 
+					board_path: board_path
+				});
 			}
 			return displayBoards;
 		}
