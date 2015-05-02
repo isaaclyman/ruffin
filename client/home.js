@@ -1,83 +1,40 @@
-var home = {};
-home.trackers = [];
-
-// Enable tooltips, set default vars
 Template.home.rendered = function() {
-	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
-	Session.setDefault({
-		name: '',
-		zip: '',
-		hobby: '',
-		warning_name: '',
-		warning_zip: '',
-		zipPerfect: false,
-		warning_hobby: ''
-	});
-	Session.set('nameTaken', false);
+	app.turnOnTooltips();
 
-	var submitTracker = Tracker.autorun(function () {
-		var sub = (Session.get('warning_name') === '' &&
-				   Session.get('warning_zip') === '' &&
-				   Session.get('warning_hobby') === '' &&
-				   Session.get('zip') !== '' &&
-				   Session.get('zipPerfect') &&
-				   Session.get('hobby') !== '');
-		Session.set('submittable', sub);
-	});
-	home.trackers.push(submitTracker);
+	home.form.initialize();
+
+	home.trackSubmittable();
 };
 
 Template.home.onDestroyed(function() {
-	for(var trk in home.trackers) {
-		home.trackers[trk].stop();
-	}
+	home.clearTrackers();
 });
 
 Template.home.events({
 	"keyup #nameInput": function (event) {
 		var name = event.currentTarget.value;
-		if( name.length > 36 ) {
-			Session.set('warning_name', 'This name is too long.');
-		} else {
-			Session.set('warning_name', '');
-		}
 		Session.set('name', name);
+		home.form.validateName(name);
 		return;
 	},
 	"keyup #zipInput": function (event) {
 		var zip = event.currentTarget.value;
-		if( zip.length > 5 && zip.match(/^[0-9]+$/) ) {
-			Session.set('warning_zip', 'Five-digit zip codes only.');
-			Session.set('zipPerfect', false);
-		} else if ( zip.length > 0 && !zip.match(/^[0-9]+$/) ) {
-			Session.set('warning_zip', 'Only numbers are allowed.');
-			Session.set('zipPerfect', false);
-		} else if ( zip.match(/^[0-9]{5}$/) ) {
-			Session.set('warning_zip', '');
-			Session.set('zipPerfect', true);
-		} else {
-			Session.set('warning_zip', '');
-			Session.set('zipPerfect', false);
-		}
 		Session.set('zip', zip);
+		Session.set('zipPerfect', home.form.validateZip(zip));
 		return;
 	},
 	"keyup #hobbyInput": function (event) {
 		var hobby = event.currentTarget.value;
-		if( hobby.length > 200 ) {
-			Session.set('warning_hobby', 'This hobby is too long.');
-		} else {
-			Session.set('warning_hobby', '');
-		}
 		Session.set('hobby', hobby);
+		home.form.validateHobby(hobby);
 		return;
 	},
 	"click #lostLink": function (event) {
 		bootbox.alert('No worries! Use this page to get a new link.');
-		app.fail('access_link', ['user-initiated|home.js|click #lostLink'], false);
+		app.fail('access_link', ['user-initiated|home.js|click #lostLink']);
 	},
 	"submit #begin": function (event) {
-		// Don't do a page refresh...don't do it...
+		// Don't do a page refresh
 		event.preventDefault();
 
 		var username  = app.transformUsername(event.target[0].value);
@@ -88,7 +45,6 @@ Template.home.events({
 		// If user wants to browse anonymously, let it happen
 		if(!username || username === '') {
 			Meteor.logout();
-			Meteor.apply('logOut', [], true);
 			Session.setPersistent('user_id', null);
 			Session.setPersistent('password', null);
 			Session.setPersistent('username', null);
@@ -100,21 +56,14 @@ Template.home.events({
 		}
 		
 		// If the user is trying to log in again as themself, let it happen
-		var loginNeeded = true;
-		Meteor.apply('alreadyLoggedIn', [username], true, function(error, result) {
-			if(result) {
-				Session.setPersistent('zip', zip);
-				Session.setPersistent('hobby', hobby);
-				Session.setPersistent('board', board);
-				Router.go('/region/' + zip + '/board/' + hobby);
-				loginNeeded = false;
-				return false;
-			}
-		});
-
-		if(!loginNeeded) {
+		if(Meteor.user() && Meteor.user().username === username) {
+			Session.setPersistent('zip', zip);
+			Session.setPersistent('hobby', hobby);
+			Session.setPersistent('board', board);
+			Router.go('/region/' + zip + '/board/' + hobby);
 			return false;
 		}
+
 		// Stop user if their name is taken
 		Meteor.call('personExists', username, function(error, result) {
 			if(result) {
@@ -177,3 +126,71 @@ Template.home.helpers({
 		return !!(Session.get('nameTaken'));
 	}
 });
+
+var home = {
+	trackers: [],
+	form: {
+		initialize: function() {
+			Session.setDefault({
+				hobby: '',
+				name: '',
+				nameTaken: false,
+				warning_hobby: '',
+				warning_name: '',
+				warning_zip: '',
+				zip: '',
+				zipPerfect: false
+			});
+		},
+		validateName: function(name) {
+			if( name.length > 36 ) {
+				Session.set('warning_name', 'This name is too long.');
+				return false;
+			}
+			Session.set('warning_name', '');
+			return true;
+		},
+		validateZip: function(zip) {
+			if( zip.length > 0 && !zip.match(/^[0-9]+$/) ) {
+				Session.set('warning_zip', 'Only numbers are allowed.');
+				return false;
+			} else if ( zip.length > 5 && zip.match(/^[0-9]+$/) ) {
+				Session.set('warning_zip', 'Five-digit zip codes only.');
+				return false;
+			} else if ( !zip.match(/^[0-9]{3,5}$/) ) {
+				Session.set('warning_zip', 'This isn\'t a valid zip code.');
+				return false;
+			}
+			Session.set('warning_zip', '');
+			return true;
+		},
+		validateHobby: function(hobby) {
+			if( hobby.length > 200 ) {
+				Session.set('warning_hobby', 'This hobby is too long.');
+				return false;
+			}
+			Session.set('warning_hobby', '');
+			return true;
+		}
+	},
+	clearTrackers: function() {
+		var trackers = this.trackers;
+		for(var tracker = 0; tracker < trackers.length; tracker++) {
+			trackers[tracker].stop();
+		}
+		return true;
+	},
+	trackSubmittable: function() {
+		var submittable = Tracker.autorun(function () {
+			Session.set('submittable',
+			   (Session.get('warning_name') === '' &&
+				Session.get('warning_zip') === '' &&
+				Session.get('warning_hobby') === '' &&
+				Session.get('zip') !== '' &&
+				Session.get('zipPerfect') &&
+				Session.get('hobby') !== '');
+			);
+		});
+		this.trackers.push(submittable);
+	}
+};

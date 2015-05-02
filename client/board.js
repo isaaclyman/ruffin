@@ -1,32 +1,16 @@
-var board = {};
-
 Template.board.rendered = function () {
-	// Turn on tooltips
-	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
+	app.turnOnTooltips();
 	
-	// Scroll to the bottom of the chats whenever a new one appears
-	$('#chatWindow').bind('DOMNodeInserted', function() {
-		$('#chatWindow')[0].scrollTop = $('#chatWindow')[0].scrollHeight;
-	});
+	board.scrollToBottomImmediately();
 
-	// Scroll to the bottom of the chats immediately
-	Meteor.setTimeout(function() {
-		$('#chatWindow')[0].scrollTop = $('#chatWindow')[0].scrollHeight;
-	}, 500);
-	
-	Session.setDefault('loggedIn', false);
-	Session.setDefault('rightnow', new Date());
+	board.onChatScrollToBottom();
 
-	// Find out if the user has a username or is browsing anonymously
-	Meteor.call('loggedIn', function(error, result) {
-		Session.set('loggedIn', result);
-	});
-
-	// Update the time regularly (only displays minutes)
-	Meteor.setInterval(function() {
-		Session.set('rightnow', new Date());
-	}, 20000);
+	board.startClock(20000);
 };
+
+Template.board.onDestroyed(function () {
+	board.clearIntervals();
+});
 
 Template.board.events({
 	"submit #newDescription" : function (event) {
@@ -71,7 +55,7 @@ Template.board.helpers({
 		}
 	},
 	loggedIn: function() {
-		return Session.get('loggedIn');
+		return !!(Meteor.userId());
 	},
 	messages: function() {
 		var messages = this.messages || false;
@@ -112,3 +96,37 @@ Template.board.helpers({
 		return month + ' ' + day + ', ' + year;
 	}
 });
+
+/*
+	LOCAL NAMESPACE
+*/
+
+var board = {
+	trackers:  [],
+	intervals: [],
+	rightnow: Date(),
+	clearIntervals: function() {
+		var intervals = this.intervals;
+		for(var interval = 0; interval < intervals.length; interval++) {
+			Meteor.clearInterval(intervals[interval]);
+		}
+		return true;
+	},
+	onChatScrollToBottom: function() {
+		$('#chatWindow').bind('DOMNodeInserted', function() {
+			$('#chatWindow')[0].scrollTop = $('#chatWindow')[0].scrollHeight;
+		});
+	},
+	scrollToBottomImmediately: function() {
+		Meteor.setTimeout(function() {
+			$('#chatWindow')[0].scrollTop = $('#chatWindow')[0].scrollHeight;
+		}, 500);
+	},
+	startClock: function(interval) {
+		var rightnow = this.rightnow;
+		var clock = Meteor.setInterval(function() {
+			rightnow = Date();
+		}, interval);
+		this.intervals.push(clock);
+	}
+};
