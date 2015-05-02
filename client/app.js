@@ -40,6 +40,16 @@ app.checkBoardName = function(name) {
 	return true;
 };
 
+app.fail = function(reason, logArray, explicit) {
+	Router.go('/failure/reason/' + reason);
+	if(!explicit) {
+		return true;
+	}
+	console.log(reason + ':');
+	console.log(logArray);
+	return true;
+};
+
 // Set page title dynamically
 Handlebars.registerHelper("setTitle", function(title) {
 	if(title) {

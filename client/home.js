@@ -74,7 +74,7 @@ Template.home.events({
 	},
 	"click #lostLink": function (event) {
 		bootbox.alert('No worries! Use this page to get a new link.');
-		Router.go('/failure/reason/access_link');
+		app.fail('access_link', ['user-initiated|home.js|click #lostLink'], false);
 	},
 	"submit #begin": function (event) {
 		// Don't do a page refresh...don't do it...
