@@ -188,7 +188,7 @@ var home = {
 				Session.get('warning_hobby') === '' &&
 				Session.get('zip') !== '' &&
 				Session.get('zipPerfect') &&
-				Session.get('hobby') !== '');
+				Session.get('hobby') !== '')
 			);
 		});
 		this.trackers.push(submittable);
