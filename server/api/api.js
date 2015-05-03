@@ -9,17 +9,19 @@ Meteor.methods({
 		check(board, {
 			board: String,
 			hobby: String,
-			zip: Number
+			zip: String
 		});
-		var board_path = app.transform.humanToUrl(board.board);
+		board.board = app.transform.humanToUrl(board.board);
+		board.hobby = app.transform.humanToUrl(board.hobby);
+		board.zip = app.transform.region(board.zip);
 		// Validate each property
 		if( !api.validate.boardPath(board.board) ||
 			!api.validate.boardName(board.hobby) ||
-			!api.validate.region(board.zip.toString()) ) {
+			!api.validate.region(board.zip) ) {
 				return false;
 		}
 		// Make sure this is a unique board name
-		if( Boards.findOne({ board: board_path }) ) {
+		if( Boards.findOne({ board: board.board }) ) {
 			throw new Meteor.Error('API', 
 				'Called makeNewBoard for a board that already exists');
 			return false;
@@ -31,9 +33,9 @@ Meteor.methods({
 			'yourself, leaving a secure contact card, and setting ' +
 			'up an event. Go ahead, be a trendsetter.';
 		var newBoard = {
-			board: board_path,
+			board: board.board,
 			hobby: board.hobby,
-			zip: app.transform.region(board.zip),
+			zip: board.zip,
 			createdDate: Date.now(),
 			messages : [{
 				user_id: 'root',
@@ -96,7 +98,9 @@ Meteor.methods({
 	},
 	addBoardToPerson: function(board_path) {
 		check(board_path, String);
-		if(!api.checkBoardPath(board_path)) {
+		check(this.userId, String);
+		board_path = app.transform.humanToUrl(board_path);
+		if(!api.validate.boardPath(board_path)) {
 			return false;
 		}
 		if( !Meteor.users.findOne({ _id: this.userId }) ) {
@@ -123,7 +127,7 @@ Meteor.methods({
 	changeZip: function(zip) {
 		check(zip, Number);
 		check(this.userId, String);
-		zip = Number(zip.toString().substring(0,3));
+		zip = app.transform.region(zip);
 		Meteor.users.update({ _id: this.userId },
 							{ $set: { 'profile.zip': zip }});
 		return zip;
@@ -134,13 +138,15 @@ Meteor.methods({
 	addMessage: function(board_path, text) {
 		check(board_path, String);
 		check(text, String);
+		check(this.userId, String);
 		if(text === '') {
 			return false;
 		}
-		var username = Meteor.user().username;
+		var board_path = app.transform.humanToUrl(board_path);
 		var message = {
+			_id: Random.id(),
 			user_id: this.userId,
-			name: username,
+			name: Meteor.user().username,
 			text: text,
 			timestamp: Date.now()
 		};
@@ -148,11 +154,15 @@ Meteor.methods({
 					  { $push: { 'messages': message } });
 		return true;
 	},
-	deleteMessage: function(board_path, timestamp) {
+	deleteMessage: function(board_path, id, timestamp) {
 		check(board_path, String);
+		check(id, String);
 		check(timestamp, Number);
+		check(this.userId, String);
 		Boards.update({ board: board_path },
-					  { $pull: { messages : { user_id: this.userId, timestamp: timestamp } } });
+					  { $pull: {messages: { user_id: this.userId,
+					  						_id: id,
+					  						timestamp: timestamp} } });
 		return true;
 	}
 });

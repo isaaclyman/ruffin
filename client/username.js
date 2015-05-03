@@ -1,14 +1,5 @@
-var username = {};
-username.validateEmail = function(email) {
-	return (email.search(/^.+@.+\..+$/i) !== -1);
-}
-
 Template.username.rendered = function() {
-	Session.set('chooseEmail', false);
-	Session.set('choiceMade' , false);
-	Session.set('emailValid', false);
-	Session.set('warning_email', '');
-	Session.set('email', null);
+	username.form.initialize();
 };
 
 Template.username.events({
@@ -36,11 +27,7 @@ Template.username.events({
 	"change #email" : function(event) {
 		var email = event.currentTarget.value;
 		Session.set('email', email);
-		if(!username.validateEmail(email)) {
-			Session.set('warning_email', 'This doesn\'t look like a valid email address.');
-		} else {
-			Session.set('warning_email', '');
-		}
+		username.validate.email(email);
 	},
 	"keyup #emailConfirm" : function(event) {
 		var email2 = event.currentTarget.value;
@@ -114,3 +101,23 @@ Template.username.helpers({
 		return this;
 	}
 });
+
+var username = {
+	form: {
+		initialize: function() {
+			Session.set({
+				chooseEmail: false,
+				choiceMade: false,
+				warning_email, '',
+				email: null
+			});
+		}
+	},
+	validate: {
+		email: function(email) {
+			var validation = app.validate.email(email);
+			Session.set('warning_email', validation.message);
+			return validation.valid;
+		}
+	}
+};

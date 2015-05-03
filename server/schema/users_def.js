@@ -15,7 +15,7 @@ EmailPattern = new SimpleSchema({
 
 ProfilePattern = new SimpleSchema({
 	zip: {
-		type: Number,
+		type: String,
 		label: "Zip Code",
 		regEx: /^[0-9]{3}$/,
 		min: 000,

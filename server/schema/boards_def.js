@@ -1,5 +1,8 @@
 //Message is a property of Boards
 MessagePattern = new SimpleSchema({
+	_id: {
+		type: String
+	},
 	user_id: {
 		type: String
 	},
@@ -40,7 +43,7 @@ Boards.attachSchema(new SimpleSchema({
 		max: 200
 	},
 	zip: {
-		type: Number,
+		type: String,
 		label: "Zip code",
 		regEx: /^[0-9]{3}$/,
 		min: 000,
