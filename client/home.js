@@ -3,7 +3,7 @@ Template.home.rendered = function() {
 
 	home.form.initialize();
 
-	home.trackSubmittable();
+	home.trackSubmittability();
 };
 
 Template.home.onDestroyed(function() {
@@ -14,7 +14,7 @@ Template.home.events({
 	"keyup #nameInput": function (event) {
 		var name = event.currentTarget.value;
 		Session.set('name', name);
-		home.form.validateName(name);
+		home.form.validate.name(name);
 		return;
 	},
 	"keyup #zipInput": function (event) {
@@ -26,40 +26,31 @@ Template.home.events({
 	"keyup #hobbyInput": function (event) {
 		var hobby = event.currentTarget.value;
 		Session.set('hobby', hobby);
-		home.form.validateHobby(hobby);
+		home.form.validate.hobby(hobby);
 		return;
 	},
 	"click #lostLink": function (event) {
 		bootbox.alert('No worries! Use this page to get a new link.');
-		app.fail('access_link', ['user-initiated|home.js|click #lostLink']);
+		app.fail('access_link',
+			['user-initiated|home.js|click #lostLink']);
 	},
 	"submit #begin": function (event) {
 		// Don't do a page refresh
 		event.preventDefault();
 
-		var username  = app.transformUsername(event.target[0].value);
-		var zip       = app.transformRegion(event.target[1].value);
-		var hobby     = app.transformToUrl(event.target[2].value);
-		var board     = zip + hobby;
+		var username = app.transformUsername(Session.get('name'));
+		var zip      = app.transformRegion(Session.get('zip'));
+		var hobby    = app.transformToUrl(Session.get('hobby'));
+		var board    = zip + hobby;
 
-		// If user wants to browse anonymously, let it happen
+		// If user wants to browse anonymously, let them
 		if(!username || username === '') {
-			Meteor.logout();
-			Session.setPersistent('user_id', null);
-			Session.setPersistent('password', null);
-			Session.setPersistent('username', null);
-			Session.setPersistent('zip', zip);
-			Session.setPersistent('hobby', hobby);
-			Session.setPersistent('board', board);
-			Router.go('/region/' + zip + '/board/' + hobby);
-			return false;
-		}
-		
-		// If the user is trying to log in again as themself, let it happen
-		if(Meteor.user() && Meteor.user().username === username) {
-			Session.setPersistent('zip', zip);
-			Session.setPersistent('hobby', hobby);
-			Session.setPersistent('board', board);
+			app.logOut();
+			Session.setPersistent({
+				zip: zip,
+				hobby: hobby,
+				board: board
+			};
 			Router.go('/region/' + zip + '/board/' + hobby);
 			return false;
 		}
@@ -70,22 +61,26 @@ Template.home.events({
 				Session.set('warning_name', 'This name is taken.');
 				Session.set('nameTaken', true);
 				return false;	
-			} else {
-				// Otherwise, create a user for them
-				var newPerson = {
-					username: username,
-					zip: zip
-				};
-				Meteor.apply('makeNewPerson', [newPerson], true, function(error, result) {
-					Meteor.loginWithPassword({id: result.user_id},result.password);
-					Session.setPersistent('username', username);
-					Session.setPersistent('zip', zip);
-					Session.setPersistent('hobby', hobby);
-					Session.setPersistent('board', board);
-					Router.go('/reserve/id/' + result.user_id + '/token/' + result.password);
-					return false;
-				});
 			}
+			// Otherwise, create a user for them
+			var newPerson = {
+				username: username,
+				zip: zip
+			};
+			Meteor.apply('makeNewPerson', [newPerson], true,
+				function(error, result) {
+					Meteor.loginWithPassword(
+						{id: result.user_id},
+						result.password);
+					Session.setPersistent({
+						zip: zip,
+						hobby: hobby,
+						board: board
+					};
+					Router.go('/reserve/id/' + result.user_id +
+						'/token/' + result.password);
+					return false;
+			});
 		});
 	}
 });
@@ -127,6 +122,11 @@ Template.home.helpers({
 	}
 });
 
+
+/*
+	LOCAL NAMESPACE
+*/
+
 var home = {
 	trackers: [],
 	form: {
@@ -142,35 +142,26 @@ var home = {
 				zipPerfect: false
 			});
 		},
-		validateName: function(name) {
-			if( name.length > 36 ) {
-				Session.set('warning_name', 'This name is too long.');
+		validate: {
+			name: function(name) {
+				var validation = app.validate.username(name);
+				Session.set('warning_name', validation.message);
+				return validation.valid;
+			},
+			zip: function(zip) {
+				if(zip.length >= 3) {
+					var validation = app.validate.region(zip);
+					Session.set('warning_zip', validation.message);
+					return validation.valid;
+				}
+				Session.set('warning_zip', '');
 				return false;
+			},
+			hobby: function(hobby) {
+				var validation = app.validate.boardName(hobby);
+				Session.set('warning_hobby', validation.message);
+				return validation.valid;
 			}
-			Session.set('warning_name', '');
-			return true;
-		},
-		validateZip: function(zip) {
-			if( zip.length > 0 && !zip.match(/^[0-9]+$/) ) {
-				Session.set('warning_zip', 'Only numbers are allowed.');
-				return false;
-			} else if ( zip.length > 5 && zip.match(/^[0-9]+$/) ) {
-				Session.set('warning_zip', 'Five-digit zip codes only.');
-				return false;
-			} else if ( !zip.match(/^[0-9]{3,5}$/) ) {
-				Session.set('warning_zip', 'This isn\'t a valid zip code.');
-				return false;
-			}
-			Session.set('warning_zip', '');
-			return true;
-		},
-		validateHobby: function(hobby) {
-			if( hobby.length > 200 ) {
-				Session.set('warning_hobby', 'This hobby is too long.');
-				return false;
-			}
-			Session.set('warning_hobby', '');
-			return true;
 		}
 	},
 	clearTrackers: function() {
@@ -180,7 +171,9 @@ var home = {
 		}
 		return true;
 	},
-	trackSubmittable: function() {
+	trackSubmittability: function() {
+		// Form is submittable if there are no warnings and
+		//  both hobby and zip are filled
 		var submittable = Tracker.autorun(function () {
 			Session.set('submittable',
 			   (Session.get('warning_name') === '' &&
