@@ -73,12 +73,10 @@ Template.username.helpers({
 		return 'Ruffin|name';
 	},
 	username: function() {
-		var username = Session.get('username');
-		if(username[0] === '"') {
-			return EJSON.parse(username);
-		} else {
-			return username;
+		if(!Meteor.user()) {
+			return ' ';
 		}
+		return app.transform.maybeEjson(Meteor.user().username);
 	},
 	chooseEmail: function() {
 		return Session.get('chooseEmail');
@@ -92,6 +90,8 @@ Template.username.helpers({
 	choiceMade: function() {
 		return Session.get('choiceMade');
 	},
+	// These are in the data context, and therefore not in Tracker.autorun statements.
+	//  This will be replaced by something more elegant eventually.
 	user_id: function() {
 		Session.set('user_id', this);
 		return this;

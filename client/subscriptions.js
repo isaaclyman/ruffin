@@ -2,8 +2,7 @@
 	ALLOW
 */
 
-// VALIDATION IS HANLDED SERVER-SIDE
-// This is here for reactive optimization
+// This is here for reactive optimization; needs extended implementation
 
 // Allow boards to be created
 Boards.allow({

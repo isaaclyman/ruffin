@@ -1,27 +1,7 @@
-var dashboard = {};
-dashboard.addHobby = function() {
-	var zip = Session.get('zip'), 
-		hobby = Session.get('hobby');
-	// Not being able to get the hobby is a fatal error
-	if(!hobby) {
-		Session.set('warning_hobby', 'That didn\'t work. Please try again.');
-		return false;
-	}
-	// Not being able to get the zip is recoverable
-	if(!zip) {
-		zip = Meteor.user().profile.zip;
-		Session.set('zip', zip);
-	}
-	zip = app.transformRegion(zip);
-	hobby = app.transformToUrl(hobby);
-	console.log(hobby);
-	Router.go('/region/' + zip + '/board/' + hobby);
-};
-
 Template.dashboard.rendered = function() {
-	$('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
+	app.turnOnTooltips();
 	if(!Meteor.userId()) {
-		Router.go('/failure');
+		app.fail('no_login', [Meteor.userId()]);
 	}
 	Session.setDefault('username', '...');
 	Session.set({
@@ -36,8 +16,7 @@ Template.dashboard.events({
 			if (result === null) {
 				return false;
 			}
-			if (!result.match(/^[0-9]{3,5}$/)) {
-				bootbox.alert('This is not a valid zip code.');
+			if(!dashboard.validate.region(result)) {
 				return false;
 			}
 			Meteor.call('changeZip', Number(result));
@@ -61,13 +40,11 @@ Template.dashboard.events({
 		// Submit if enter key
 		if(event.which === 13 && Session.get('hobby')) {
 			dashboard.addHobby();
+			return;
 		}
-		// Immediate validation
 		var hobby = event.currentTarget.value;
-		if( hobby.length > 200 ) {
-			Session.set('warning_hobby', 'This hobby is too long.');
-		} else {
-			Session.set('warning_hobby', '');
+		if(!dashboard.validate.hobby(hobby)) {
+			return;
 		}
 		Session.set('hobby', hobby);
 		return;
@@ -88,43 +65,34 @@ Template.dashboard.helpers({
 	username: function() {
 		if(!Meteor.user()) {
 			return ' ';
-		} else {
-			Session.set('username', Meteor.user().username);
 		}
-		var username = Session.get('username');
-		if(username[0] === '"') {
-			return EJSON.parse(username);
-		} else {
-			return username;
-		}
+		dashboard.data.username = Meteor.user().username;
+		return app.transform.maybeEjson(dashboard.data.username);
 	},
 	zip: function() {
 		if(!Meteor.user()) {
 			return '###';
-		} else {
-			return Meteor.user().profile.zip;
 		}
+		return Meteor.user().profile.zip;
 	},
 	boards: function() {
 		if(Meteor.user()) {
-			var userBoards = Meteor.user().profile.boards;
+			dashboard.data.userBoards = Meteor.user().profile.boards;
 			var displayBoards = [];
-			for(var board in userBoards) {
-				var zip = userBoards[board].substring(0,3);
-				var hobby = userBoards[board].substring(3);
-				var board_path = zip + hobby;
+			for(var board in dashboard.data.userBoards) {
 				displayBoards.push({
-					hobby: hobby, 
-					zip: zip, 
-					board_path: board_path
+					zip: userBoards[board].substring(0,3),
+					hobby: userBoards[board].substring(3),
+					board_path: this.zip + this.hobby
 				});
 			}
 			return displayBoards;
 		}
+		return [];
 	},
 	hobbyPerfect: function() {
 		return !(Session.get('hobby') !== '' &&
-			   Session.get('warning_hobby') === '') ?
+			     Session.get('warning_hobby') === '') ?
 				{'disabled': true} :
 				{};
 	},
@@ -132,3 +100,48 @@ Template.dashboard.helpers({
 		return Session.get('warning_hobby');
 	}
 });
+
+/*
+	LOCAL NAMESPACE
+*/
+
+var dashboard = {
+	addHobby: function() {
+		var zip = Session.get('zip'), 
+			hobby = Session.get('hobby');
+		// Not being able to get the hobby is a fatal error
+		if(!hobby) {
+			Session.set('warning_hobby', 'That didn\'t work. Please try again.');
+			return false;
+		}
+		// Not being able to get the zip is recoverable
+		if(!zip) {
+			zip = Meteor.user().profile.zip;
+			Session.set('zip', zip);
+		}
+		zip = app.transformRegion(zip);
+		hobby = app.transformToUrl(hobby);
+		Router.go('/region/' + zip + '/board/' + hobby);
+	},
+	data: {
+		username: '',
+		userBoards: []
+	},
+	validate: {
+		region: function(region) {
+			var validation = app.validate.region(region);
+			if(!validation.valid) {
+				bootbox.alert('This is not a valid zip code.');
+			}
+			return validation.valid;
+		},
+		hobby: function(hobby) {
+			if(hobby.length < 1) {
+				return false;
+			}
+			var validation = app.validate.boardName(hobby);
+			Session.set('warning_hobby', validation.message);
+			return validation.valid;
+		}
+	}
+};
