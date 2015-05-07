@@ -10,14 +10,19 @@ Template.dashboard.rendered = function() {
 
 Template.dashboard.events({
 	"click #logOut" : function() {
-		if(!Meteor.user().emails) {
-			bootbox.alert('If you log out, your user name will be given away. Is that okay?', function(result) {
+		if(!Meteor.user().emails || !Meteor.user().emails[0].verified) {
+			bootbox.confirm('If you log out, your user name will be given away. Is that okay?', function(result) {
 				if(result === false) {
 					return false;
 				}
 				Meteor.logout(function() {
 					Router.go('/');
 				});
+				return;
+			});
+		} else {
+			Meteor.logout(function() {
+				Router.go('/');
 			});
 		}
 	},
@@ -64,6 +69,15 @@ Template.dashboard.events({
 	},
 	"click #addButton": function (event) {
 		dashboard.addHobby();
+	},
+	"click #destroyAllMessages": function () {
+		bootbox.prompt('Are you sure? If you want to delete all messages you have written ' +
+					   'on every board, please type "DELETE ALL" in the box below.',
+			function(result) {
+				if(result === 'DELETE ALL') {
+					Meteor.call('deleteAllUserMessages', result);
+				}
+		});
 	}
 });
 
@@ -100,6 +114,12 @@ Template.dashboard.helpers({
 			return '';
 		}
 		return Meteor.user().emails[0].address;
+	},
+	emailVerified: function() {
+		if(!Meteor.user() || !Meteor.user().emails || !Meteor.user().emails[0].verified) {
+			return false;
+		}
+		return true;
 	},
 	zip: function() {
 		if(!Meteor.user()) {
@@ -146,11 +166,11 @@ var dashboard = {
 		userBoards: []
 	},
 	tabs: [{
-		name: 'Personal Information',
-		id: 'tab_info'
-	},{
 		name: 'Boards',
 		id: 'tab_boards'
+	},{
+		name: 'Personal Information',
+		id: 'tab_info'
 	},{
 		name: 'Security',
 		id: 'tab_security'

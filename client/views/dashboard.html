@@ -15,23 +15,9 @@
 		</div>
 		
 		<div class="col-xs-12">
-			{{#if tab_info}}
-				<h2>Personal Information</h2>
-				<p>
-					Your current region is <span class="bottom-outline" data-toggle="tooltip" data-original-title="This is the first three digits of your zip code.">{{zip}}</span> <button class="btn btn-default thinBtn" id="changeZip"><i class="fa fa-pencil"></i> Edit</button>
-				</p>
-				{{#if userHasEmail}}
-					<p>
-						The email address you've provided is <span class="bottom-outline">{{email}}</span> <button class="btn btn-default thinBtn" id="changeEmail"><i class="fa fa-pencil"></i> Edit</button>
-					</p>
-				{{else}}
-					<p>We don't have your email address. That's fine with us, but it means that your user name will eventually expire and be given away. You can still reserve it if you'd like.</p>
-					<p><button class="btn btn-default" id="giveEmail">Provide Email</button></p>
-				{{/if}}
-			{{/if}}
 
 			{{#if tab_boards}}
-				<h2>Boards</h2>
+				<p class="heading">Boards</p>
 				{{#if boards}}
 					<p>You're a member of the following boards:</p>
 				{{/if}}
@@ -64,14 +50,44 @@
 	            	All boards that you visit are automatically added to your profile.
 	            </p>
 	        {{/if}}
+			
+			{{#if tab_info}}
+				<p class="heading">Personal Information</p>
+				<p>
+					Your current region is <span class="bottom-outline" data-toggle="tooltip" data-original-title="This is the first three digits of your zip code.">{{zip}}</span> <button class="btn btn-default thinBtn" id="changeZip"><i class="fa fa-pencil"></i> Edit</button>
+				</p>
+				{{#if userHasEmail}}
+					<p>
+						The email address you've provided is <span class="bottom-outline">{{email}}</span> <button class="btn btn-default thinBtn" id="changeEmail"><i class="fa fa-pencil"></i> Edit</button>
+					</p>
+					{{#unless emailVerified}}
+						<p>This email address hasn't been verified yet. If you didn't get a verification link, we can send you a new one.</p>
+						<button class="btn btn-default" id="newVerifyLink">Email Me Again</button>
+					{{/unless}}
+				{{else}}
+					<p>We don't have your email address. That's fine with us, but it means that your user name will eventually expire and be given away. You can still reserve it if you'd like.</p>
+					<p><button class="btn btn-default" id="giveEmail">Provide Email</button></p>
+				{{/if}}
+			{{/if}}
 
 	        {{#if tab_security}}
-	        	<h2>Security</h2>
+	        	<p class="heading">Security</p>
+	        	{{#if userHasEmail}}
+	        		<p>To change your email address, see the "Personal Information" tab. If you'd like a brand-new Ruffin access link, hit the button below.</p>
+	        		<button class="btn btn-default" id="newAccessLink">Get New Link</button>
+	        	{{else}}
+	        		<p>Since you haven't provided an email address, we don't have any identifying information for you (aside from what you've posted on your boards). It doesn't get any more secure than that.</p>
+	        	{{/if}}
+	        	<hr>
+	        	<p>If you'd like to delete every message you've ever posted, use this button. Remember that once you've done it, there's no going back.</p>
+	        	<button class="btn btn-default" id="destroyAllMessages">Destroy All Messages</button>
+	        	<hr>
+	        	<p>If you have any other security concerns, please let us know.</p>
 	        {{/if}}
 
 	        {{#if tab_help}}
-	        	<h2>Help</h2>
-	        	<p>This website was built by <a class="subtle" href="http://www.isaaclyman.com">Isaac Lyman</a> using the <a class="subtle" href="http://www.meteor.com">Meteor</a> platform.</p> 
+	        	<p class="heading">Help</p>
+	        	<p>My name is <a class="subtle" href="http://www.isaaclyman.com">Isaac Lyman</a>. I built this website using the <a class="subtle" href="http://www.meteor.com">Meteor</a> platform.</p> 
 				<p>If you find a bug in the site or have questions, email me: <a class="subtle" href="mailto:ruffin@isaaclyman.com">ruffin@isaaclyman.com</a></p>
 	        {{/if}}
 

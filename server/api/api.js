@@ -170,6 +170,16 @@ Meteor.methods({
 					  						_id: id,
 					  						timestamp: timestamp} } });
 		return true;
+	},
+	deleteAllUserMessages: function(confirm) {
+		check(confirm, String);
+		if(confirm.toLowerCase() !== 'delete all') {
+			return false;
+		}
+		Boards.update({ board: { $exists: true } },
+					  { $pull: {messages: { user_id: this.userId }}},
+					  { multi: true });
+		return true;
 	}
 });
 
