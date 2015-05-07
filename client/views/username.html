@@ -11,7 +11,7 @@
 					<p>
 						<input type="radio" name="email" class="radio-form" id="noEmail" />
 						<label for="noEmail">
-							<b> No,</b> I don't want to use this name forever. I'll pick a different one next time I visit Ruffin.
+							<b> No,</b> I don't want to use this name forever. I'll pick a different one when this one expires.
 						</label>
 					</p>
 					<p>
@@ -31,9 +31,6 @@
 					{{#if choiceMade}}
 						<button class="form-control btn btn-default" {{emailValid}}>Continue to board</button>
 					{{/if}}
-					<!-- These are here so the helpers will run. Not a best practice, but operational for now. -->
-					{{#if user_id}} {{/if}}
-					{{#if password}}{{/if}}
 				</div>
 			</form>
 		</div>

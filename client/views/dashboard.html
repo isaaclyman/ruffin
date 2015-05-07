@@ -1,11 +1,26 @@
 <template name="dashboard">
 	{{setTitle title}}
 	<div class="center row dashboard">
+		<div class="col-xs-9">
+			<h1>Welcome, {{username}}.</h1>
+		</div>
+		<div class="logout col-xs-3">
+			<p><button class="btn btn-default" id="logOut">Log Out</button></p>
+		</div>
 		<div class="col-xs-12">
-			<h1>Welcome, <span class="capitalize">{{username}}.</span></h1>
 			<p>
 				Your current region is <span class="bottom-outline" data-toggle="tooltip" data-original-title="This is the first three digits of your zip code.">{{zip}}</span> <button class="btn btn-default thinBtn" id="changeZip"><i class="fa fa-pencil"></i> Edit</button>
 			</p>
+			{{#if userHasEmail}}
+				<p>
+					The email address you've provided is <span class="bottom-outline">{{email}}</span> <button class="button btn-default thinBtn" id="changeEmail"><i class="fa fa-pencil"></i> Change</button>
+				</p>
+			{{else}}
+				<p>We don't have your email address. That's fine with us, but it means that your user name will eventually expire and be given away. You can still reserve it if you'd like.</p>
+				<p><button class="btn btn-default" id="giveEmail">Provide Email</button></p>
+			{{/if}}
+			<hr>
+
 			{{#if boards}}
 				<p>You're a member of the following boards:</p>
 			{{/if}}
@@ -37,6 +52,10 @@
             <p class="break-top">
             	All boards that you visit are automatically added to your profile.
             </p>
+
+            <hr>
+
+            
 		</div>
 	</div>
 </template>

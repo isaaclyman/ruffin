@@ -13,40 +13,39 @@ Template.board.onDestroyed(function () {
 });
 
 Template.board.events({
-	"submit #newDescription" : function (event) {
+	"submit #newDescription" : function () {
 		event.preventDefault();
-		var description = $('#descriptionInput')[0].value;
-		Meteor.call('addBoardDescription', board.data.board, description);
+		board.form.description.submit(this.board);
 	},
-	"click #deleteBtn" : function (event) {
+	"click #descriptionBtn" : function () {
+		board.form.description.submit(this.board);
+	},
+	"click #deleteBtn" : function () {
 		// lexical scope is the message object
 		var timestamp = this.timestamp;
 		var id = this._id;
-		Meteor.call('deleteMessage', board.data.board, id, timestamp);
+		Meteor.call('deleteMessage', this.board, id, timestamp);
 	},
-	"submit #newMessage" : function (event) {
+	"submit #newMessage" : function () {
 		event.preventDefault();
-		var message = event.currentTarget[0].value;
-		Meteor.call('addMessage', board.data.board, message);
-		event.currentTarget[0].value = '';
+		board.form.message.submit(this.board);
+	},
+	"click #messageBtn" : function () {
+		board.form.message.submit(this.board);
 	}
 });
 
 Template.board.helpers({ 
 	title: function() {
-		return "Ruffin|" + Session.get('hobby');
+		return "Ruffin|" + this.hobby;
 	},
 	board: function() {
-		return Session.get('hobby');
+		return this.hobby;
 	},
 	zip: function() {
-		return Session.get('zip');
+		return this.zip;
 	},
 	description: function() {
-		if(!this.description) {
-			return '';
-		}
-		board.data.board = this.description;
 		return this.description;
 	},
 	loggedIn: function() {
@@ -75,7 +74,7 @@ Template.board.helpers({
 		}
 	},
 	time: function() {
-		return app.transform.toFriendlyTime(Session.get('rightnow'));
+		return app.transform.toFriendlyTime(board.rightnow);
 	}
 });
 
@@ -101,8 +100,10 @@ var board = {
 	},
 	scrollToBottomImmediately: function() {
 		Meteor.setTimeout(function() {
-			$('#chatWindow')[0].scrollTop = $('#chatWindow')[0].scrollHeight;
-		}, 500);
+			if($('#chatWindow').length) {
+				$('#chatWindow')[0].scrollTop = $('#chatWindow')[0].scrollHeight;
+			}
+		}, 600);
 	},
 	startClock: function(interval) {
 		var rightnow = this.rightnow;
@@ -120,7 +121,19 @@ var board = {
 			return !!(message.user_id === Meteor.userId());
 		}
 	},
-	data: {
-		board: null
+	form: {
+		description: {
+			submit: function(board) {
+				var description = $('#descriptionInput')[0].value;
+				Meteor.call('addBoardDescription', board, description);
+			}
+		},
+		message: {
+			submit: function(board) {
+				var message = $('#messageInput')[0].value;
+				Meteor.call('addMessage', board, message);
+				$('#messageInput')[0].value = '';
+			}
+		}
 	}
 };

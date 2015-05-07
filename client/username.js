@@ -37,12 +37,12 @@ Template.username.events({
 			Session.set('warning_email', 'These email addresses do not match.');
 		} else {
 			Session.set('warning_email', '');
-			if(email1.trim() && email1 === email2 && username.validateEmail(email2)) {
+			if(email1.trim() && email1 === email2 && username.validate.email(email2)) {
 				Session.set('emailValid', true);
 			} else if(!email1.trim()){
 				Session.set('warning_email', 'Please enter an email address.');
 				Session.set('emailValid', false);
-			} else if(!username.validateEmail(email1)) {
+			} else if(!username.validate.email(email1)) {
 				Session.set('warning_email', 'This doesn\'t look like a valid email address.');
 				Session.set('emailValid', false);
 			}
@@ -51,14 +51,14 @@ Template.username.events({
 	"submit #reserveName" : function(event) {
 		event.preventDefault();
 		if(!Session.get('chooseEmail')) {
-			Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
+			Router.go('/region/' + this.region + '/board/' + this.hobby);
 		} else {
 			var email1 = event.target[2].value;
 			var email2 = event.target[3].value;
 			if(email1 === email2 && username.validateEmail(email1)) {
 				Meteor.apply('verifyThisEmail', [Meteor.userId(), email1], true);
 				bootbox.alert('You\'re all set! Check your email soon to verify this address.');
-				Router.go('/region/' + Session.get('zip') + '/board/' + Session.get('hobby'));
+				Router.go('/region/' + this.region + '/board/' + this.hobby);
 				return false;
 			} else {
 				bootbox.alert('Error: Something\'s wrong with this email address. Please look it over and try again.');
@@ -89,16 +89,6 @@ Template.username.helpers({
 	},
 	choiceMade: function() {
 		return Session.get('choiceMade');
-	},
-	// These are in the data context, and therefore not in Tracker.autorun statements.
-	//  This will be replaced by something more elegant eventually.
-	user_id: function() {
-		Session.set('user_id', this);
-		return this;
-	},
-	password: function() {
-		Session.set('password', this);
-		return this;
 	}
 });
 

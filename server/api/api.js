@@ -38,6 +38,7 @@ Meteor.methods({
 			zip: board.zip,
 			createdDate: Date.now(),
 			messages : [{
+				_id: Random.id(),
 				user_id: 'root',
 				name: 'Administrator',
 				text: welcomeMessage,
@@ -51,6 +52,11 @@ Meteor.methods({
 		check(description, String);
 		check(this.userId, String);
 		board_path = app.transform.humanToUrl(board_path);
+		if(!Boards.findOne({ board: board_path })) {
+			throw new Meteor.Error('API',
+				'Called addBoardDescription for a board that doesn\'t exist.');
+			return false;
+		}
 		if(Boards.findOne({ board: board_path }).description) {
 			throw new Meteor.Error('API',
 				'Called addBoardDescription for a board that already has a description');
@@ -73,7 +79,7 @@ Meteor.methods({
 	makeNewPerson: function(person) {
 		check(person, {
 			username: String,
-			zip: Number
+			zip: String
 		});
 		if( Meteor.users.findOne({ username: person.username }) ) {
 			throw new Meteor.Error('API', 'Attempted to create a person that already exists.');
@@ -125,7 +131,7 @@ Meteor.methods({
 		return true;
 	},
 	changeZip: function(zip) {
-		check(zip, Number);
+		check(zip, String);
 		check(this.userId, String);
 		zip = app.transform.region(zip);
 		Meteor.users.update({ _id: this.userId },

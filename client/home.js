@@ -20,7 +20,7 @@ Template.home.events({
 	"keyup #zipInput": function (event) {
 		var zip = event.currentTarget.value;
 		Session.set('zip', zip);
-		Session.set('zipPerfect', home.form.validateZip(zip));
+		Session.set('zipPerfect', home.form.validate.zip(zip));
 		return;
 	},
 	"keyup #hobbyInput": function (event) {
@@ -35,22 +35,17 @@ Template.home.events({
 			['user-initiated|home.js|click #lostLink']);
 	},
 	"submit #begin": function (event) {
-		// Don't do a page refresh
+		// Don't refresh the page
 		event.preventDefault();
 
-		var username = app.transformUsername(Session.get('name'));
-		var zip      = app.transformRegion(Session.get('zip'));
-		var hobby    = app.transformToUrl(Session.get('hobby'));
+		var username = app.transform.username(Session.get('name'));
+		var zip      = app.transform.region(Session.get('zip'));
+		var hobby    = app.transform.humanToUrl(Session.get('hobby'));
 		var board    = zip + hobby;
 
 		// If user wants to browse anonymously, let them
 		if(!username || username === '') {
 			app.logOut();
-			Session.setPersistent({
-				zip: zip,
-				hobby: hobby,
-				board: board
-			});
 			Router.go('/region/' + zip + '/board/' + hobby);
 			return false;
 		}
@@ -72,13 +67,10 @@ Template.home.events({
 					Meteor.loginWithPassword(
 						{id: result.user_id},
 						result.password);
-					Session.setPersistent({
-						zip: zip,
-						hobby: hobby,
-						board: board
-					});
 					Router.go('/reserve/id/' + result.user_id +
-						'/token/' + result.password);
+							  '/token/' + result.password +
+							  '/board/' + zip +
+							  '/' + hobby);
 					return false;
 			});
 		});
@@ -149,15 +141,18 @@ var home = {
 				return validation.valid;
 			},
 			zip: function(zip) {
-				if(zip.length >= 3) {
-					var validation = app.validate.region(zip);
-					Session.set('warning_zip', validation.message);
-					return validation.valid;
+				if(zip.length < 3) {
+					Session.set('warning_zip', '');
+					return false;
 				}
-				Session.set('warning_zip', '');
-				return false;
+				var validation = app.validate.region(zip);
+				Session.set('warning_zip', validation.message);
+				return validation.valid;
 			},
 			hobby: function(hobby) {
+				if(hobby.length < 1) {
+					return false;
+				}
 				var validation = app.validate.boardName(hobby);
 				Session.set('warning_hobby', validation.message);
 				return validation.valid;

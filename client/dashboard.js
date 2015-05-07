@@ -19,7 +19,7 @@ Template.dashboard.events({
 			if(!dashboard.validate.region(result)) {
 				return false;
 			}
-			Meteor.call('changeZip', Number(result));
+			Meteor.call('changeZip', result);
 		});
 	},
 	"click .boardList" : function(event) {
@@ -34,7 +34,7 @@ Template.dashboard.events({
 		Router.go('/region/' + this.zip + '/board/' + this.hobby);
 	},
 	"click .deleteBtn" : function (event) {
-		Meteor.call('removeBoardFromPerson', this.board_path);
+		Meteor.call('removeBoardFromPerson', this.board);
 	},
 	"keyup #boardInput": function (event) {
 		// Submit if enter key
@@ -80,10 +80,13 @@ Template.dashboard.helpers({
 			dashboard.data.userBoards = Meteor.user().profile.boards;
 			var displayBoards = [];
 			for(var board in dashboard.data.userBoards) {
+				var zip   = dashboard.data.userBoards[board].substring(0,3);
+				var hobby = dashboard.data.userBoards[board].substring(3);
+				var board = zip + hobby;
 				displayBoards.push({
-					zip: dashboard.data.userBoards[board].substring(0,3),
-					hobby: dashboard.data.userBoards[board].substring(3),
-					board_path: this.zip + this.hobby
+					zip  : zip,
+					hobby: hobby,
+					board: board
 				});
 			}
 			return displayBoards;
@@ -119,8 +122,8 @@ var dashboard = {
 			zip = Meteor.user().profile.zip;
 			Session.set('zip', zip);
 		}
-		zip = app.transformRegion(zip);
-		hobby = app.transformToUrl(hobby);
+		zip = app.transform.region(zip);
+		hobby = app.transform.humanToUrl(hobby);
 		Router.go('/region/' + zip + '/board/' + hobby);
 	},
 	data: {
