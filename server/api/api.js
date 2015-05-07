@@ -194,9 +194,9 @@ var api = {
 		process: function(validation) {
 			if(!validation.valid) {
 				throw new Meteor.Error('API', validation.message);
-			}
-			if(app.debug) {
-				console.log(validation.details);
+				if(app.debug) {
+					console.log(validation.details);
+				}
 			}
 			return validation.valid;
 		}

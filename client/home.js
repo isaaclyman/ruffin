@@ -50,7 +50,7 @@ Template.home.events({
 				zip: zip,
 				hobby: hobby,
 				board: board
-			};
+			});
 			Router.go('/region/' + zip + '/board/' + hobby);
 			return false;
 		}
@@ -76,7 +76,7 @@ Template.home.events({
 						zip: zip,
 						hobby: hobby,
 						board: board
-					};
+					});
 					Router.go('/reserve/id/' + result.user_id +
 						'/token/' + result.password);
 					return false;

@@ -9,6 +9,5 @@ Accounts.validateNewUser(function (person) {
 			}
 		} else {
 			throw new Meteor.Error('API', 'Tried to create a new user with invalid arguments.');
-			console.log(person);
 		}
 });

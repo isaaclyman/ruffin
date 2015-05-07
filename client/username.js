@@ -108,7 +108,7 @@ var username = {
 			Session.set({
 				chooseEmail: false,
 				choiceMade: false,
-				warning_email, '',
+				warning_email: '',
 				email: null
 			});
 		}

@@ -81,8 +81,8 @@ Template.dashboard.helpers({
 			var displayBoards = [];
 			for(var board in dashboard.data.userBoards) {
 				displayBoards.push({
-					zip: userBoards[board].substring(0,3),
-					hobby: userBoards[board].substring(3),
+					zip: dashboard.data.userBoards[board].substring(0,3),
+					hobby: dashboard.data.userBoards[board].substring(3),
 					board_path: this.zip + this.hobby
 				});
 			}
