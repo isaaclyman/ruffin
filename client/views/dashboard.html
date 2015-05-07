@@ -8,59 +8,72 @@
 			<p><button class="btn btn-default" id="logOut">Log Out</button></p>
 		</div>
 		
-		<div class="tabs">
-
+		<div class="col-xs-12 tabs">
+			{{#each tabs}}
+				<button class="btn btn-default tab" id="{{this.id}}">{{this.name}}</button>
+			{{/each}}
 		</div>
 		
 		<div class="col-xs-12">
-			<p>
-				Your current region is <span class="bottom-outline" data-toggle="tooltip" data-original-title="This is the first three digits of your zip code.">{{zip}}</span> <button class="btn btn-default thinBtn" id="changeZip"><i class="fa fa-pencil"></i> Edit</button>
-			</p>
-			{{#if userHasEmail}}
+			{{#if tab_info}}
+				<h2>Personal Information</h2>
 				<p>
-					The email address you've provided is <span class="bottom-outline">{{email}}</span> <button class="btn btn-default thinBtn" id="changeEmail"><i class="fa fa-pencil"></i> Edit</button>
+					Your current region is <span class="bottom-outline" data-toggle="tooltip" data-original-title="This is the first three digits of your zip code.">{{zip}}</span> <button class="btn btn-default thinBtn" id="changeZip"><i class="fa fa-pencil"></i> Edit</button>
 				</p>
-			{{else}}
-				<p>We don't have your email address. That's fine with us, but it means that your user name will eventually expire and be given away. You can still reserve it if you'd like.</p>
-				<p><button class="btn btn-default" id="giveEmail">Provide Email</button></p>
+				{{#if userHasEmail}}
+					<p>
+						The email address you've provided is <span class="bottom-outline">{{email}}</span> <button class="btn btn-default thinBtn" id="changeEmail"><i class="fa fa-pencil"></i> Edit</button>
+					</p>
+				{{else}}
+					<p>We don't have your email address. That's fine with us, but it means that your user name will eventually expire and be given away. You can still reserve it if you'd like.</p>
+					<p><button class="btn btn-default" id="giveEmail">Provide Email</button></p>
+				{{/if}}
 			{{/if}}
-			
-			<hr>
 
-			{{#if boards}}
-				<p>You're a member of the following boards:</p>
-			{{/if}}
-			<p>
-				{{#each boards}}
-					<button class="btn btn-default boardList">
-						<span class="board-name">
-							<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
-						</span>
-						<span class="board-options">
-							<span class="goBtn">
-								<i class="fa fa-external-link fa-lg"></i> Visit
+			{{#if tab_boards}}
+				<h2>Boards</h2>
+				{{#if boards}}
+					<p>You're a member of the following boards:</p>
+				{{/if}}
+				<p>
+					{{#each boards}}
+						<button class="btn btn-default boardList">
+							<span class="board-name">
+								<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
 							</span>
-							<span class="divider"> | </span>
-							<span class="deleteBtn">
-								Delete <i class="fa fa-trash fa-lg"></i>
+							<span class="board-options">
+								<span class="goBtn">
+									<i class="fa fa-external-link fa-lg"></i> Visit
+								</span>
+								<span class="divider"> | </span>
+								<span class="deleteBtn">
+									Delete <i class="fa fa-trash fa-lg"></i>
+								</span>
 							</span>
-						</span>
-					</button>
-				{{/each}}
-			</p>
-			<p>
-				Want to add a new board? <span class="warning">{{warning_hobby}}</span>
-			</p>
-        	<div class="input-group">
-                <input class="form-control" id="boardInput" type="text" placeholder="I like..." aria-describedby="addButton" />
-                <span class="input-group-addon btn btn-default" id="addButton" {{hobbyPerfect}}>Add</span>
-            </div>
-            <p class="break-top">
-            	All boards that you visit are automatically added to your profile.
-            </p>
+						</button>
+					{{/each}}
+				</p>
+				<p>
+					Want to add a new board? <span class="warning">{{warning_hobby}}</span>
+				</p>
+	        	<div class="input-group">
+	                <input class="form-control" id="boardInput" type="text" placeholder="I like..." aria-describedby="addButton" />
+	                <span class="input-group-addon btn btn-default" id="addButton" {{hobbyPerfect}}>Add</span>
+	            </div>
+	            <p class="break-top">
+	            	All boards that you visit are automatically added to your profile.
+	            </p>
+	        {{/if}}
 
-            <hr>
+	        {{#if tab_security}}
+	        	<h2>Security</h2>
+	        {{/if}}
 
+	        {{#if tab_help}}
+	        	<h2>Help</h2>
+	        	<p>This website was built by <a class="subtle" href="http://www.isaaclyman.com">Isaac Lyman</a> using the <a class="subtle" href="http://www.meteor.com">Meteor</a> platform.</p> 
+				<p>If you find a bug in the site or have questions, email me: <a class="subtle" href="mailto:ruffin@isaaclyman.com">ruffin@isaaclyman.com</a></p>
+	        {{/if}}
 
 		</div>
 	</div>

@@ -3,9 +3,11 @@
 @bg-color: #EEEEEE;
 @box-color: #FFF;
 @border-color: #888888;
+@tab-border: #CCCCCC;
 @light-text: #444444;
 @shadow-color: #DDDDDD;
 @transparent-shadow: rgba(221,221,221,0.6);
+@button-active: #E6E6E6;
 @fa-check-color: #33CC33;
 @window-border: rgb(204,204,204);
 @warning-color: #D43B43;
@@ -29,6 +31,7 @@ body {
   padding: 0;
   height: 100%;
   background-color: @bg-color;
+  font-family: "prociono", Georgia, serif;
 }
 
 div.wrapper {
@@ -46,7 +49,6 @@ div.wrapper {
       padding-bottom: @footer-height;
       margin: 15px auto;
       background-color: @box-color;
-      border: 1px solid transparent;
       border-radius: none;
       box-shadow: 0px 0px 5px 3px @shadow-color;
       z-index: 1;
@@ -121,7 +123,7 @@ p.break-top {
   color: @fa-check-color;
 }
 
-h1 {
+h1, h2 {
   font-family: 'ralewayThin', Helvetica, sans-serif;
 }
 

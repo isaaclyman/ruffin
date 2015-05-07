@@ -1,13 +1,11 @@
 Template.dashboard.rendered = function() {
 	app.turnOnTooltips();
+
+	dashboard.initialize();
+
 	if(!Meteor.userId()) {
 		app.fail('no_login', [Meteor.userId()]);
 	}
-	Session.setDefault('username', '...');
-	Session.set({
-		'warning_hobby': '',
-		'hobby': ''
-	});
 };
 
 Template.dashboard.events({
@@ -22,6 +20,9 @@ Template.dashboard.events({
 				});
 			});
 		}
+	},
+	"click .tab" : function(event) {
+		dashboard.switchTab(this.id, event.currentTarget);
 	},
 	"click #changeZip" : function(event) {
 		bootbox.prompt('Please enter your new zip code.', function(result) {
@@ -81,6 +82,13 @@ Template.dashboard.helpers({
 		dashboard.data.username = Meteor.user().username;
 		return app.transform.maybeEjson(dashboard.data.username);
 	},
+	tabs: function() {
+		return dashboard.tabs;
+	},
+	tab_info    : function() { return Session.get('activeTab') === 'tab_info'; },
+	tab_boards  : function() { return Session.get('activeTab') === 'tab_boards'; },
+	tab_security: function() { return Session.get('activeTab') === 'tab_security'; },
+	tab_help    : function() { return Session.get('activeTab') === 'tab_help'; },
 	userHasEmail: function() {
 		if(!Meteor.user() || !Meteor.user().emails) {
 			return false;
@@ -133,27 +141,23 @@ Template.dashboard.helpers({
 */
 
 var dashboard = {
-	addHobby: function() {
-		var zip = Session.get('zip'), 
-			hobby = Session.get('hobby');
-		// Not being able to get the hobby is a fatal error
-		if(!hobby) {
-			Session.set('warning_hobby', 'That didn\'t work. Please try again.');
-			return false;
-		}
-		// Not being able to get the zip is recoverable
-		if(!zip) {
-			zip = Meteor.user().profile.zip;
-			Session.set('zip', zip);
-		}
-		zip = app.transform.region(zip);
-		hobby = app.transform.humanToUrl(hobby);
-		Router.go('/region/' + zip + '/board/' + hobby);
-	},
 	data: {
 		username: '',
 		userBoards: []
 	},
+	tabs: [{
+		name: 'Personal Information',
+		id: 'tab_info'
+	},{
+		name: 'Boards',
+		id: 'tab_boards'
+	},{
+		name: 'Security',
+		id: 'tab_security'
+	},{
+		name: 'Help',
+		id: 'tab_help'
+	}],
 	validate: {
 		region: function(region) {
 			var validation = app.validate.region(region);
@@ -170,5 +174,37 @@ var dashboard = {
 			Session.set('warning_hobby', validation.message);
 			return validation.valid;
 		}
+	},
+	initialize: function() {
+		Session.set('activeTab', this.tabs[0].id);
+		$('.tab').first().addClass('active');
+
+		Session.setDefault('username', '...');
+		Session.set({
+			'warning_hobby': '',
+			'hobby': ''
+		});
+	},
+	switchTab: function(tabId, target) {
+		$('.tab').removeClass('active');
+		$(target).addClass('active');
+		Session.set('activeTab', tabId);
+	},
+	addHobby: function() {
+		var zip = Session.get('zip'), 
+			hobby = Session.get('hobby');
+		// Not being able to get the hobby is a fatal error
+		if(!hobby) {
+			Session.set('warning_hobby', 'That didn\'t work. Please try again.');
+			return false;
+		}
+		// Not being able to get the zip is recoverable
+		if(!zip) {
+			zip = Meteor.user().profile.zip;
+			Session.set('zip', zip);
+		}
+		zip = app.transform.region(zip);
+		hobby = app.transform.humanToUrl(hobby);
+		Router.go('/region/' + zip + '/board/' + hobby);
 	}
 };
