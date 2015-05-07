@@ -11,6 +11,18 @@ Template.dashboard.rendered = function() {
 };
 
 Template.dashboard.events({
+	"click #logOut" : function() {
+		if(!Meteor.user().emails) {
+			bootbox.alert('If you log out, your user name will be given away. Is that okay?', function(result) {
+				if(result === false) {
+					return false;
+				}
+				Meteor.logout(function() {
+					Router.go('/');
+				});
+			});
+		}
+	},
 	"click #changeZip" : function(event) {
 		bootbox.prompt('Please enter your new zip code.', function(result) {
 			if (result === null) {
@@ -68,6 +80,18 @@ Template.dashboard.helpers({
 		}
 		dashboard.data.username = Meteor.user().username;
 		return app.transform.maybeEjson(dashboard.data.username);
+	},
+	userHasEmail: function() {
+		if(!Meteor.user() || !Meteor.user().emails) {
+			return false;
+		}
+		return true;
+	},
+	email: function() {
+		if(!Meteor.user()) {
+			return '';
+		}
+		return Meteor.user().emails[0].address;
 	},
 	zip: function() {
 		if(!Meteor.user()) {

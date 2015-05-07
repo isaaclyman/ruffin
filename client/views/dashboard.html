@@ -7,18 +7,24 @@
 		<div class="logout col-xs-3">
 			<p><button class="btn btn-default" id="logOut">Log Out</button></p>
 		</div>
+		
+		<div class="tabs">
+
+		</div>
+		
 		<div class="col-xs-12">
 			<p>
 				Your current region is <span class="bottom-outline" data-toggle="tooltip" data-original-title="This is the first three digits of your zip code.">{{zip}}</span> <button class="btn btn-default thinBtn" id="changeZip"><i class="fa fa-pencil"></i> Edit</button>
 			</p>
 			{{#if userHasEmail}}
 				<p>
-					The email address you've provided is <span class="bottom-outline">{{email}}</span> <button class="button btn-default thinBtn" id="changeEmail"><i class="fa fa-pencil"></i> Change</button>
+					The email address you've provided is <span class="bottom-outline">{{email}}</span> <button class="btn btn-default thinBtn" id="changeEmail"><i class="fa fa-pencil"></i> Edit</button>
 				</p>
 			{{else}}
 				<p>We don't have your email address. That's fine with us, but it means that your user name will eventually expire and be given away. You can still reserve it if you'd like.</p>
 				<p><button class="btn btn-default" id="giveEmail">Provide Email</button></p>
 			{{/if}}
+			
 			<hr>
 
 			{{#if boards}}
@@ -55,7 +61,7 @@
 
             <hr>
 
-            
+
 		</div>
 	</div>
 </template>
