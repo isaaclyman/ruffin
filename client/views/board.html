@@ -1,6 +1,6 @@
 <template name="board">
 	{{setTitle title}}
-	<div class="center row">
+	<div class="center row board">
 		<div class="board-title col-xs-7">
 			<h1 class="capitalize">{{board}} <span class="little">({{zip}}<span class="gray">##</span>)</span></h1>
 		</div>
@@ -31,6 +31,7 @@
 				{{/if}}
 			{{/if}}
 		</div>
+
 		<div class="messages col-xs-12">
 			<div class="window col-xs-12" id="chatWindow">
 				{{#each messages}}
@@ -55,7 +56,7 @@
 				{{/each}}
 			</div>
 
-			<hr />
+			<hr>
 
 			<div class="add col-xs-12">
 				<p class="row">
@@ -77,27 +78,100 @@
 			</div>
 		</div>
 
-		<hr />
+		<hr>
 
-		<div class="options col-xs-12">
-			<p class="options col-xs-12">
-				<button class="form-control btn btn-default break" data-toggle="tooltip" data-original-title="Leave contact information for others on this board">Leave a card</button>
-				<button class="form-control btn btn-default" data-toggle="tooltip" data-original-title="Set a time and place to do this with others">Create an event</button>
-			</p>
-		</div>
-
-		<hr />
-
-		<div class="card col-xs-12">
-			{{#each card}}
-				<div class="contact-box col-xs-4">
-					<h2>{{name}}</h2>
-					<p>Available:</p>
-					<p>{{availability}}</p>
-					<button class="form-control">Talk</button>
+		{{#if loggedIn}}
+			<div class="options col-xs-12">
+				{{#unless userHasCardHere}}
+					<div class="col-xs-6 nopadding margin-right">
+						<button class="form-control btn btn-default break" data-toggle="tooltip" data-original-title="Allow others on this board to contact you" id="showFormCard">Leave a card</button>
+					</div>
+				{{/unless}}
+				<div class="col-xs-6 nopadding">
+					<button class="form-control btn btn-default" data-toggle="tooltip" data-original-title="Set a time and place to do this with others" id="showFormEvent">Create an event</button>
 				</div>
-			{{/each}}
-		</div>
+			</div>
+		{{/if}}
+
+		{{#if form_card}}
+			<div class="form-wrapper col-xs-12">
+				<div class="board-form">
+					<p>
+						When are you available for {{board}} with others?
+						<input class="form-control" type="text" placeholder="Availability" id="availabilityInput" maxlength="140"/>
+					</p>
+					<p>
+						<input type="checkbox" id="allowEmailCheckbox" /> Email me when someone sends me a message.
+					</p>
+					<p>
+						We will never give your contact information to another user directly. If you prefer not to be emailed, messages sent to you will only show up in your dashboard.
+					</p>
+					<button class="form-control btn btn-default" id="submitCard">Submit</button>
+				</div>
+			</div>
+		{{/if}}
+
+		{{#if form_event}}
+			<div class="form-wrapper col-xs-12">
+				<div class="board-form">
+					<p>
+						What would you like to name this event?
+						<input class="form-control" type="text" placeholder="Title" id="titleInput" maxlength="140"/>
+					</p>
+					<p>
+						When will it be happening? <span class="warning">{{warning_date}}</span>
+						<input class="form-control" type="text" placeholder="Date/Time" id="dateInput"/>
+					</p>
+					<p>
+						Where will you be hosting it?
+						<textarea class="form-control" placeholder="Location" id="locationInput" maxlength="1000"></textarea>
+					</p>
+					<p>
+						Any other details you'd like to add? Please keep them brief and to the point.
+						<textarea class="form-control" placeholder="Details" id="descriptionInput" maxlength="1000"></textarea>
+					</p>
+					<button class="form-control btn btn-default" id="submitEvent">Submit</button>
+				</div>
+			</div>
+		{{/if}}
+
+		{{#if cards}}
+			<hr>
+			<div class="cards col-xs-12">
+				<p class="heading">Contact Cards:</p>
+				{{#each cards}}
+					<div class="contact-container col-md-4 col-sm-6 col-xs-12">
+						<div class="contact-box">
+							<p><i class="fa fa-user"></i> {{this.username}}</p>
+							<p>Availability:</p>
+							<p class="availability" data-toggle="tooltip" data-original-title="{{this.availability}}">{{this.availability}}</p>
+							<button class="form-control btn btn-default">Talk</button>
+						</div>
+					</div>
+				{{/each}}
+			</div>
+		{{/if}}
+
+		{{#if events}}
+			<hr>
+			<div class="events col-xs-12">
+				{{#each events}}
+					<div class="event-box col-xs-4">
+						<p class="heading">{{this.title}}</p>
+						<p>When: {{this.date}}</p>
+						<p>Where: {{this.location}}</p>
+						<p>{{this.description}}</p>
+						<p>At least {{this.attendeeNumber}} attending.</p>
+						{{#if this.userAttending}}
+							<p>You're going to this event.</p>
+							<button class="form-control btn btn-default" id="notAttending">I'm Not Going</button>
+						{{else}}
+							<button class="form-control btn btn-default" id="attending">I'm Going</button>
+						{{/if}}
+					</div>
+				{{/each}}
+			</div> 
+		{{/if}}
 
 	</div>
 </template>

@@ -49,7 +49,7 @@ div.wrapper {
       margin: 15px auto;
       background-color: @box-color;
       border-radius: none;
-      box-shadow: 0px 0px 5px 3px @shadow-color;
+      .box-shadow(0px 0px 5px 3px @shadow-color);
       z-index: 1;
       .form-group {
         margin-bottom: 0px;
@@ -80,6 +80,36 @@ div.right-addon {
     pointer-events: none;
     right: 0px;
   }
+}
+
+div.tabs {
+  width: 100%;
+  padding: 0px 0px;
+  border-top: 1px solid @tab-border;
+  border-bottom: 1px solid @tab-border;
+  margin: 6px 0px;
+  margin-bottom: 12px;
+
+  button.tab {
+    float: left;
+    padding: 4px 15px;
+    border: none;
+    border-radius: 0px;
+    margin: 0px 0px;
+
+    &.active {
+      background-color: @button-active;
+    }
+
+    &:focus {
+      outline: 0px;
+      outline-offset: 0px;
+    }
+  }
+}
+
+div.nopadding {
+  padding: 0px 0px;
 }
 
 a.subtle {
@@ -114,6 +144,10 @@ p.break-top {
   margin-top: 10px;
 }
 
+p.heading {
+  font-size: 20px;
+}
+
 .nomargin {
   margin-bottom: 0px;
 }
@@ -136,6 +170,13 @@ p, h1, h2, h3, span {
   }
 }
 
+hr {
+  height: 1px;
+  width: 90%;
+  margin: 10px auto;
+  color: @window-border;
+}
+
 .capitalize {
   text-transform: capitalize;
 }
@@ -145,4 +186,10 @@ p, h1, h2, h3, span {
      -moz-transition: @details;
        -o-transition: @details;
           transition: @details;
+}
+
+.box-shadow(@details) {
+  -webkit-box-shadow: @details;
+     -moz-box-shadow: @details;
+          box-shadow: @details;
 }

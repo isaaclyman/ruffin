@@ -37,6 +37,8 @@ Meteor.methods({
 			hobby: board.hobby,
 			zip: board.zip,
 			createdDate: Date.now(),
+			cards: [],
+			events: [],
 			messages : [{
 				_id: Random.id(),
 				user_id: 'root',
@@ -52,6 +54,10 @@ Meteor.methods({
 		check(description, String);
 		check(this.userId, String);
 		board_path = app.transform.humanToUrl(board_path);
+		if (!api.validate.boardPath(board_path) ||
+			!api.validate.boardDescription(description)) {
+			return false;
+		}
 		if(!Boards.findOne({ board: board_path })) {
 			throw new Meteor.Error('API',
 				'Called addBoardDescription for a board that doesn\'t exist.');
@@ -59,11 +65,46 @@ Meteor.methods({
 		}
 		if(Boards.findOne({ board: board_path }).description) {
 			throw new Meteor.Error('API',
-				'Called addBoardDescription for a board that already has a description');
+				'Called addBoardDescription for a board that already has a description.');
 			return false;
 		}
 		Boards.update({ board: board_path }, 
 					  {$set: { description: description, described_by: this.userId } });
+		return true;
+	},
+	addCardToBoard: function(board_path, availability, allow_email) {
+		check(board_path, String);
+		check(availability, String);
+		check(allow_email, Boolean);
+		board_path = app.transform.humanToUrl(board_path);
+		if (!api.validate.availability(availability) ||
+			!api.validate.boardPath(board_path)) {
+			return false;
+		}
+		if (Boards.findOne({ board: board_path, 'cards.user_id': this.userId})) {
+			throw new Meteor.Error('API',
+				'Called addCardToBoard, but this board already has this user\'s card.');
+			return false;
+		}
+		var newCard = {
+			user_id: this.userId,
+			username: Meteor.user().username,
+			allow_email: allow_email,
+			availability: availability
+		};
+		console.log(board_path);
+		Boards.update({ board: board_path },
+					  { $push: { 'cards': newCard } });
+		return true;
+	},
+	removeUserCard: function(board_path) {
+		check(board_path, String);
+		board_path = app.transform.humanToUrl(board_path);
+		if (!api.validate.boardPath(board_path)) {
+			return false;
+		}
+		Boards.update({ board: board_path },
+					  { $pull: {cards: { user_id: this.userId} } });
 		return true;
 	},
 	/*
@@ -113,7 +154,7 @@ Meteor.methods({
 			throw new Meteor.Error('API', 'User not found.');
 			return false;
 		}
-		if( Meteor.users.findOne({ _id: this.userId, "profile.boards": board_path }) )	{
+		if( Meteor.users.findOne({ _id: this.userId, 'profile.boards': board_path }) )	{
 			// No error here; the user is just coming back to a board
 			//  that they've visited before.
 			// TODO: check this on the client instead
@@ -188,15 +229,6 @@ Meteor.methods({
 	LOCAL NAMESPACE
 */
 var api = {
-	getName: function(user_id) {
-		check(user_id, String);
-		if(!user_id) {
-			throw new Meteor.Error('API',
-				'Called getName with invalid arguments');
-			return false;
-		}
-		return People.findOne({ _id: user_id }).name;
-	},
 	validate: {
 		boardPath: function(board_path) {
 			return this.process(app.validate.boardPath(board_path));
@@ -204,8 +236,14 @@ var api = {
 		boardName: function(name) {
 			return this.process(app.validate.boardName(name));
 		},
+		boardDescription: function(description) {
+			return this.process(app.validate.char140(description));
+		},
 		region: function(region) {
 			return this.process(app.validate.region(region));
+		},
+		availability: function(availability) {
+			return this.process(app.validate.char1000(availability));
 		},
 		process: function(validation) {
 			if(!validation.valid) {

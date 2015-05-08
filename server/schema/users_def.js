@@ -26,7 +26,8 @@ PersonalMsgPattern = new SimpleSchema({
 	},
 	text: {
 		type: String,
-		label: "Text"
+		label: "Text",
+		max: 10000  // 10,000
 	},
 	date: {
 		type: Number,

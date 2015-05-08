@@ -1,5 +1,7 @@
 Template.board.rendered = function () {
 	app.turnOnTooltips();
+
+	board.initialize();
 	
 	board.scrollToBottomImmediately();
 
@@ -37,6 +39,23 @@ Template.board.events({
 	},
 	"click #messageBtn" : function () {
 		board.form.message.submit(this.board);
+	},
+	"click #showFormCard" : function () {
+		board.toggle('form_card');
+	},
+	"click #showFormEvent" : function() {
+		board.toggle('form_event');
+	},
+	"click #submitCard" : function() {
+		for(var card = 0; card < this.cards.length; card++) {
+			if(this.cards[card].user_id === Meteor.userId()) {
+				return false;
+			}
+		}
+		var availability = $('#availabilityInput')[0].value;
+		var allow_email  = $('#allowEmailCheckbox')[0].checked;
+		Meteor.call('addCardToBoard', this.board, availability, allow_email);
+		Session.set('form_card', false);
 	}
 });
 
@@ -50,11 +69,11 @@ Template.board.helpers({
 	zip: function() {
 		return this.zip;
 	},
-	description: function() {
-		return this.description;
-	},
 	loggedIn: function() {
 		return !!(Meteor.userId());
+	},
+	description: function() {
+		return this.description;
 	},
 	messages: function() {
 		if(!this.messages) {
@@ -80,6 +99,29 @@ Template.board.helpers({
 	},
 	time: function() {
 		return app.transform.toFriendlyTime(board.rightnow);
+	},
+	cards: function() {
+		return this.cards;
+	},
+	events: function() {
+		return this.events;
+	},
+	form_card: function() {
+		return Session.get('form_card');
+	},
+	form_event: function() {
+		return Session.get('form_event');
+	},
+	userHasCardHere: function() {
+		if(!this.cards) {
+			return false;
+		}
+		for(var card = 0; card < this.cards.length; card++) {
+			if(this.cards[card].user_id === Meteor.userId()) {
+				return true;
+			}
+		}
+		return false;
 	}
 });
 
@@ -92,6 +134,12 @@ var board = {
 	intervals: [],
 	data: {},
 	rightnow: new Date(),
+	initialize: function() {
+		Session.set({
+			form_card : false,
+			form_event: false
+		});
+	},
 	clearIntervals: function() {
 		var intervals = this.intervals;
 		for(var interval = 0; interval < intervals.length; interval++) {
@@ -117,6 +165,21 @@ var board = {
 			rightnow = new Date();
 		}, interval);
 		this.intervals.push(clock);
+	},
+	toggle: function(form) {
+		if(form === 'form_card') {
+			Session.set('form_card', !Session.get('form_card'));
+			Session.set('form_event', false);
+			return;
+		}
+		if(form === 'form_event') {
+			Session.set('form_event', !Session.get('form_event'));
+			Session.set('form_card', false);
+			Meteor.setTimeout(function() {
+				$('#dateInput').datetimepicker();
+			}, 500);
+			return;
+		}
 	},
 	validate: {
 		description: function(description) {

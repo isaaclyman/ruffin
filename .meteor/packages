@@ -7,10 +7,8 @@
 natestrauser:font-awesome
 less
 iron:router
-ayue:recaptcha
 jquery
 meteor-platform
-twbs:bootstrap-noglyph
 aldeed:collection2
 accounts-password
 mizzao:timesync
@@ -20,3 +18,5 @@ u2622:persistent-session
 audit-argument-checks
 email
 mike:mocha
+tsega:bootstrap3-datetimepicker
+twbs:bootstrap

@@ -30,9 +30,18 @@ CardPattern = new SimpleSchema({
 	user_id: {
 		type: String
 	},
+	username: {
+		type: String,
+		label: "Name"
+	},
 	allow_email: {
 		type: Boolean,
 		label: "Allow Email"
+	},
+	availability: {
+		type: String,
+		label: "Availability",
+		max: 140
 	}
 });
 
@@ -45,19 +54,19 @@ EventPattern = new SimpleSchema({
 		label: "Title",
 		max: 140
 	},
-	description: {
-		type: String,
-		label: "Description",
-		max: 1000
+	date: {
+		type: Number,
+		label: "Date",
 	},
 	location: {
 		type: String,
 		label: "Location",
 		max: 1000
 	},
-	date: {
-		type: Number,
-		label: "Date",
+	description: {
+		type: String,
+		label: "Description",
+		max: 1000
 	},
 	attendees: {
 		type: [String],
