@@ -140,7 +140,7 @@
 				</div>
 				{{#if userHasEmail}}
 					<p class="margin-top">
-						The email address you've provided is <span class="bottom-outline">{{email}}</span> <button class="btn btn-default thinBtn" id="changeEmail"><i class="fa fa-pencil"></i> Edit</button>
+						The email address you've provided is <span class="bottom-outline">{{email}}</span> <button class="btn btn-default thinBtn" id="changeEmail"><i class="fa fa-pencil"></i> Edit</button> <button class="btn btn-default thinBtn" id="removeEmail"><i class="fa fa-trash"></i> Remove</button>
 					</p>
 					<div class="hide-animate" id="emailForm">
 						<div class="input-group">
@@ -155,6 +155,12 @@
 				{{else}}
 					<p>We don't have your email address. That's fine with us, but it means that your user name will eventually expire and be given away. You can still reserve it if you'd like.</p>
 					<p><button class="btn btn-default" id="giveEmail">Provide Email</button></p>
+					<div class="hide-animate" id="emailForm">
+						<div class="input-group">
+							<input class="form-control" id="emailInput" type="text" placeholder="Email Address" aria-describedby="emailBtn"  maxlength="140" />
+							<span class="input-group-addon btn btn-default" id="emailBtn" {{emailValid}}>Update</span>
+						</div>
+					</div>
 				{{/if}}
 
 				<hr>

@@ -1,10 +1,10 @@
 <template name="board">
 	{{setTitle title}}
 	<div class="center row">
-		<div class="board-title col-xs-9">
+		<div class="board-title col-xs-7">
 			<h1 class="capitalize">{{board}} <span class="little">({{zip}}<span class="gray">##</span>)</span></h1>
 		</div>
-		<div class="menu col-xs-3">
+		<div class="menu col-xs-5">
 			{{#if loggedIn}}
 				<p><button class="btn btn-default" id="menuBtn">Dashboard</button></p>
 			{{else}}

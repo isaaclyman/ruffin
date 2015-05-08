@@ -80,7 +80,7 @@ Template.dashboard.events({
 		var zip = $('#zipInput')[0].value;
 		dashboard.change.region(zip);
 	},
-	"click #changeEmail" : function() {
+	"click #changeEmail, click #giveEmail" : function() {
 		$('#emailForm').first().toggleClass('show');
 	},
 	"keyup #emailInput" : function(event) {
@@ -93,6 +93,23 @@ Template.dashboard.events({
 	"click #emailBtn" : function() {
 		var email = $('#emailInput')[0].value;
 		dashboard.change.email(email);
+	},
+	"click #removeEmail": function() {
+		bootbox.confirm('This will delete your email address from our records. Are you sure you want to do this?', function(result) {
+			if(result === true) {
+				Meteor.call('removeEmail');
+			}
+		});
+	},
+	"click #newVerifyLink": function() {
+		if(Meteor.user()) {
+			dashboard.change.email(Meteor.user().emails[0].address);		
+		}
+	},
+	"click #newAccessLink": function() {
+		if(Meteor.user()) {
+			Meteor.call('resendLogin', window.location.host, Meteor.user().username);
+		}
 	},
 	"click #destroyAllMessages": function () {
 		bootbox.prompt('Are you sure? If you want to delete all messages you have written ' +

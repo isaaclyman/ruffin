@@ -40,6 +40,10 @@ Meteor.methods({
 							{ $set: { 'emails': [{ address: address, verified: false }] } });
 		Accounts.sendVerificationEmail(this.userId, address);
 	},
+	removeEmail: function() {
+		Meteor.users.update({ _id: this.userId },
+							{ $unset: { 'emails': '' } });
+	},
 	// Login information
 	sendNewLogin: function(root_url) {
 		check(root_url, String);
