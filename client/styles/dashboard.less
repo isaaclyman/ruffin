@@ -69,4 +69,21 @@ div.dashboard {
 			color: @light-text;
 		}
 	}
+
+	div.hide-animate {
+	 	height: 0px;
+	 	overflow: hidden;
+		-webkit-transition: all 0.5s;
+		-moz-transition: all 0.5s;
+		-o-transition: all 0.5s;
+		transition: all 0.5s;
+
+		&.show {
+			height: 34px;
+		}
+	}
+
+	.margin-top {
+		margin-top: 6px;
+	}
 }

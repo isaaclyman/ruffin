@@ -33,37 +33,33 @@ emailApi.verifyRoot = function (root) {
 
 Meteor.methods({
 	// Email verification
-	verifyThisEmail: function(user_id, address) {
-		check(user_id, String);
+	verifyThisEmail: function(address) {
 		check(address, String);
-		if(user_id !== this.userId) {
-			throw new Meteor.Error('Email', 'This user is not logged in.');
-			return false;
-		}
-		Meteor.users.update({ _id: user_id },
+		check(this.userId, String);
+		Meteor.users.update({ _id: this.userId },
 							{ $set: { 'emails': [{ address: address, verified: false }] } });
-		Accounts.sendVerificationEmail(user_id, address);
+		Accounts.sendVerificationEmail(this.userId, address);
 	},
 	// Login information
-	sendNewLogin: function(root_url, user_id) {
+	sendNewLogin: function(root_url) {
 		check(root_url, String);
-		check(user_id, String);
+		check(this.userId, String);
 		if (!emailApi.verifyRoot(root_url)) {
 			throw new Meteor.Error('Email','URL is invalid.');
 			return false;
 		}
 		// Get email address
-		var user = Meteor.users.findOne({ _id: user_id });
+		var user = Meteor.users.findOne({ _id: this.userId });
 		var address  = user.emails[0].address;
 		// Change their password and send them their original link
 		var passlen  = (Math.floor((Math.random() * 10) + 15));
 		var password = Random.id(passlen);
-		Accounts.setPassword(user_id, password, {logout: false});
+		Accounts.setPassword(this.userId, password, {logout: false});
 		Email.send({
 			from: 'Do Not Reply - Ruffin',
 			to  :  address,
 			subject: 'Here is your Ruffin access link.',
-			html:  emailApi.loginEmail(root_url, user_id, password)
+			html:  emailApi.loginEmail(root_url, this.userId, password)
 		});
 	},
 	resendLogin: function(root_url, username) {

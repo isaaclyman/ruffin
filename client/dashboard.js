@@ -9,16 +9,17 @@ Template.dashboard.rendered = function() {
 };
 
 Template.dashboard.events({
+	/*
+		MENU
+	*/
 	"click #logOut" : function() {
 		if(!Meteor.user().emails || !Meteor.user().emails[0].verified) {
 			bootbox.confirm('If you log out, your user name will be given away. Is that okay?', function(result) {
-				if(result === false) {
-					return false;
+				if(result !== false) {
+					Meteor.logout(function() {
+						Router.go('/');
+					});
 				}
-				Meteor.logout(function() {
-					Router.go('/');
-				});
-				return;
 			});
 		} else {
 			Meteor.logout(function() {
@@ -29,17 +30,9 @@ Template.dashboard.events({
 	"click .tab" : function(event) {
 		dashboard.switchTab(this.id, event.currentTarget);
 	},
-	"click #changeZip" : function(event) {
-		bootbox.prompt('Please enter your new zip code.', function(result) {
-			if (result === null) {
-				return false;
-			}
-			if(!dashboard.validate.region(result)) {
-				return false;
-			}
-			Meteor.call('changeZip', result);
-		});
-	},
+	/*
+		BOARDS
+	*/
 	"click .boardList" : function(event) {
 		var button = event.currentTarget;
 		$(button).addClass('select');
@@ -48,10 +41,10 @@ Template.dashboard.events({
 		var button = event.currentTarget;
 		$(button).removeClass('select');
 	},
-	"click .goBtn" : function (event) {
+	"click .goBtn" : function () {
 		Router.go('/region/' + this.zip + '/board/' + this.hobby);
 	},
-	"click .deleteBtn" : function (event) {
+	"click .deleteBtn" : function () {
 		Meteor.call('removeBoardFromPerson', this.board);
 	},
 	"keyup #boardInput": function (event) {
@@ -67,15 +60,50 @@ Template.dashboard.events({
 		Session.set('hobby', hobby);
 		return;
 	},
-	"click #addButton": function (event) {
+	"click #addButton": function () {
 		dashboard.addHobby();
+	},
+	/*
+		PROFILE
+	*/
+	"click #changeZip" : function() {
+		$('#zipForm').first().toggleClass('show');
+	},
+	"keyup #zipInput" : function(event) {
+		var zip = event.currentTarget.value;
+		if(dashboard.validate.region(zip) && event.which == 13) {
+			dashboard.change.region(zip);
+			return;
+		}
+	},
+	"click #zipBtn" : function() {
+		var zip = $('#zipInput')[0].value;
+		dashboard.change.region(zip);
+	},
+	"click #changeEmail" : function() {
+		$('#emailForm').first().toggleClass('show');
+	},
+	"keyup #emailInput" : function(event) {
+		var email = event.currentTarget.value;
+		if(dashboard.validate.email(email) && event.which === 13) {
+			dashboard.change.email(email);
+			return;
+		}
+	},
+	"click #emailBtn" : function() {
+		var email = $('#emailInput')[0].value;
+		dashboard.change.email(email);
 	},
 	"click #destroyAllMessages": function () {
 		bootbox.prompt('Are you sure? If you want to delete all messages you have written ' +
 					   'on every board, please type "DELETE ALL" in the box below.',
 			function(result) {
 				if(result === 'DELETE ALL') {
-					Meteor.call('deleteAllUserMessages', result);
+					Meteor.call('deleteAllUserMessages', result, function(error, result) {
+						bootbox.alert('All messages destroyed.');
+					});
+				} else {
+					bootbox.alert('Destruction averted. Your messages have been left untouched.');
 				}
 		});
 	}
@@ -99,10 +127,11 @@ Template.dashboard.helpers({
 	tabs: function() {
 		return dashboard.tabs;
 	},
-	tab_info    : function() { return Session.get('activeTab') === 'tab_info'; },
+	tab_profile : function() { return Session.get('activeTab') === 'tab_profile'; },
 	tab_boards  : function() { return Session.get('activeTab') === 'tab_boards'; },
-	tab_security: function() { return Session.get('activeTab') === 'tab_security'; },
 	tab_help    : function() { return Session.get('activeTab') === 'tab_help'; },
+	tab_events  : function() { return Session.get('activeTab') === 'tab_events'; },
+	tab_messages: function() { return Session.get('activeTab') === 'tab_messages'; },
 	userHasEmail: function() {
 		if(!Meteor.user() || !Meteor.user().emails) {
 			return false;
@@ -121,11 +150,17 @@ Template.dashboard.helpers({
 		}
 		return true;
 	},
+	emailValid: function() {
+		return !Session.get('emailValid') ? {'disabled': true} : null;
+	},
 	zip: function() {
 		if(!Meteor.user()) {
 			return '###';
 		}
 		return Meteor.user().profile.zip;
+	},
+	zipValid: function() {
+		return !Session.get('zipValid') ? {'disabled': true} : null;
 	},
 	boards: function() {
 		if(Meteor.user()) {
@@ -169,23 +204,19 @@ var dashboard = {
 		name: 'Boards',
 		id: 'tab_boards'
 	},{
-		name: 'Personal Information',
-		id: 'tab_info'
+		name: 'Events',
+		id: 'tab_events'
 	},{
-		name: 'Security',
-		id: 'tab_security'
+		name: 'Messages',
+		id: 'tab_messages'
+	},{
+		name: 'Profile',
+		id: 'tab_profile'
 	},{
 		name: 'Help',
 		id: 'tab_help'
 	}],
 	validate: {
-		region: function(region) {
-			var validation = app.validate.region(region);
-			if(!validation.valid) {
-				bootbox.alert('This is not a valid zip code.');
-			}
-			return validation.valid;
-		},
 		hobby: function(hobby) {
 			if(hobby.length < 1) {
 				return false;
@@ -193,6 +224,30 @@ var dashboard = {
 			var validation = app.validate.boardName(hobby);
 			Session.set('warning_hobby', validation.message);
 			return validation.valid;
+		},
+		region: function(region) {
+			var validation = app.validate.region(region);
+			Session.set('zipValid', validation.valid);
+			return validation.valid;
+		},
+		email: function(email) {
+			var validation = app.validate.email(email);
+			Session.set('emailValid', validation.valid);
+			return validation.valid;
+		}
+	},
+	change: {
+		region: function(region) {
+			region = app.transform.region(region);
+			Meteor.call('changeZip', region);
+			$('#zipInput')[0].value = '';
+			$('#zipForm').first().removeClass('show');
+		},
+		email: function(email) {
+			Meteor.call('verifyThisEmail', email);
+			bootbox.alert('Great! We\'re emailing you now to verify this address.');
+			$('#emailInput')[0].value = '';
+			$('#emailForm').first().removeClass('show');
 		}
 	},
 	initialize: function() {
@@ -202,13 +257,18 @@ var dashboard = {
 		Session.setDefault('username', '...');
 		Session.set({
 			'warning_hobby': '',
-			'hobby': ''
+			'hobby': '',
+			'zipValid': false,
+			'emailValid': false
 		});
 	},
 	switchTab: function(tabId, target) {
 		$('.tab').removeClass('active');
 		$(target).addClass('active');
 		Session.set('activeTab', tabId);
+		Meteor.setTimeout(function () {
+			app.turnOnTooltips();
+		}, 500);
 	},
 	addHobby: function() {
 		var zip = Session.get('zip'), 

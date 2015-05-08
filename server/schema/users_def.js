@@ -13,6 +13,33 @@ EmailPattern = new SimpleSchema({
 	}
 });
 
+PersonalMsgPattern = new SimpleSchema({
+	_id: {
+		type: String
+	},
+	from_id: {
+		type: String
+	},
+	from: {
+		type: String,
+		label: "Sender Name"
+	},
+	text: {
+		type: String,
+		label: "Text"
+	},
+	date: {
+		type: Number,
+		label: "Date Sent"
+	}
+});
+
+PersonalEventPattern = new SimpleSchema({
+	_id: {
+		type: String
+	}
+});
+
 ProfilePattern = new SimpleSchema({
 	zip: {
 		type: String,
@@ -27,6 +54,16 @@ ProfilePattern = new SimpleSchema({
 		regEx: /^[a-zA-Z0-9_]+$/,
 		min: 1,
 		max: 203,
+		optional: true
+	},
+	messages: {
+		type: [PersonalMsgPattern],
+		label: "Messages",
+		optional: true
+	},
+	events: {
+		type: [PersonalEventPattern],
+		label: "Events",
 		optional: true
 	}
 });

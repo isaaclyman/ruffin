@@ -176,7 +176,7 @@ Meteor.methods({
 		if(confirm.toLowerCase() !== 'delete all') {
 			return false;
 		}
-		Boards.update({ board: { $exists: true } },
+		Boards.update({ 'messages.user_id': this.userId },
 					  { $pull: {messages: { user_id: this.userId }}},
 					  { multi: true });
 		return true;

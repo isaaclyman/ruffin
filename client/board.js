@@ -6,6 +6,8 @@ Template.board.rendered = function () {
 	board.onChatScrollToBottom();
 
 	board.startClock(20000);
+
+	board.data = this.data;
 };
 
 Template.board.onDestroyed(function () {
@@ -13,6 +15,9 @@ Template.board.onDestroyed(function () {
 });
 
 Template.board.events({
+	"click #menuBtn" : function () {
+		Router.go('/');
+	},
 	"submit #newDescription" : function () {
 		event.preventDefault();
 		board.form.description.submit(this.board);
@@ -24,7 +29,7 @@ Template.board.events({
 		// lexical scope is the message object
 		var timestamp = this.timestamp;
 		var id = this._id;
-		Meteor.call('deleteMessage', this.board, id, timestamp);
+		Meteor.call('deleteMessage', board.data.board, id, timestamp);
 	},
 	"submit #newMessage" : function () {
 		event.preventDefault();
@@ -85,6 +90,7 @@ Template.board.helpers({
 var board = {
 	trackers:  [],
 	intervals: [],
+	data: {},
 	rightnow: new Date(),
 	clearIntervals: function() {
 		var intervals = this.intervals;

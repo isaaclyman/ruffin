@@ -1,10 +1,10 @@
 <template name="dashboard">
 	{{setTitle title}}
 	<div class="center row dashboard">
-		<div class="col-xs-9">
+		<div class="col-xs-8">
 			<h1>Welcome, {{username}}.</h1>
 		</div>
-		<div class="logout col-xs-3">
+		<div class="logout col-xs-4">
 			<p><button class="btn btn-default" id="logOut">Log Out</button></p>
 		</div>
 		
@@ -49,34 +49,122 @@
 	            <p class="break-top">
 	            	All boards that you visit are automatically added to your profile.
 	            </p>
+
+	            <hr>
+	            <p class="heading">Discover</p>
+	        	<p>Looking for something new to do?</p>
+	        	{{#if popularFive}}
+	        		<p>The most popular boards in your area are:</p>
+	        	{{/if}}
+	        	{{#each popularFive}}
+	        		<button class="btn btn-default boardList">
+						<span class="board-name">
+							<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
+						</span>
+						<span class="board-options">
+							<span class="goBtn">
+								<i class="fa fa-external-link fa-lg"></i> Visit
+							</span>
+						</span>
+					</button>
+	        	{{/each}}
+	        	{{#if unpopularFive}}
+	        		<p>Here are some boards that could use a little love:</p>
+	        	{{/if}}
+	        	{{#each unpopularFive}}
+	        		<button class="btn btn-default boardList">
+						<span class="board-name">
+							<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
+						</span>
+						<span class="board-options">
+							<span class="goBtn">
+								<i class="fa fa-external-link fa-lg"></i> Visit
+							</span>
+						</span>
+					</button>
+	        	{{/each}}
+	        	{{#unless popularFive}}
+	        		{{#unless unpopularFive}}
+	        			<p>We've got nothing for you to discover right now. Check back when things liven up!</p>
+	        		{{/unless}}
+	        	{{/unless}}
+	        {{/if}}
+
+	        {{#if tab_events}}
+	        	<p class="heading">Events</p>
+	        	{{#unless userEvents}}
+	        		<p>You don't have any upcoming events. Time for a nap, maybe?</p>
+	        	{{/unless}}
+	        	{{#each userEvents}}
+	        		<hr>
+	        		<p>
+	        			<span class="bold">{{this.title}}</span>: <span>{{this.date}}</span>
+	        		</p>
+	        		<p>
+	        			<span>{{this.description}}</span>
+	        		</p>
+	        		<p>
+	        			<span>At least {{this.attendees}} attending.</span>
+	        		</p>
+	        	{{/each}}
+	        {{/if}}
+
+	        {{#if tab_messages}}
+	        	<p class="heading">Messages</p>
+	        	{{#unless userMessages}}
+	        		<p>No messages.</p>
+	        	{{/unless}}
+	    		{{#if userContactCards}}
+	    			<p>You've left your card on {{userContactCards}} boards.</p>
+	    		{{else}}
+	    			<p>You haven't left any contact cards. Visit a board to get started.</p>
+	    		{{/if}}
+	    		{{#each userMessages}}
+	    			<hr>
+	    			<p>
+	    				<span>{{this.from}}:</span> <span>{{this.text}}</span>
+	    			</p>
+	    		{{/each}}
 	        {{/if}}
 			
-			{{#if tab_info}}
-				<p class="heading">Personal Information</p>
+			{{#if tab_profile}}
+				<p class="heading">Profile</p>
 				<p>
 					Your current region is <span class="bottom-outline" data-toggle="tooltip" data-original-title="This is the first three digits of your zip code.">{{zip}}</span> <button class="btn btn-default thinBtn" id="changeZip"><i class="fa fa-pencil"></i> Edit</button>
 				</p>
+				<div class="hide-animate" id="zipForm">
+					<div class="input-group">
+						<input class="form-control" id="zipInput" type="text" placeholder="Zip Code" aria-describedby="zipBtn"  maxlength="140" />
+						<span class="input-group-addon btn btn-default" id="zipBtn" {{zipValid}}>Update</span>
+					</div>
+				</div>
 				{{#if userHasEmail}}
-					<p>
+					<p class="margin-top">
 						The email address you've provided is <span class="bottom-outline">{{email}}</span> <button class="btn btn-default thinBtn" id="changeEmail"><i class="fa fa-pencil"></i> Edit</button>
 					</p>
+					<div class="hide-animate" id="emailForm">
+						<div class="input-group">
+							<input class="form-control" id="emailInput" type="text" placeholder="Email Address" aria-describedby="emailBtn"  maxlength="140" />
+							<span class="input-group-addon btn btn-default" id="emailBtn" {{emailValid}}>Update</span>
+						</div>
+					</div>
 					{{#unless emailVerified}}
-						<p>This email address hasn't been verified yet. If you didn't get a verification link, we can send you a new one.</p>
+						<p class="margin-top">This email address hasn't been verified yet. If you didn't get a verification link, we can send you a new one.</p>
 						<button class="btn btn-default" id="newVerifyLink">Email Me Again</button>
 					{{/unless}}
 				{{else}}
 					<p>We don't have your email address. That's fine with us, but it means that your user name will eventually expire and be given away. You can still reserve it if you'd like.</p>
 					<p><button class="btn btn-default" id="giveEmail">Provide Email</button></p>
 				{{/if}}
-			{{/if}}
 
-	        {{#if tab_security}}
+				<hr>
+
 	        	<p class="heading">Security</p>
-	        	{{#if userHasEmail}}
-	        		<p>To change your email address, see the "Personal Information" tab. If you'd like a brand-new Ruffin access link, hit the button below.</p>
+	        	{{#if emailVerified}}
+	        		<p>Worried about someone using your username? We can generate a brand-new Ruffin access link for you.</p>
 	        		<button class="btn btn-default" id="newAccessLink">Get New Link</button>
 	        	{{else}}
-	        		<p>Since you haven't provided an email address, we don't have any identifying information for you (aside from what you've posted on your boards). It doesn't get any more secure than that.</p>
+	        		<p>Since you haven't provided a verified email address, we don't have any identifying information for you (aside from messages you've posted on your boards). That's as secure as it gets.</p>
 	        	{{/if}}
 	        	<hr>
 	        	<p>If you'd like to delete every message you've ever posted, use this button. Remember that once you've done it, there's no going back.</p>

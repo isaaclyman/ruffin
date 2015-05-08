@@ -5,7 +5,11 @@
 			<h1 class="capitalize">{{board}} <span class="little">({{zip}}<span class="gray">##</span>)</span></h1>
 		</div>
 		<div class="menu col-xs-3">
-			<p><button class="btn btn-default">Menu</button></p>
+			{{#if loggedIn}}
+				<p><button class="btn btn-default" id="menuBtn">Dashboard</button></p>
+			{{else}}
+				<p><button class="btn btn-default" id="menuBtn">Home</button></p>
+			{{/if}}
 		</div>
 		<div class="description col-xs-12">
 			{{#if loggedIn}}
@@ -34,7 +38,7 @@
 						<p class="pull-left">
 							<span class="msgContent">{{this.text}}</span>
 							<br>
-							<span class="msgUsername capitalize">{{this.name}}</span>
+							<span class="msgUsername">{{this.name}}</span>
 							<span class="msgTimestamp"> on {{this.friendlyTimestamp}}</span>
 						</p>
 						<p class="gray" id="deleteBtn">
@@ -44,7 +48,7 @@
 						<p class="pull-right">
 							<span class="msgContent">{{this.text}}</span>
 							<br>
-							<span class="msgUsername capitalize">{{this.name}}</span>
+							<span class="msgUsername">{{this.name}}</span>
 							<span class="msgTimestamp"> on {{this.friendlyTimestamp}}</span>
 						</p>
 					{{/if}}
@@ -57,7 +61,7 @@
 				<p class="row">
 					{{#if loggedIn}}
 						<span class="username">
-							<span class="capitalize">{{username}}</span>
+							<span>{{username}}</span>
 							at {{time}}:
 						</span>
 						<form id="newMessage">

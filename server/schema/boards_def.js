@@ -26,6 +26,45 @@ MessagePattern = new SimpleSchema({
 	}
 });
 
+CardPattern = new SimpleSchema({
+	user_id: {
+		type: String
+	},
+	allow_email: {
+		type: Boolean,
+		label: "Allow Email"
+	}
+});
+
+EventPattern = new SimpleSchema({
+	_id: {
+		type: String
+	},
+	title: {
+		type: String,
+		label: "Title",
+		max: 140
+	},
+	description: {
+		type: String,
+		label: "Description",
+		max: 1000
+	},
+	location: {
+		type: String,
+		label: "Location",
+		max: 1000
+	},
+	date: {
+		type: Number,
+		label: "Date",
+	},
+	attendees: {
+		type: [String],
+		label: "Attendees"
+	}
+});
+
 //Boards = new Mongo.Collection("boards");
 Boards.attachSchema(new SimpleSchema({
 	board: {
@@ -69,6 +108,16 @@ Boards.attachSchema(new SimpleSchema({
 	messages: {
 		type: [MessagePattern],
 		label: "Messages",
+		optional: true
+	},
+	cards: {
+		type: [CardPattern],
+		label: "Contact Cards",
+		optional: true
+	},
+	events: {
+		type: [EventPattern],
+		label: "Events",
 		optional: true
 	},
 	createdDate: {
