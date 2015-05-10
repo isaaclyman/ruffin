@@ -67,7 +67,7 @@
 						</span>
 						<form id="newMessage">
 							<div class="input-group">
-								<input class="form-control" type="text" placeholder="Type a message here" id="messageInput" aria-describedby="messageBtn" />
+								<input class="form-control" type="text" placeholder="Type a message here" id="messageInput" aria-describedby="messageBtn" maxlength="1000" />
 								<span class="input-group-addon btn btn-default" id="messageBtn">Post</span>
 							</div>
 						</form>
@@ -145,10 +145,10 @@
 				<p class="heading">Contact Cards:</p>
 				{{#each cards}}
 					<div class="contact-container col-md-4 col-sm-6 col-xs-12">
-						<div class="contact-box">
+						<div class="contact-box" data-toggle="tooltip" data-original-title="{{this.availability}}" data-trigger="hover click">
 							<p><i class="fa fa-user"></i> {{this.username}}</p>
 							<p class="no-margin-bottom">Availability:</p>
-							<p class="availability" data-toggle="tooltip" data-original-title="{{this.availability}}">{{this.availability}}</p>
+							<p class="availability">{{this.availability}}</p>
 							<button class="form-control btn btn-default">Talk</button>
 						</div>
 					</div>

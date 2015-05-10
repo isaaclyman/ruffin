@@ -13,7 +13,8 @@ MessagePattern = new SimpleSchema({
 	},
 	text: {
 		type: String,
-		label: "Text"
+		label: "Text",
+		max: 1000
 	},
 	edited: {
 		type: Boolean,

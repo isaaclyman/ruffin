@@ -42,6 +42,11 @@ PersonalEventPattern = new SimpleSchema({
 });
 
 ProfilePattern = new SimpleSchema({
+	essentialName: {
+		type: String,
+		label: "Lowercase Username",
+		regEx: /^[^A-Z]+$/
+	},
 	zip: {
 		type: String,
 		label: "Zip Code",

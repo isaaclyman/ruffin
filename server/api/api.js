@@ -112,7 +112,8 @@ Meteor.methods({
 	*/
 	personExists: function(username) {
 		check(username, String);
-		if( Meteor.users.findOne({ username: username }) ) {
+		username = username.toLowerCase();
+		if( Meteor.users.findOne({ 'profile.essentialName': username }) ) {
 			return true;
 		}
 		return false;
@@ -122,7 +123,9 @@ Meteor.methods({
 			username: String,
 			zip: String
 		});
-		if( Meteor.users.findOne({ username: person.username }) ) {
+		person.username = app.transform.username(person.username);
+		person.zip = app.transform.region(person.zip);
+		if( Meteor.users.findOne({ 'profile.essentialName': person.username.toLowerCase() }) ) {
 			throw new Meteor.Error('API', 'Attempted to create a person that already exists.');
 			return false;
 		}
@@ -130,6 +133,7 @@ Meteor.methods({
 			username :  person.username,
 			createdAt:  Date.now(),
 			profile: {
+				essentialName: person.username.toLowerCase(),
 				zip: person.zip,
 				boards: []
 			}
@@ -186,7 +190,7 @@ Meteor.methods({
 		check(board_path, String);
 		check(text, String);
 		check(this.userId, String);
-		if(text === '') {
+		if(text === '' || !api.validate.message(text)) {
 			return false;
 		}
 		var board_path = app.transform.humanToUrl(board_path);
@@ -238,6 +242,9 @@ var api = {
 		},
 		boardDescription: function(description) {
 			return this.process(app.validate.char140(description));
+		},
+		message: function(message) {
+			return this.process(app.validate.char1000(message));
 		},
 		region: function(region) {
 			return this.process(app.validate.region(region));
