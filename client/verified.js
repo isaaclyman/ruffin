@@ -1,8 +1,5 @@
 Template.verified.rendered = function() {
-	if(Session.get('andVerified')) {
-		Meteor.call('sendNewLogin', window.location.host);
-	}
-	Session.setPersistent('andVerified', false);
+	Meteor.call('sendNewLogin', window.location.host);
 };
 
 Template.verified.events({
