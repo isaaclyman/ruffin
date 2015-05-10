@@ -82,14 +82,18 @@
 
 		{{#if loggedIn}}
 			<div class="options col-xs-12">
-				{{#unless userHasCardHere}}
+				{{#if userHasCardHere}}
+					<div class="col-xs-12 nopadding">
+						<button class="form-control btn btn-default" data-toggle="tooltip" data-original-title="Set a time and place to do this with others" id="showFormEvent">Create an event</button>
+					</div>
+				{{else}}
 					<div class="col-xs-6 nopadding margin-right">
 						<button class="form-control btn btn-default break" data-toggle="tooltip" data-original-title="Allow others on this board to contact you" id="showFormCard">Leave a card</button>
 					</div>
-				{{/unless}}
-				<div class="col-xs-6 nopadding">
-					<button class="form-control btn btn-default" data-toggle="tooltip" data-original-title="Set a time and place to do this with others" id="showFormEvent">Create an event</button>
-				</div>
+					<div class="col-xs-6 nopadding">
+						<button class="form-control btn btn-default" data-toggle="tooltip" data-original-title="Set a time and place to do this with others" id="showFormEvent">Create an event</button>
+					</div>
+				{{/if}}
 			</div>
 		{{/if}}
 
@@ -98,7 +102,7 @@
 				<div class="board-form">
 					<p>
 						When are you available for {{board}} with others?
-						<input class="form-control" type="text" placeholder="Availability" id="availabilityInput" maxlength="140"/>
+						<input class="form-control" type="text" placeholder="Availability (e.g. Thursday Mornings)" id="availabilityInput" maxlength="140"/>
 					</p>
 					<p>
 						<input type="checkbox" id="allowEmailCheckbox" /> Email me when someone sends me a message.
@@ -143,7 +147,7 @@
 					<div class="contact-container col-md-4 col-sm-6 col-xs-12">
 						<div class="contact-box">
 							<p><i class="fa fa-user"></i> {{this.username}}</p>
-							<p>Availability:</p>
+							<p class="no-margin-bottom">Availability:</p>
 							<p class="availability" data-toggle="tooltip" data-original-title="{{this.availability}}">{{this.availability}}</p>
 							<button class="form-control btn btn-default">Talk</button>
 						</div>
