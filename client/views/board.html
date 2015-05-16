@@ -144,12 +144,21 @@
 			<div class="cards col-xs-12">
 				<p class="heading">Contact Cards:</p>
 				{{#each cards}}
-					<div class="contact-container col-md-4 col-sm-6 col-xs-12">
-						<div class="contact-box" data-toggle="tooltip" data-original-title="{{this.availability}}" data-trigger="hover click">
-							<p><i class="fa fa-user"></i> {{this.username}}</p>
-							<p class="no-margin-bottom">Availability:</p>
-							<p class="availability">{{this.availability}}</p>
-							<button class="form-control btn btn-default">Talk</button>
+					<div class="contact-container flip-container col-md-4 col-sm-6 col-xs-12">
+						<div class="flipper">
+							<div class="front contact-box" data-toggle="tooltip" data-original-title="{{this.availability}}" data-trigger="hover click">
+								<p><i class="fa fa-user"></i> {{this.username}}</p>
+								<p class="no-margin-bottom">Availability:</p>
+								<p class="availability">{{this.availability}}</p>
+								<button class="form-control btn btn-default talkBtn">Talk</button>
+							</div>
+							<div class="back talk-box">
+								<button class="btn btn-default talkBtn">
+									<i class="fa fa-lg fa-caret-left"></i> Back
+								</button> 
+								<textarea class="form-control" placeholder="Message" id="pMessageInput" maxlength="10000"></textarea>
+								<button class="form-control btn btn-default" id="pMessageSend">Send</button>
+							</div>
 						</div>
 					</div>
 				{{/each}}

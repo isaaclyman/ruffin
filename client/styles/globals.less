@@ -112,6 +112,38 @@ div.nopadding {
   padding: 0px 0px;
 }
 
+div.flip-container {
+  &.flipped .flipper {
+    .transform(rotateY(180deg));
+  }
+
+  div.flipper {
+    height: inherit;
+    width: 100%;
+    .transition(0.4s);
+    transform-style: preserve-3d;
+    position: relative;
+  
+    .front, .back {
+      .backface-visibility(hidden);
+      position: absolute;
+      height: inherit;
+      width: inherit;
+      top: 0;
+      left: 0;
+    }
+
+    .front {
+      z-index: 2;
+      .transform(rotateY(0deg));
+    }
+
+    .back {
+      .transform(rotateY(180deg));
+    }
+  }
+}
+
 a.subtle {
   color: @light-text;
 }
@@ -192,4 +224,17 @@ hr {
   -webkit-box-shadow: @details;
      -moz-box-shadow: @details;
           box-shadow: @details;
+}
+
+.transform(@details) {
+  -webkit-transform: @details;
+     -moz-transform: @details;
+      -ms-transform: @details;
+       -o-transform: @details;
+          transform: @details;
+}
+
+.backface-visibility(@details) {
+  -webkit-backface-visibility: @details;
+          backface-visibility: @details;
 }

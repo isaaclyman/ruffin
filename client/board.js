@@ -56,6 +56,19 @@ Template.board.events({
 		var allow_email  = $('#allowEmailCheckbox')[0].checked;
 		Meteor.call('addCardToBoard', this.board, availability, allow_email);
 		Session.set('form_card', false);
+	},
+	"click .talkBtn" : function(event) {
+		board.flipCard(event.target);
+	},
+	"keyup #pMessageInput" : function(event) {
+		if(event.which === 13) {
+			board.form.pMessage.send(board.data.board, this.user_id);
+			board.flipCard(event.target);
+		}
+	},
+	"click #pMessageSend" : function(event) {
+		board.form.pMessage.send(board.data.board, this.user_id);
+		board.flipCard(event.target);
 	}
 });
 
@@ -181,6 +194,10 @@ var board = {
 			return;
 		}
 	},
+	flipCard: function(buttonElement) {
+		$(buttonElement.parentElement.parentElement.parentElement).toggleClass('flipped');
+		return;
+	},
 	validate: {
 		description: function(description) {
 			var validation = app.validate.boardDescription(description);
@@ -202,6 +219,13 @@ var board = {
 				var message = $('#messageInput')[0].value;
 				Meteor.call('addMessage', board, message);
 				$('#messageInput')[0].value = '';
+			}
+		},
+		pMessage: {
+			send: function(board, toUser) {
+				var pMessage = $('#pMessageInput')[0].value;
+				Meteor.call('pMessageSend', board, toUser, pMessage);
+				$('#pMessageInput')[0].value = '';
 			}
 		}
 	}

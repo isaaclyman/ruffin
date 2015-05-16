@@ -10,6 +10,7 @@
 @window-color: #FCFCFC;
 
 div.board {
+	overflow: visible;
 
 	div.board-title {
 		min-height: 40px;
@@ -116,11 +117,12 @@ div.board {
 
 	div.contact-container {
 		padding: 0px 4px;
+		min-height: 160px;
 	}
 
-	div.contact-box {
+	div.contact-box, div.talk-box {
 		display: inline-block;
-		height: 160px;
+		min-height: 160px;
 		width: 100%;
 		padding: 10px 10px;
 		border-left: 1px solid @form-border;
@@ -136,6 +138,16 @@ div.board {
 			max-height: 20px;
 			overflow: hidden;
 		}
+	}
+
+	div.talk-box .form-control {
+		margin-top: 6px;
+	}
+
+	span.talkBtn {
+		display: block;
+		cursor: pointer;
+		margin-bottom: 6px;
 	}
 
 	.break {

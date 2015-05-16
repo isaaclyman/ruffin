@@ -92,7 +92,6 @@ Meteor.methods({
 			allow_email: allow_email,
 			availability: availability
 		};
-		console.log(board_path);
 		Boards.update({ board: board_path },
 					  { $push: { 'cards': newCard } });
 		return true;
@@ -135,7 +134,9 @@ Meteor.methods({
 			profile: {
 				essentialName: person.username.toLowerCase(),
 				zip: person.zip,
-				boards: []
+				boards: [],
+				messages: [],
+				events: []
 			}
 		};
 		// Generate a random password for this person
@@ -225,6 +226,37 @@ Meteor.methods({
 					  { $pull: {messages: { user_id: this.userId }}},
 					  { multi: true });
 		return true;
+	},
+	pMessageSend: function(board, toUser, text) {
+		check(board, String);
+		check(toUser, String);
+		check(text, String);
+		check(this.userId, String);
+		if(!api.validate.pMessage(text)) {
+			return false;
+		}
+		if(!Boards.findOne({ board: board })) {
+			throw new Meteor.Error('API',
+				'Tried to send a personal message from a nonexistent board.');
+			return false;
+		}
+		if(!Meteor.users.findOne({ _id: toUser })) {
+			throw new Meteor.Error('API',
+				'Tried to send a personal message to a user that does\'t exist.');
+			return false;
+		}
+		var pMessage = {
+			_id: Random.id(),
+			from_id: this.userId,
+			from_username: Meteor.user().username,
+			board: board,
+			text: text,
+			date: Date.now(),
+			seen: false
+		};
+		Meteor.users.update({ _id: toUser },
+							{ $push: { 'profile.messages': pMessage }});
+		return true;
 	}
 });
 
@@ -245,6 +277,9 @@ var api = {
 		},
 		message: function(message) {
 			return this.process(app.validate.char1000(message));
+		},
+		pMessage: function(message) {
+			return this.process(app.validate.char10k(message));
 		},
 		region: function(region) {
 			return this.process(app.validate.region(region));

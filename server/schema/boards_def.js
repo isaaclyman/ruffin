@@ -8,22 +8,22 @@ MessagePattern = new SimpleSchema({
 	},
 	name: {
 		type: String,
-		label: "Name",
+		label: 'Name',
 		max: 36
 	},
 	text: {
 		type: String,
-		label: "Text",
+		label: 'Text',
 		max: 1000
 	},
 	edited: {
 		type: Boolean,
-		label: "Edited",
+		label: 'Edited',
 		optional: true
  	},
 	timestamp: {
 		type: Number,
-		label: "Timestamp"
+		label: 'Timestamp'
 	}
 });
 
@@ -33,15 +33,15 @@ CardPattern = new SimpleSchema({
 	},
 	username: {
 		type: String,
-		label: "Name"
+		label: 'Name'
 	},
 	allow_email: {
 		type: Boolean,
-		label: "Allow Email"
+		label: 'Allow Email'
 	},
 	availability: {
 		type: String,
-		label: "Availability",
+		label: 'Availability',
 		max: 140
 	}
 });
@@ -52,86 +52,86 @@ EventPattern = new SimpleSchema({
 	},
 	title: {
 		type: String,
-		label: "Title",
+		label: 'Title',
 		max: 140
 	},
 	date: {
 		type: Number,
-		label: "Date",
+		label: 'Date',
 	},
 	location: {
 		type: String,
-		label: "Location",
+		label: 'Location',
 		max: 1000
 	},
 	description: {
 		type: String,
-		label: "Description",
+		label: 'Description',
 		max: 1000
 	},
 	attendees: {
 		type: [String],
-		label: "Attendees"
+		label: 'Attendees'
 	}
 });
 
-//Boards = new Mongo.Collection("boards");
+//Boards = new Mongo.Collection('boards');
 Boards.attachSchema(new SimpleSchema({
 	board: {
 		type: String,
-		label: "Board",
+		label: 'Board',
 		regEx: /^[a-zA-Z0-9_]+$/,
 		min: 4,
 		max: 203
 	},
 	hobby: {
 		type: String,
-		label: "Hobby",
+		label: 'Hobby',
 		regEx: /^[a-zA-Z0-9_]+$/,
 		min: 1,
 		max: 200
 	},
 	zip: {
 		type: String,
-		label: "Zip code",
+		label: 'Zip code',
 		regEx: /^[0-9]{3}$/,
 		min: 000,
 		max: 999
 	},
 	description: {
 		type: String,
-		label: "Description",
+		label: 'Description',
 		max: 140,
 		optional: true
 	},
 	described_by: {
 		type: String,
-		label: "Description",
+		label: 'Description',
 		optional: true
 	},
 	tags: {
 		type: [String],
-		label: "Tags",
+		label: 'Tags',
 		max: 36,
 		optional: true
 	},
 	messages: {
 		type: [MessagePattern],
-		label: "Messages",
+		label: 'Messages',
 		optional: true
 	},
 	cards: {
 		type: [CardPattern],
-		label: "Contact Cards",
+		label: 'Contact Cards',
 		optional: true
 	},
 	events: {
 		type: [EventPattern],
-		label: "Events",
+		label: 'Events',
 		optional: true
 	},
 	createdDate: {
 		type: Date,
-		label: "Created on"
+		label: 'Created on'
 	}
 }));
