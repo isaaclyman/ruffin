@@ -1,5 +1,5 @@
 var emailApi = {};
-emailApi.loginEmail = function (root_url, user_id, password) {
+emailApi.loginEmailHtml = function (root_url, user_id, password) {
 	var link = 'http://' + root_url + '/set/user/' + user_id + '/token/' + password;
 	var html =
     '<h1 style=\
@@ -22,6 +22,20 @@ emailApi.loginEmail = function (root_url, user_id, password) {
     "Margin-top: 0;color: #565656;font-family: Georgia,serif;font-size: 16px;line-height: 25px;Margin-bottom: 25px">\
     Thanks! You\'re the greatest.</p>';
     return html;
+};
+emailApi.loginEmailText = function (root_url, user_id, password) {
+	var link = 'http://' + root_url + '/set/user/' + user_id + '/token/' + password;
+	var text =
+	'This is your exclusive Ruffin access link.\
+	\n\n\
+	Hold onto it. There\'s no other way for you to use your unique username.\
+	\n\n\
+	' + link + '\
+	\n\n\
+	Use this link anytime you want to access the site, but don\'t share it with anyone.\
+	\n\n\
+	Thanks! You\'re the greatest.';
+	return text;
 };
 emailApi.verifyRoot = function (root) {
 	if (root !== 'localhost:3000' &&
@@ -63,7 +77,8 @@ Meteor.methods({
 			from: 'Do Not Reply - Ruffin',
 			to  :  address,
 			subject: 'Here is your Ruffin access link.',
-			html:  emailApi.loginEmail(root_url, this.userId, password)
+			html: emailApi.loginEmailHtml(root_url, this.userId, password),
+			text: emailApi.loginEmailText(root_url, this.userId, password)
 		});
 	},
 	resendLogin: function(root_url, username) {
@@ -85,7 +100,8 @@ Meteor.methods({
 			from: 'Do Not Reply - Ruffin',
 			to  :  address,
 			subject: 'You requested a replacement Ruffin access link.',
-			html:  emailApi.loginEmail(root_url, user_id, password)
+			html: emailApi.loginEmailHtml(root_url, user_id, password),
+			text: emailApi.loginEmailText(root_url, user_id, password)
 		});
 	}
 });

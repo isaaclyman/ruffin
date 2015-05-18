@@ -26,6 +26,20 @@ verify.verifyHTML = function(link) {
     Thanks again. You\'re the greatest.</p>';
     return html;
 };
+verify.verifyText = function(link) {
+    var text =
+    'Thanks for trusting us with your email address.\
+    \n\n\
+    It\'s safe with us, and we won\'t ask you for any other personal\
+    information.\
+    \n\n\
+    Follow the link below to verify that this address belongs to you.\
+    \n\n\
+    ' + link + '\
+    \n\n\
+    Thanks again. You\'re the greatest.';
+    return text;
+};
 
 Accounts.emailTemplates.from = "Do Not Reply - Ruffin";
 Accounts.emailTemplates.siteName = "Ruffin";
@@ -35,4 +49,6 @@ Accounts.emailTemplates.verifyEmail.subject = function(user) {
 Accounts.emailTemplates.verifyEmail.html = function(user, url) {
 	return verify.verifyHTML(url);
 };
-
+Accounts.emailTemplates.verifyEmail.text = function(user, url) {
+    return verify.verifyText(url);
+};
