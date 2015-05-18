@@ -47,11 +47,16 @@ Template.board.events({
 		board.toggle('form_event');
 	},
 	"click #submitCard" : function() {
-		for(var card = 0; card < this.cards.length; card++) {
-			if(this.cards[card].user_id === Meteor.userId()) {
+		// Don't allow a user to submit a card twice
+		if(this.cards && this.cards.length) {
+			var userIds = this.cards.map(function(card) {
+				return card.user_id;
+			});
+			if (userIds.indexOf(Meteor.userId()) !== -1) {
 				return false;
 			}
 		}
+
 		var availability = $('#availabilityInput')[0].value;
 		var allow_email  = $('#allowEmailCheckbox')[0].checked;
 		Meteor.call('addCardToBoard', this.board, availability, allow_email);
@@ -93,14 +98,12 @@ Template.board.helpers({
 			return [];
 		}
 		var messages = this.messages;
-		for(var msg in messages) {
-			// Create a readable timestamp for each message
-			messages[msg].friendlyTimestamp =
-				app.transform.toFriendlyDateTime(messages[msg].timestamp);
-			// Determine whether each message was written by the current user
-			messages[msg].mine = board.validate.isMine(messages[msg]);
-		}
-		return messages;
+		return messages.map(function(msg) {
+			msg.friendlyTimestamp =
+				app.transform.toFriendlyDateTime(msg.timestamp);
+			msg.mine = board.validate.isMine(msg);
+			return msg;
+		});
 	},
 	username: function() {
 		// Reactively set the username
@@ -114,6 +117,18 @@ Template.board.helpers({
 		return app.transform.toFriendlyTime(board.rightnow);
 	},
 	cards: function() {
+		// If this user has a card here, put it at the beginning for easy access
+		if (this.cards && this.cards.length) {
+			var userIds = this.cards.map(function(card) {
+				return card.user_id;
+			});
+			var myCardIndex = userIds.indexOf(Meteor.userId());
+			if (myCardIndex !== -1) {
+				var myCard = this.cards[myCardIndex];
+				this.cards.splice(myCardIndex, 1);
+				this.cards.unshift(myCard);
+			}
+		}
 		return this.cards;
 	},
 	events: function() {
@@ -129,10 +144,11 @@ Template.board.helpers({
 		if(!this.cards) {
 			return false;
 		}
-		for(var card = 0; card < this.cards.length; card++) {
-			if(this.cards[card].user_id === Meteor.userId()) {
-				return true;
-			}
+		var userIds = this.cards.map(function(card) {
+			return card.user_id;
+		});
+		if (userIds.indexOf(Meteor.userId()) !== -1) {
+			return true;
 		}
 		return false;
 	}
@@ -154,10 +170,9 @@ var board = {
 		});
 	},
 	clearIntervals: function() {
-		var intervals = this.intervals;
-		for(var interval = 0; interval < intervals.length; interval++) {
-			Meteor.clearInterval(intervals[interval]);
-		}
+		this.intervals.forEach(function(interval) {
+			Meteor.clearInterval(interval);
+		});
 		return true;
 	},
 	onChatScrollToBottom: function() {

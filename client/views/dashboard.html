@@ -25,7 +25,7 @@
 					{{#each boards}}
 						<button class="btn btn-default boardList">
 							<span class="board-name">
-								<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
+								{{this.hobby}} ({{this.zip}})
 							</span>
 							<span class="board-options">
 								<span class="goBtn">
@@ -57,30 +57,16 @@
 	        		<p>The most popular boards in your area are:</p>
 	        	{{/if}}
 	        	{{#each popularFive}}
-	        		<button class="btn btn-default boardList">
-						<span class="board-name">
-							<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
-						</span>
-						<span class="board-options">
-							<span class="goBtn">
-								<i class="fa fa-external-link fa-lg"></i> Visit
-							</span>
-						</span>
+	        		<button class="btn btn-default boardList goBtn">
+						{{this.hobby}} ({{this.zip}})
 					</button>
 	        	{{/each}}
 	        	{{#if unpopularFive}}
 	        		<p>Here are some boards that could use a little love:</p>
 	        	{{/if}}
 	        	{{#each unpopularFive}}
-	        		<button class="btn btn-default boardList">
-						<span class="board-name">
-							<span class="capitalize">{{this.hobby}}</span> ({{this.zip}})
-						</span>
-						<span class="board-options">
-							<span class="goBtn">
-								<i class="fa fa-external-link fa-lg"></i> Visit
-							</span>
-						</span>
+	        		<button class="btn btn-default boardList goBtn">
+						{{this.hobby}} ({{this.zip}})
 					</button>
 	        	{{/each}}
 	        	{{#unless popularFive}}
@@ -110,19 +96,27 @@
 	        {{/if}}
 
 	        {{#if tab_messages}}
-	        	<p class="heading">Messages</p>
+	        	<p class="heading">Cards</p>
 	        	{{#unless userMessages}}
 	        		<p>No messages.</p>
 	        	{{/unless}}
-	    		{{#if userContactCards}}
-	    			<p>You've left your card on {{userContactCards}} boards.</p>
-	    		{{else}}
-	    			<p>You haven't left any contact cards. Visit a board to get started.</p>
+	    		{{#if howManyContactCards}}
+	    			<p>You've left your card on {{howManyContactCards}} {{board_s howManyContactCards}}:</p>
+	    			{{#each userCardBoards}}
+	    				<button class="btn btn-default boardList goBtn">
+							{{this.hobby}} ({{this.zip}})
+						</button>
+	    			{{/each}}
+	    			<p>To remove or change a contact card, visit the board you left it at.</p>
+				{{else}}
+	    			<p>You haven't left any contact cards. Visit a board and click "Leave a Card" to get started.</p>
 	    		{{/if}}
+	    		<hr>
+	    		<p class="heading">Messages</p>
 	    		{{#each userMessages}}
 	    			<hr>
-	    			<p>
-	    				<span>{{this.from}}:</span> <span>{{this.text}}</span>
+	    			<p class="message-item">
+	    				<span class="bold">{{this.from_username}}:</span> <span>{{this.text}}</span>
 	    			</p>
 	    		{{/each}}
 	        {{/if}}

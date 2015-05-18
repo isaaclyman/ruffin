@@ -68,18 +68,20 @@ ProfilePattern = new SimpleSchema({
 		label: 'Boards',
 		regEx: /^[a-zA-Z0-9_]+$/,
 		min: 1,
-		max: 203,
-		optional: true
+		max: 203
 	},
 	messages: {
 		type: [PersonalMsgPattern],
-		label: 'Messages',
-		optional: true
+		label: 'Messages'
 	},
 	events: {
 		type: [PersonalEventPattern],
-		label: 'Events',
-		optional: true
+		label: 'Events'
+	},
+	cards: {
+		type: [String],
+		label: 'Boards With User\'s Card',
+		max: 203
 	}
 });
 

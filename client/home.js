@@ -161,9 +161,9 @@ var home = {
 	},
 	clearTrackers: function() {
 		var trackers = this.trackers;
-		for(var tracker = 0; tracker < trackers.length; tracker++) {
-			trackers[tracker].stop();
-		}
+		trackers.forEach(function(tracker) {
+			tracker.stop();
+		});
 		return true;
 	},
 	trackSubmittability: function() {

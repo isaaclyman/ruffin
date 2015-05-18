@@ -92,6 +92,8 @@ Meteor.methods({
 			allow_email: allow_email,
 			availability: availability
 		};
+		Meteor.users.update({ _id: this.userId },
+							{ $push: { 'profile.cards': board_path } });
 		Boards.update({ board: board_path },
 					  { $push: { 'cards': newCard } });
 		return true;
@@ -102,6 +104,8 @@ Meteor.methods({
 		if (!api.validate.boardPath(board_path)) {
 			return false;
 		}
+		Meteor.users.update({ _id: this.userId },
+							{ $pull: { 'profile.cards': board_path } });
 		Boards.update({ board: board_path },
 					  { $pull: {cards: { user_id: this.userId} } });
 		return true;
@@ -136,7 +140,8 @@ Meteor.methods({
 				zip: person.zip,
 				boards: [],
 				messages: [],
-				events: []
+				events: [],
+				cards: []
 			}
 		};
 		// Generate a random password for this person

@@ -182,18 +182,14 @@ Template.dashboard.helpers({
 	boards: function() {
 		if(Meteor.user()) {
 			dashboard.data.userBoards = Meteor.user().profile.boards;
-			var displayBoards = [];
-			for(var board in dashboard.data.userBoards) {
-				var zip   = dashboard.data.userBoards[board].substring(0,3);
-				var hobby = dashboard.data.userBoards[board].substring(3);
-				var board = zip + hobby;
-				displayBoards.push({
-					zip  : zip,
-					hobby: hobby,
+			
+			return dashboard.data.userBoards.map(function(board) {
+				return {
+					zip:   board.substring(0,3),
+					hobby: board.substring(3),
 					board: board
-				});
-			}
-			return displayBoards;
+				};
+			});
 		}
 		return [];
 	},
@@ -205,6 +201,29 @@ Template.dashboard.helpers({
 	},
 	warning_hobby: function() {
 		return Session.get('warning_hobby');
+	},
+	howManyContactCards: function() {
+		if(Meteor.user()) {
+			return Meteor.user().profile.cards.length;
+		}
+		return false;
+	},
+	board_s: function(howMany) {
+		return howMany === 1 ? 'board' : 'boards';
+	},
+	userCardBoards: function() {
+		if(Meteor.user()) {
+			return Meteor.user().profile.cards.map(function(card) {
+				return dashboard.splitBoardPath(card);
+			});
+		}
+		return false;
+	},
+	userMessages: function() {
+		if(Meteor.user()) {
+			return Meteor.user().profile.messages;
+		}
+		return false;
 	}
 });
 
@@ -303,5 +322,11 @@ var dashboard = {
 		zip = app.transform.region(zip);
 		hobby = app.transform.humanToUrl(hobby);
 		Router.go('/region/' + zip + '/board/' + hobby);
+	},
+	splitBoardPath: function(board_path) {
+		return {
+			zip  : board_path.substring(0,3),
+			hobby: board_path.substring(3)
+		};
 	}
 };
