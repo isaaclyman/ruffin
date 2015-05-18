@@ -262,6 +262,17 @@ Meteor.methods({
 		Meteor.users.update({ _id: toUser },
 							{ $push: { 'profile.messages': pMessage }});
 		return true;
+	},
+	pMessageDelete: function(id) {
+		check(id, String);
+		if(!Meteor.users.findOne({ _id: this.userId, 'profile.messages._id': id })) {
+			throw new Meteor.Error('API',
+				'Tried to delete a message that doesn\'t exist.');
+			return false;
+		}
+		Meteor.users.update({ _id: this.userId },
+							{ $pull: { 'profile.messages': { _id: id } } });
+		return true;
 	}
 });
 

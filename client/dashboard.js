@@ -66,6 +66,9 @@ Template.dashboard.events({
 	/*
 		MESSAGES
 	*/
+	"click .deleteMessage": function () {
+		Meteor.call('pMessageDelete', this._id);
+	},
 	"click .replyMessage": function () {
 		$('#replyForm-' + this._id).toggleClass('show');
 	},
