@@ -64,6 +64,23 @@ Template.dashboard.events({
 		dashboard.addHobby();
 	},
 	/*
+		MESSAGES
+	*/
+	"click .replyMessage": function () {
+		$('#replyForm-' + this._id).toggleClass('show');
+	},
+	"click .submitMessageReply": function () {
+		var board  = this.board;
+		var toUser = this.from_id;
+		var text   = $('#pMessageReply-' + this._id)[0].value;
+		if (!text.length) {
+			return;
+		}
+		Meteor.call('pMessageSend', board, toUser, text);
+		$('#pMessageReply-' + this._id)[0].value = '';
+		$('#replyForm-' + this._id).removeClass('show');
+	},
+	/*
 		PROFILE
 	*/
 	"click #changeZip" : function() {
@@ -73,7 +90,6 @@ Template.dashboard.events({
 		var zip = event.currentTarget.value;
 		if(dashboard.validate.region(zip) && event.which == 13) {
 			dashboard.change.region(zip);
-			return;
 		}
 	},
 	"click #zipBtn" : function() {
@@ -87,7 +103,6 @@ Template.dashboard.events({
 		var email = event.currentTarget.value;
 		if(dashboard.validate.email(email) && event.which === 13) {
 			dashboard.change.email(email);
-			return;
 		}
 	},
 	"click #emailBtn" : function() {

@@ -40,22 +40,24 @@ div.dashboard {
 		}
 	}
 
-	p.message-item {
+	div.message-item {
 		padding: 5px 10px;
 		border: 1px solid @tab-border;
 		border-radius: 5px;
+
+		div.replyForm.show {
+			height: 100px;
+		}
 	}
 
 	div.hide-animate {
 	 	height: 0px;
-	 	overflow: hidden;
-		-webkit-transition: all 0.5s;
-		-moz-transition: all 0.5s;
-		-o-transition: all 0.5s;
-		transition: all 0.5s;
+	 	visibility: hidden;
+	 	.transition(height 0.5s);
 
 		&.show {
-			height: 34px;
+			height: 36px;
+			visibility: visible;
 		}
 	}
 

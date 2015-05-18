@@ -65,6 +65,9 @@ Template.board.events({
 	"click .talkBtn" : function(event) {
 		board.flipCard(event.target);
 	},
+	"click .deleteCard" : function() {
+		Meteor.call('removeUserCard', board.data.board);
+	},
 	"keyup #pMessageInput" : function(event) {
 		if(event.which === 13) {
 			board.form.pMessage.send(board.data.board, this.user_id);
@@ -129,6 +132,7 @@ Template.board.helpers({
 				this.cards.unshift(myCard);
 			}
 		}
+		app.turnOnTooltips();
 		return this.cards;
 	},
 	events: function() {

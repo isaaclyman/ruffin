@@ -107,17 +107,24 @@
 							{{this.hobby}} ({{this.zip}})
 						</button>
 	    			{{/each}}
-	    			<p>To remove or change a contact card, visit the board you left it at.</p>
+	    			<p>To remove a contact card, visit the board you left it at.</p>
 				{{else}}
 	    			<p>You haven't left any contact cards. Visit a board and click "Leave a Card" to get started.</p>
 	    		{{/if}}
 	    		<hr>
 	    		<p class="heading">Messages</p>
 	    		{{#each userMessages}}
-	    			<hr>
-	    			<p class="message-item">
-	    				<span class="bold">{{this.from_username}}:</span> <span>{{this.text}}</span>
-	    			</p>
+	    			<div class="message-item">
+	    				<p>
+	    					<span class="bold">{{this.from_username}}:</span> {{this.text}}
+	    				</p>
+	    				<button class="btn btn-default thinBtn replyMessage"> <i class="fa fa-reply"></i> Reply</button>
+	    				<button class="btn btn-default thinBtn deleteMessage"><i class="fa fa-times"></i> Delete</button>
+	    				<div class="hide-animate replyForm" id="replyForm-{{this._id}}">
+	    					<textarea class="form-control margin-top" placeholder="Message" id="pMessageReply-{{this._id}}" maxlength="10000"></textarea>
+	    					<button class="btn btn-default thinBtn margin-top submitMessageReply">Send</button>
+	    				</div>
+	    			</div>
 	    		{{/each}}
 	        {{/if}}
 			
