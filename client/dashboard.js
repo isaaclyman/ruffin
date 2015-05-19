@@ -247,7 +247,7 @@ Template.dashboard.helpers({
 			for(var key in messages) {
 				messageList.push(messages[key]);
 			}
-			return messages;
+			return messageList;
 		}
 		return false;
 	}
