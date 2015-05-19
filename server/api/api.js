@@ -254,17 +254,51 @@ Meteor.methods({
 			_id: Random.id(),
 			from_id: this.userId,
 			from_username: Meteor.user().username,
+			to_id: toUser,
+			to_username: Meteor.users.findOne({ _id: toUser }).username,
 			board: board,
 			text: text,
-			date: Date.now(),
-			seen: false
+			date: Date.now()
 		};
 		Meteor.users.update({ _id: toUser },
 							{ $push: { 'profile.messages': pMessage }});
+		Meteor.users.update({ _id: this.userId },
+							{ $push: { 'profile.messages': pMessage }});
 		return true;
+	},
+	pMessageReply: function(id, toUser, text) {
+		check(id, String);
+		check(this.userId, String);
+		if(!api.validate.pMessage(text)) {
+			return false;
+		}
+		if(!Meteor.users.findOne({ _id: toUser })) {
+			throw new Meteor.Error('API',
+				'Tried to send a message to a user that doesn\'t exist.');
+			return false;
+		}
+		if(!Meteor.users.findOne({ _id: toUser, 'profile.messages._id': id })) {
+			Meteor.call('pMessageSend', 'DASHBOARD', toUser, text);
+			return;
+		}
+		var replyMessage = {
+			from_id: this.userId,
+			from_username: Meteor.user().username,
+			to_id: toUser,
+			to_username: Meteor.users.findOne({ _id: toUser }).username,
+			text: text,
+			date: Date.now()
+		};
+		Meteor.users.update({ _id: toUser, 'profile.messages._id': id },
+							{ $push: { 'profile.messages.$.replies': replyMessage } });
+		Meteor.users.update({ _id: this.userId, 'profile.messages._id': id },
+							{ $push: { 'profile.messages.$.replies': replyMessage } });
+		return true;
+
 	},
 	pMessageDelete: function(id) {
 		check(id, String);
+		check(this.userId, String);
 		if(!Meteor.users.findOne({ _id: this.userId, 'profile.messages._id': id })) {
 			throw new Meteor.Error('API',
 				'Tried to delete a message that doesn\'t exist.');

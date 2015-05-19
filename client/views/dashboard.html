@@ -97,9 +97,6 @@
 
 	        {{#if tab_messages}}
 	        	<p class="heading">Cards</p>
-	        	{{#unless userMessages}}
-	        		<p>No messages.</p>
-	        	{{/unless}}
 	    		{{#if howManyContactCards}}
 	    			<p>You've left your card on {{howManyContactCards}} {{board_s howManyContactCards}}:</p>
 	    			{{#each userCardBoards}}
@@ -113,11 +110,21 @@
 	    		{{/if}}
 	    		<hr>
 	    		<p class="heading">Messages</p>
+	        	{{#unless userMessages}}
+	        		<p>No messages.</p>
+	        	{{/unless}}
 	    		{{#each userMessages}}
 	    			<div class="message-item">
 	    				<p>
 	    					<span class="bold">{{this.from_username}}:</span> {{this.text}}
 	    				</p>
+	    				{{#each this.replies}}
+	    					<div class="message-item">
+	    						<p>
+	    							<span class="bold">{{this.from_username}}:</span> {{this.text}}
+	    						</p>
+	    					</div>
+	    				{{/each}}
 	    				<button class="btn btn-default thinBtn replyMessage"> <i class="fa fa-reply"></i> Reply</button>
 	    				<button class="btn btn-default thinBtn deleteMessage"><i class="fa fa-times"></i> Delete</button>
 	    				<div class="hide-animate replyForm" id="replyForm-{{this._id}}">

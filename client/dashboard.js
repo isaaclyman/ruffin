@@ -73,13 +73,13 @@ Template.dashboard.events({
 		$('#replyForm-' + this._id).toggleClass('show');
 	},
 	"click .submitMessageReply": function () {
-		var board  = this.board;
+		var id     = this._id;
 		var toUser = this.from_id;
 		var text   = $('#pMessageReply-' + this._id)[0].value;
 		if (!text.length) {
 			return;
 		}
-		Meteor.call('pMessageSend', board, toUser, text);
+		Meteor.call('pMessageReply', id, toUser, text);
 		$('#pMessageReply-' + this._id)[0].value = '';
 		$('#replyForm-' + this._id).removeClass('show');
 	},
@@ -239,7 +239,15 @@ Template.dashboard.helpers({
 	},
 	userMessages: function() {
 		if(Meteor.user()) {
-			return Meteor.user().profile.messages;
+			var messages = {};
+			var messageList = [];
+			Meteor.user().profile.messages.forEach(function (msg) {
+				messages[msg._id] = msg;
+			});
+			for(var key in messages) {
+				messageList.push(messages[key]);
+			}
+			return messages;
 		}
 		return false;
 	}

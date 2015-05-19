@@ -13,6 +13,33 @@ EmailPattern = new SimpleSchema({
 	}
 });
 
+ReplyMsgPattern = new SimpleSchema({
+	from_id: {
+		type: String,
+		label: 'From'
+	},
+	from_username: {
+		type: String,
+		label: 'Sender Name'
+	},
+	to_id: {
+		type: String
+	},
+	to_username: {
+		type: String,
+		label: 'Receiver Name'
+	},
+	text: {
+		type: String,
+		label: 'Text',
+		max: 10000  // 10,000
+	},
+	date: {
+		type: Number,
+		label: 'Date Sent'
+	}
+});
+
 PersonalMsgPattern = new SimpleSchema({
 	_id: {
 		type: String,
@@ -24,6 +51,13 @@ PersonalMsgPattern = new SimpleSchema({
 	from_username: {
 		type: String,
 		label: 'Sender Name'
+	},
+	to_id: {
+		type: String
+	},
+	to_username: {
+		type: String,
+		label: 'Receiver Name'
 	},
 	board: {
 		type: String,
@@ -38,9 +72,10 @@ PersonalMsgPattern = new SimpleSchema({
 		type: Number,
 		label: 'Date Sent'
 	},
-	seen: {
-		type: Boolean,
-		label: 'Seen'
+	replies: {
+		type: [ReplyMsgPattern],
+		label: 'Replies',
+		optional: true
 	}
 });
 
