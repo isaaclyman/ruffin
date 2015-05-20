@@ -245,6 +245,7 @@ Template.dashboard.helpers({
 				messages[msg._id] = msg;
 			});
 			for(var key in messages) {
+				messages[key].date = app.transform.toFriendlyDateTime(messages[key].date);
 				messageList.push(messages[key]);
 			}
 			return messageList;
