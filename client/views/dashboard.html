@@ -119,9 +119,8 @@
 	    				<p><span class="bold">{{this.from_username}}</span> ({{this.date}})</p>
 	    				{{#each this.replies}}
 	    					<div class="message-item">
-	    						<p>
-	    							<span class="bold">{{this.from_username}}:</span> {{this.text}}
-	    						</p>
+	    						<p>{{this.text}}</p>
+	    						<p><span class="bold">{{this.from_username}}</span> ({{this.date}})</p>
 	    					</div>
 	    				{{/each}}
 	    				<button class="btn btn-default thinBtn replyMessage"> <i class="fa fa-reply"></i> Reply</button>

@@ -128,6 +128,7 @@ Template.board.helpers({
 			var myCardIndex = userIds.indexOf(Meteor.userId());
 			if (myCardIndex !== -1) {
 				var myCard = this.cards[myCardIndex];
+				myCard.mine = true;
 				this.cards.splice(myCardIndex, 1);
 				this.cards.unshift(myCard);
 			}
@@ -155,6 +156,9 @@ Template.board.helpers({
 			return true;
 		}
 		return false;
+	},
+	disableTalk: function(mine) {
+		return mine ? {disabled: true} : null;
 	}
 });
 

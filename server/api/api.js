@@ -268,6 +268,8 @@ Meteor.methods({
 	},
 	pMessageReply: function(id, toUser, text) {
 		check(id, String);
+		check(toUser, String);
+		check(text, String);
 		check(this.userId, String);
 		if(!api.validate.pMessage(text)) {
 			return false;

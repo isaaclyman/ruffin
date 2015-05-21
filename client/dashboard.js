@@ -74,7 +74,7 @@ Template.dashboard.events({
 	},
 	"click .submitMessageReply": function () {
 		var id     = this._id;
-		var toUser = this.from_id;
+		var toUser = this.from_id !== Meteor.userId() ? this.from_id : this.to_id;
 		var text   = $('#pMessageReply-' + this._id)[0].value;
 		if (!text.length) {
 			return;
