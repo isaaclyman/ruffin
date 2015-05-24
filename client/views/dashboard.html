@@ -116,15 +116,24 @@
 	    		{{#each userMessages}}
 	    			<div class="message-item">
 	    				<p>{{this.text}}</p>
-	    				<p><span class="bold">{{this.from_username}}</span> ({{this.date}})</p>
+	    				<p>
+	    					<span class="bold">{{this.from_username}}</span> ({{this.date}}) from <span class="bold">{{this.board}}</span>
+	    				</p>
+	    				{{#if this.replies}}
+		    				<p>
+		    					<button class="btn btn-default thinBtn"><i class="fa fa-ellipsis-h"></i></button>
+		    				</p>
+	    				{{/if}}
 	    				{{#each this.replies}}
 	    					<div class="message-item">
 	    						<p>{{this.text}}</p>
 	    						<p><span class="bold">{{this.from_username}}</span> ({{this.date}})</p>
 	    					</div>
 	    				{{/each}}
-	    				<button class="btn btn-default thinBtn replyMessage"> <i class="fa fa-reply"></i> Reply</button>
-	    				<button class="btn btn-default thinBtn deleteMessage"><i class="fa fa-times"></i> Delete</button>
+	    				<p class="margin-top">
+	    					<button class="btn btn-default thinBtn replyMessage"> <i class="fa fa-reply"></i> Reply</button>
+	    					<button class="btn btn-default thinBtn deleteMessage"><i class="fa fa-times"></i> Delete</button>
+	    				</p>
 	    				<div class="hide-animate replyForm" id="replyForm-{{this._id}}">
 	    					<textarea class="form-control margin-top" placeholder="Message" id="pMessageReply-{{this._id}}" maxlength="10000"></textarea>
 	    					<button class="btn btn-default thinBtn margin-top submitMessageReply">Send</button>
