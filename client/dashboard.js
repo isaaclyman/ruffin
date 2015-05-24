@@ -246,6 +246,11 @@ Template.dashboard.helpers({
 			});
 			for(var key in messages) {
 				messages[key].date = app.transform.toFriendlyDateTime(messages[key].date);
+				if (messages[key].replies && messages[key].replies.length) {
+					messages[key].replies.forEach(function (reply) {
+						reply.date = app.transform.toFriendlyDateTime(reply.date);
+					});
+				}
 				messageList.push(messages[key]);
 			}
 			return messageList;

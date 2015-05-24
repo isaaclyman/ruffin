@@ -246,7 +246,7 @@ var board = {
 		},
 		pMessage: {
 			send: function(board, toUser) {
-				var pMessage = $('#pMessageInput')[0].value;
+				var pMessage = $('#card-' + toUser + ' #pMessageInput')[0].value;
 				Meteor.call('pMessageSend', board, toUser, pMessage);
 				$('#pMessageInput')[0].value = '';
 			}

@@ -144,7 +144,7 @@
 			<div class="cards col-xs-12">
 				<p class="heading">Contact Cards:</p>
 				{{#each cards}}
-					<div class="contact-container flip-container col-md-4 col-sm-6 col-xs-12">
+					<div class="contact-container flip-container col-md-4 col-sm-6 col-xs-12" id="card-{{this.user_id}}">
 						<div class="flipper">
 							<div class="front contact-box" data-toggle="tooltip" data-original-title="{{this.availability}}" data-trigger="hover click">
 								<p class="pull-right deleteCard"><i class="fa fa-lg fa-times"></i></p>
