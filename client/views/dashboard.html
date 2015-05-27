@@ -124,12 +124,14 @@
 		    					<button class="btn btn-default thinBtn toggleReplies"><i class="fa fa-comments"></i> Show Replies</button>
 		    				</p>
 	    				{{/if}}
-	    				{{#each this.replies}}
-	    					<div class="message-item hidden" id="replies-{{../_id}}">
-	    						<p>{{this.text}}</p>
-	    						<p><span class="bold">{{this.from_username}}</span> ({{this.timestamp}})</p>
-	    					</div>
-	    				{{/each}}
+	    				<div class="hidden" id="replies-{{this._id}}">
+		    				{{#each this.replies}}
+		    					<div class="message-item">
+		    						<p>{{this.text}}</p>
+		    						<p><span class="bold">{{this.from_username}}</span> ({{this.timestamp}})</p>
+		    					</div>
+		    				{{/each}}
+	    				</div>
 	    				<p class="margin-top">
 	    					<button class="btn btn-default thinBtn replyMessage"> <i class="fa fa-reply"></i> Reply</button>
 	    					<button class="btn btn-default thinBtn deleteMessage"><i class="fa fa-times"></i> Delete</button>
