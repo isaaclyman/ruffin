@@ -117,17 +117,17 @@
 	    			<div class="message-item">
 	    				<p>{{this.text}}</p>
 	    				<p>
-	    					<span class="bold">{{this.from_username}}</span> ({{this.date}}) from <span class="bold">{{this.board}}</span>
+	    					<span class="bold">{{this.from_username}}</span> ({{this.timestamp}}) from <span class="bold">{{this.board}}</span>
 	    				</p>
 	    				{{#if this.replies}}
 		    				<p>
-		    					<button class="btn btn-default thinBtn"><i class="fa fa-ellipsis-h"></i></button>
+		    					<button class="btn btn-default thinBtn toggleReplies"><i class="fa fa-comments"></i> Show Replies</button>
 		    				</p>
 	    				{{/if}}
 	    				{{#each this.replies}}
-	    					<div class="message-item">
+	    					<div class="message-item hidden" id="replies-{{../_id}}">
 	    						<p>{{this.text}}</p>
-	    						<p><span class="bold">{{this.from_username}}</span> ({{this.date}})</p>
+	    						<p><span class="bold">{{this.from_username}}</span> ({{this.timestamp}})</p>
 	    					</div>
 	    				{{/each}}
 	    				<p class="margin-top">
