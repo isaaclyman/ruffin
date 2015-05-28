@@ -65,8 +65,7 @@ Template.home.events({
 			};
 			Meteor.apply('makeNewPerson', [newPerson, recaptcha], true,
 				function(error, result) {
-					console.log(error, result);
-					if (result === false || typeof result === 'undefined') {
+					if (result === false || result === undefined) {
 						Session.set('warning_captcha', 'Verification failed.');
 						return;
 					}
