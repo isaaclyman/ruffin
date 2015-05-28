@@ -42,6 +42,7 @@ Template.home.events({
 		var zip      = app.transform.region(Session.get('zip'));
 		var hobby    = app.transform.humanToUrl(Session.get('hobby'));
 		var board    = zip + hobby;
+		var recaptcha = $('#g-recaptcha-response').val();
 
 		// If user wants to browse anonymously, let them
 		if(!username || username === '') {
@@ -62,8 +63,13 @@ Template.home.events({
 				username: username,
 				zip: zip
 			};
-			Meteor.apply('makeNewPerson', [newPerson], true,
+			Meteor.apply('makeNewPerson', [newPerson, recaptcha], true,
 				function(error, result) {
+					console.log(error, result);
+					if (result === false || typeof result === 'undefined') {
+						Session.set('warning_captcha', 'Verification failed.');
+						return;
+					}
 					Meteor.loginWithPassword(
 						{id: result.user_id},
 						result.password);
@@ -86,6 +92,9 @@ Template.home.helpers({
 	},
 	warning_hobby: function() {
 		return Session.get('warning_hobby');
+	},
+	warning_captcha: function() {
+		return Session.get('warning_captcha');
 	},
 	name: function() {
 		return Session.get('name');
@@ -130,6 +139,7 @@ var home = {
 				warning_hobby: '',
 				warning_name: '',
 				warning_zip: '',
+				warning_captcha: '',
 				zip: '',
 				zipPerfect: false
 			});

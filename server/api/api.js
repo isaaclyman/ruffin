@@ -121,11 +121,19 @@ Meteor.methods({
 		}
 		return false;
 	},
-	makeNewPerson: function(person) {
+	makeNewPerson: function(person, recaptcha) {
 		check(person, {
 			username: String,
 			zip: String
 		});
+		check(recaptcha, String);
+
+		var verifyCaptchaResponse = reCAPTCHA.verifyCaptcha(this.connection.clientAddress, recaptcha);
+		if (verifyCaptchaResponse.data.success === false) {
+			throw new Meteor.Error('API', 'Recaptcha failed.');
+			return false;
+		}
+
 		person.username = app.transform.username(person.username);
 		person.zip = app.transform.region(person.zip);
 		if( Meteor.users.findOne({ 'profile.essentialName': person.username.toLowerCase() }) ) {
