@@ -50,6 +50,9 @@ EventPattern = new SimpleSchema({
 	_id: {
 		type: String
 	},
+	host: {
+		type: String
+	},
 	title: {
 		type: String,
 		label: 'Title',

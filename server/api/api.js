@@ -76,10 +76,14 @@ Meteor.methods({
 		check(board_path, String);
 		check(availability, String);
 		check(allow_email, Boolean);
+		check(this.userId, String);
 		board_path = app.transform.humanToUrl(board_path);
-		if (!api.validate.availability(availability) ||
-			!api.validate.boardPath(board_path)) {
+		if (!api.validate.availability(availability)) {
 			return false;
+		}
+		if (!Boards.findOne({ board: board_path })) {
+			throw new Meteor.Error('API',
+				'Called addCardToBoard for a board that doesn\'t exist.');
 		}
 		if (Boards.findOne({ board: board_path, 'cards.user_id': this.userId})) {
 			throw new Meteor.Error('API',
@@ -100,14 +104,91 @@ Meteor.methods({
 	},
 	removeUserCard: function(board_path) {
 		check(board_path, String);
+		check(this.userId, String);
 		board_path = app.transform.humanToUrl(board_path);
-		if (!api.validate.boardPath(board_path)) {
-			return false;
-		}
 		Meteor.users.update({ _id: this.userId },
 							{ $pull: { 'profile.cards': board_path } });
 		Boards.update({ board: board_path },
-					  { $pull: {cards: { user_id: this.userId} } });
+					  { $pull: { cards: { user_id: this.userId } } });
+		return true;
+	},
+	addEventToBoard: function(board_path, title, date, location, description) {
+		check(board_path, String);
+		check(title, String);
+		check(date, Number);
+		check(location, String);
+		check(description, String);
+		check(this.userId, String);
+		board_path = app.transform.humanToUrl(board_path);
+		if (!Boards.findOne({ board: board_path })) {
+			throw new Meteor.Error('API',
+				'Called addEventToBoard for a board that doesn\'t exist.');
+		}
+		if (!api.validate.eventTitle(title) ||
+			!api.validate.eventLocation(location) ||
+			!api.validate.eventDescription(description)) {
+				return false;
+		}
+		var newEvent = {
+			_id: Random.id(),
+			host: this.userId,
+			title: title,
+			date: date,
+			location: location,
+			description: description,
+			attendees: [this.userId]
+		};
+		Boards.update({ board: board_path },
+					  { $push: { events: newEvent } });
+		return true;
+	},
+	cancelEvent: function(board_path, id, title, date) {
+		check(board_path, String);
+		check(id, String);
+		check(title, String);
+		check(date, Number);
+		check(this.userId, String);
+		board_path = app.transform.humanToUrl(board_path);
+		var removeEvent = {
+			_id: id,
+			host: this.userId,
+			title: title,
+			date: date
+		};
+		Boards.update( { board: board_path },
+					   { $pull: { events: removeEvent } });
+		return true;
+	},
+	RSVP: function(board_path, id, host, title, date) {
+		check(board_path, String);
+		check(id, String);
+		check(title, String);
+		check(date, Number);
+		board_path = app.transform.humanToUrl(board_path);
+		var matchEvent = {
+			_id: id,
+			host: host,
+			title: title,
+			date: date
+		};
+		Boards.update({ board: board_path, events: { $elemMatch: matchEvent } },
+					  { $push: { 'events.$.attendees': this.userId } });
+		return true;
+	},
+	unRSVP: function(board_path, id, host, title, date) {
+		check(board_path, String);
+		check(id, String);
+		check(title, String);
+		check(date, Number);
+		board_path = app.transform.humanToUrl(board_path);
+		var matchEvent = {
+			_id: id,
+			host: host,
+			title: title,
+			date: date
+		};
+		Boards.update({ board: board_path, events: { $elemMatch: matchEvent } },
+					  { $pull: { 'events.$.attendees': this.userId } });
 		return true;
 	},
 	/*
@@ -346,6 +427,15 @@ var api = {
 		},
 		availability: function(availability) {
 			return this.process(app.validate.char1000(availability));
+		},
+		eventTitle: function(title) {
+			return this.process(app.validate.char140(title));
+		},
+		eventLocation: function(location) {
+			return this.process(app.validate.char1000(location));
+		},
+		eventDescription: function(description) {
+			return this.process(app.validate.char1000(description));
 		},
 		process: function(validation) {
 			if(!validation.valid) {

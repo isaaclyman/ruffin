@@ -17,36 +17,36 @@ Template.board.onDestroyed(function () {
 });
 
 Template.board.events({
-	"click #menuBtn" : function () {
+	'click #menuBtn' : function () {
 		Router.go('/');
 	},
-	"submit #newDescription" : function () {
+	'submit #newDescription' : function () {
 		event.preventDefault();
 		board.form.description.submit(this.board);
 	},
-	"click #descriptionBtn" : function () {
+	'click #descriptionBtn' : function () {
 		board.form.description.submit(this.board);
 	},
-	"click #deleteBtn" : function () {
+	'click #deleteBtn' : function () {
 		// lexical scope is the message object
 		var timestamp = this.timestamp;
 		var id = this._id;
 		Meteor.call('deleteMessage', board.data.board, id, timestamp);
 	},
-	"submit #newMessage" : function () {
+	'submit #newMessage' : function () {
 		event.preventDefault();
 		board.form.message.submit(this.board);
 	},
-	"click #messageBtn" : function () {
+	'click #messageBtn' : function () {
 		board.form.message.submit(this.board);
 	},
-	"click #showFormCard" : function () {
+	'click #showFormCard' : function () {
 		board.toggle('form_card');
 	},
-	"click #showFormEvent" : function() {
+	'click #showFormEvent' : function() {
 		board.toggle('form_event');
 	},
-	"click #submitCard" : function() {
+	'click #submitCard' : function() {
 		// Don't allow a user to submit a card twice
 		if(this.cards && this.cards.length) {
 			var userIds = this.cards.map(function(card) {
@@ -62,27 +62,51 @@ Template.board.events({
 		Meteor.call('addCardToBoard', this.board, availability, allow_email);
 		Session.set('form_card', false);
 	},
-	"click .talkBtn" : function(event) {
+	'click .talkBtn' : function(event) {
 		board.flipCard(event.target);
 	},
-	"click .deleteCard" : function() {
+	'click .deleteCard' : function() {
 		Meteor.call('removeUserCard', board.data.board);
 	},
-	"keyup #pMessageInput" : function(event) {
+	'keyup #pMessageInput' : function(event) {
 		if(event.which === 13) {
 			board.form.pMessage.send(board.data.board, this.user_id);
 			board.flipCard(event.target);
 		}
 	},
-	"click #pMessageSend" : function(event) {
+	'click #pMessageSend' : function(event) {
 		board.form.pMessage.send(board.data.board, this.user_id);
 		board.flipCard(event.target);
+	},
+	'keyup #titleInput' : function(event) {
+		var title = event.target.value;
+		board.validate.title(title);
+	},
+	'change #dateInput' : function(event) {
+		var date = event.target.value;
+		board.validate.date(date);
+	},
+	'keyup #locationInput' : function(event) {
+		var location = event.target.value;
+		board.validate.location(location);
+	},
+	'keyup #descriptionInput' : function(event) {
+		var description = event.target.value;
+		board.validate.description(description);
+	},
+	'click #submitEvent' : function() {
+		var title = $('#titleInput')[0].value;
+		var date  = $('#dateInput')[0].value;
+		var location = $('#locationInput')[0].value;
+		var description = $('#descriptionInput')[0].value;
+		Meteor.call('addEventToBoard', this.board, title, Date.parse(date), location, description);
+		board.toggle('form_event');
 	}
 });
 
 Template.board.helpers({ 
 	title: function() {
-		return "Ruffin|" + this.hobby;
+		return 'Ruffin|' + this.hobby;
 	},
 	board: function() {
 		return this.hobby;
@@ -134,10 +158,25 @@ Template.board.helpers({
 			}
 		}
 		app.turnOnTooltips();
-		return this.cards;
+		return this.cards || [];
 	},
 	events: function() {
-		return this.events;
+		// If this user has events here, put them at the beginning for easy access
+		var events = this.events;
+		if (events && events.length) {
+			var hostIds = events.map(function(event) {
+				return event.host;
+			});
+			hostIds.filter(function (host) {
+				return host === Meteor.userId();
+			}).forEach(function () {
+				var myEventIndex = hostIds.lastIndexOf(Meteor.userId());
+				var myEvent = events[myEventIndex];
+				events.splice(myEventIndex, 1);
+				events.unshift(myEvent);
+			});
+		}
+		return events || [];
 	},
 	form_card: function() {
 		return Session.get('form_card');
@@ -159,6 +198,18 @@ Template.board.helpers({
 	},
 	disableTalk: function(mine) {
 		return mine ? {disabled: true} : null;
+	},
+	warning_title: function() {
+		return Session.get('warning_title');
+	},
+	warning_date: function() {
+		return Session.get('warning_date');
+	},
+	warning_location: function() {
+		return Session.get('warning_location');
+	},
+	warning_description: function() {
+		return Session.get('warning_description');
 	}
 });
 
@@ -174,7 +225,11 @@ var board = {
 	initialize: function() {
 		Session.set({
 			form_card : false,
-			form_event: false
+			form_event: false,
+			warning_title: '',
+			warning_date: '',
+			warning_location: '',
+			warning_description: ''
 		});
 	},
 	clearIntervals: function() {
@@ -228,6 +283,26 @@ var board = {
 		},
 		isMine: function(message) {
 			return !!(message.user_id === Meteor.userId());
+		},
+		title: function(title) {
+			var validation = app.validate.char140(title);
+			Session.set('warning_title', validation.message);
+			return validation.valid;
+		},
+		date: function(date) {
+			var validation = app.validate.humanDate(date);
+			Session.set('warning_date', validation.message);
+			return validation.valid;
+		},
+		location: function(location) {
+			var validation = app.validate.char1000(location);
+			Session.set('warning_location', validation.message);
+			return validation.valid;
+		},
+		description: function(description) {
+			var validation = app.validate.char1000(description);
+			Session.set('warning_description', validation.message);
+			return validation.valid;
 		}
 	},
 	form: {
