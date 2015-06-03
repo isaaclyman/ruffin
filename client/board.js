@@ -210,6 +210,12 @@ Template.board.helpers({
 	},
 	warning_description: function() {
 		return Session.get('warning_description');
+	},
+	count: function (array) {
+		return array.length;
+	},
+	friendly: function (datestring) {
+		return app.transform.toFriendlyDateTime(datestring);
 	}
 });
 

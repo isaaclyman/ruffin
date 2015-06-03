@@ -173,10 +173,10 @@
 				{{#each events}}
 					<div class="event-box col-md-6 col-xs-12" id="event-{{this._id}}">
 						<p class="heading">{{this.title}}</p>
-						<p>When: {{this.date}}</p>
+						<p>When: {{friendly this.date}}</p>
 						<p>Where: {{this.location}}</p>
 						<p>{{this.description}}</p>
-						<p>At least {{this.attendeeNumber}} attending.</p>
+						<p>At least {{count this.attendees}} attending.</p>
 						{{#if this.userAttending}}
 							<p>You're going to this event.</p>
 							<button class="form-control btn btn-default" id="notAttending">I'm Not Going</button>
