@@ -47,7 +47,7 @@ Meteor.methods({
 				timestamp: Date.now()
 			}]
 		};
-		return Boards.insert(newBoard);		
+		return true;		
 	},
 	addBoardDescription: function(board_path, description) {
 		check(board_path, String);
@@ -276,7 +276,7 @@ Meteor.methods({
 		zip = app.transform.region(zip);
 		Meteor.users.update({ _id: this.userId },
 							{ $set: { 'profile.zip': zip }});
-		return zip;
+		return true;
 	},
 	/*
 		MESSAGES
@@ -370,7 +370,7 @@ Meteor.methods({
 		}
 		if(!Meteor.users.findOne({ _id: toUser, 'profile.messages._id': id })) {
 			Meteor.call('pMessageSend', 'DASHBOARD', toUser, text);
-			return;
+			return true;
 		}
 		var replyMessage = {
 			from_id: this.userId,

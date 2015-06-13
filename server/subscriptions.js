@@ -3,18 +3,24 @@
 */
 
 // Publish a specific board
-Meteor.publish('board', function(region, hobby) {
-	region = app.transform.region(region);
-	hobby = app.transform.humanToUrl(hobby);
-	return Boards.find({ zip: region, hobby: hobby }, 
-					   { fields: { described_by: 0 } });
+Meteor.publish('Board', function(board) {
+	check(board, String);
+	var validation = app.validate.boardPath(board);
+	if (!validation.valid) {
+		throw new Meteor.Error('Publish',
+			'Invalid board path. ' + validation.message + validation.details);
+		return;
+	}
+	return Boards.find({ board: board },
+					   { fields: { _id: 0, described_by: 0 } });
 });
 
 // Publish a list of boards from a specific region
-Meteor.publish('localBoards', function(region) {
+Meteor.publish('LocalBoards', function(region) {
+	check(region, String);
 	region = app.transform.region(region);
-	return Boards.find({ zip: region }, { fields: { hobby: 1 } });
+	return Boards.find({ zip: region }, { fields: { board: 1 } });
 });
 
 // Prevent users from editing their profile
-Meteor.users.deny({update: function() { return true; }});
+Meteor.users.deny({ update: function() { return true; } });
