@@ -12,7 +12,7 @@ Meteor.publish('Board', function(board) {
 		return;
 	}
 	return Boards.find({ board: board },
-					   { fields: { _id: 0, described_by: 0 } });
+					   { fields: { described_by: 0 } });
 });
 
 // Publish a list of boards from a specific region
