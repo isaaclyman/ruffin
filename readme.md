@@ -33,4 +33,4 @@ Objectives
 License
 -------
 
-Copyright.
+MIT
